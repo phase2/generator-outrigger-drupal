@@ -1,0 +1,38 @@
+{
+  "name": "generator-phase2",
+  "version": "0.0.0",
+  "description": "Yeoman generator",
+  "license": "MIT",
+  "main": "app/index.js",
+  "repository": "phase2/generator-phase2",
+  "author": {
+    "name": "Phase2",
+    "email": "",
+    "url": "https://github.com/phase2"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "files": [
+    "app"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "yeoman-generator": "^0.18.9",
+    "chalk": "^1.0.0",
+    "yosay": "^1.0.2"
+  },
+  "peerDependencies": {
+    "yo": ">=1.0.0",
+    "generator-gadget": ">=0.1.0",
+    "generator-pattern-lab-starter": ">=0.0.6"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  }
+}
