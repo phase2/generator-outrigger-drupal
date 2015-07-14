@@ -28,11 +28,15 @@ module.exports = yeoman.generators.Base.extend({
       this.themePath = 'src/themes/' + this.themeName;
 
       this.composeWith('gadget', { options: {
+        skipWelcome: true,
         themeName: this.themeName,
-        themePath: this.themePath
+        themePath: this.themePath,
+        themeType: 'grunt',
+        themeGruntTask: 'compile'
       }});
 
       this.composeWith('pattern-lab-starter', { options: {
+        skipWelcome: true,
         themeName: this.themeName,
         themePath: this.themePath
       }});
