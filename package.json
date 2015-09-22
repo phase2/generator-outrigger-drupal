@@ -25,12 +25,9 @@
   "dependencies": {
     "yeoman-generator": "^0.18.9",
     "chalk": "^1.0.0",
-    "yosay": "^1.0.2"
-  },
-  "peerDependencies": {
-    "yo": ">=1.0.0",
+    "generator-pattern-lab-starter": ">=0.0.6",
     "generator-gadget": ">=0.1.0",
-    "generator-pattern-lab-starter": ">=0.0.6"
+    "yosay": "^1.0.2"
   },
   "devDependencies": {
     "mocha": "*"

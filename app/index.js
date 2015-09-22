@@ -31,8 +31,9 @@ module.exports = yeoman.generators.Base.extend({
         skipWelcome: true,
         themeName: this.themeName,
         themePath: this.themePath,
-        themeType: 'grunt',
-        themeGruntTask: 'compile'
+        themeScripts: {
+          "compile-theme": "npm run compile"
+        }
       }});
 
       this.composeWith('pattern-lab-starter', { options: {
