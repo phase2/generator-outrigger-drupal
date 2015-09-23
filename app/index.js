@@ -17,8 +17,6 @@ module.exports = yeoman.generators.Base.extend({
 
   prompting: function () {
     var done = this.async();
-
-
     var prompts = [];
 
     if (!options.themeName) {
@@ -35,7 +33,13 @@ module.exports = yeoman.generators.Base.extend({
       //this.themeName = props.themeName;
       options.themePath = 'src/themes/' + options.themeName;
 
-      this.composeWith('gadget', { options: {
+      done();
+    }.bind(this));
+  },
+
+  writing: function () {
+    this.composeWith('gadget', {
+      options: {
         skipWelcome: true,
         themeName: options.themeName,
         themePath: options.themePath,
@@ -43,42 +47,16 @@ module.exports = yeoman.generators.Base.extend({
           "compile-theme": "npm run compile",
           "validate": "npm run test"
         }
-      }});
+      }
+    });
 
-      this.composeWith('pattern-lab-starter', { options: {
+    this.composeWith('pattern-lab-starter', {
+      options: {
         skipWelcome: true,
         themeName: options.themeName,
         themePath: options.themePath
-      }});
-
-      done();
-    }.bind(this));
-  },
-
-  writing: {
-/*
-    app: function () {
-      this.fs.copy(
-        this.templatePath('_package.json'),
-        this.destinationPath('package.json')
-      );
-      this.fs.copy(
-        this.templatePath('_bower.json'),
-        this.destinationPath('bower.json')
-      );
-    },
-
-    projectfiles: function () {
-      this.fs.copy(
-        this.templatePath('editorconfig'),
-        this.destinationPath('.editorconfig')
-      );
-      this.fs.copy(
-        this.templatePath('jshintrc'),
-        this.destinationPath('.jshintrc')
-      );
-    }
-*/
+      }
+    });
   },
 
   install: function () {
