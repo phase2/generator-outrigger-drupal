@@ -12,7 +12,7 @@ module.exports = yeoman.generators.Base.extend({
     this.log(yosay(
       'Welcome to the fantabulous ' + chalk.red('Phase2') + ' generator!'
     ));
-    options = _.assign(this.config, this.options);
+    options = this.options;
   },
 
   prompting: function () {
@@ -30,7 +30,6 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
-      //this.themeName = props.themeName;
       options.themePath = 'src/themes/' + options.themeName;
 
       done();
