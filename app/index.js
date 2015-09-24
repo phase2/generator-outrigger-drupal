@@ -12,50 +12,92 @@ module.exports = yeoman.generators.Base.extend({
     this.log(yosay(
       'Welcome to the fantabulous ' + chalk.red('Phase2') + ' generator!'
     ));
-    options = this.options;
+    options = _.assign({
+      skipWelcome: true
+    }, this.options);
   },
 
   prompting: function () {
     var done = this.async();
     var prompts = [];
 
+    if (!options.projectName) {
+      prompts.push({
+        name: 'projectName',
+        message: 'Machine name of project?',
+        default: _.last(this.env.cwd.split('/')), // parent folder
+        validate: function (input) {
+          return (input.search(' ') === -1) ? true : 'No spaces allowed.';
+        }
+      });
+    }
+
+    if (!options.projectDescription) {
+      prompts.push({
+        name: 'projectDescription',
+        message: 'Description of project?'
+      });
+    }
+
+    if (!options.backEnd) {
+      var backEndChoices = [];
+      backEndChoices.push({'name': 'Drupal 8', 'value': '8.x'});
+      backEndChoices.push({'name': 'Drupal 7', 'value': '7.x'});
+      prompts.push({
+        name: 'backEnd',
+        message: 'What Back End to use?',
+        type: 'list',
+        choices: backEndChoices
+      })
+    }
+
+    if (!options.frontEnd) {
+      var frontEndChoices = [];
+      frontEndChoices.push({'name': 'Pattern Lab Starter', 'value': 'patternLabStarter'});
+      frontEndChoices.push({'name': 'None', 'value': false});
+      prompts.push({
+        name: 'frontEnd',
+        message: 'What Front End to use?',
+        type: 'list',
+        choices: frontEndChoices
+      })
+    }
+
     if (!options.themeName) {
       prompts.push({
-        type: 'input',
         name: 'themeName',
         message: 'What would you like to name the theme?',
-        default: ''
+        default: '',
+        when: function (answers) {
+          return answers.frontEnd !== false;
+        }
       });
     }
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
-      options.themePath = 'src/themes/' + options.themeName;
 
       done();
     }.bind(this));
   },
 
   writing: function () {
+    options.themePath = 'src/themes/' + options.themeName;
+    
     this.composeWith('gadget', {
-      options: {
-        skipWelcome: true,
-        themeName: options.themeName,
-        themePath: options.themePath,
+      options: _.assign(options, {
         themeScripts: {
           "compile-theme": "npm run compile",
           "validate": "npm run test"
         }
-      }
+      })
     });
 
-    this.composeWith('pattern-lab-starter', {
-      options: {
-        skipWelcome: true,
-        themeName: options.themeName,
-        themePath: options.themePath
-      }
-    });
+    if (options.frontEnd === 'patternLabStarter') {
+      this.composeWith('pattern-lab-starter', {
+        options: options
+      });
+    }
   },
 
   install: function () {
