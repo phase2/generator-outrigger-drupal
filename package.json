@@ -1,17 +1,13 @@
 {
-  "name": "generator-phase2",
-  "version": "0.0.0",
-  "description": "Yeoman generator",
+  "name": "generator-p2",
+  "version": "1.0.0",
+  "description": "Phase2 Yeoman generator",
   "license": "MIT",
   "main": "app/index.js",
-  "repository": "phase2/generator-phase2",
-  "author": {
-    "name": "Phase2",
-    "email": "",
-    "url": "https://github.com/phase2"
-  },
+  "repository": "https://bitbucket.org/phase2tech/generator-p2",
+  "private": true,
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=0.12.0"
   },
   "scripts": {
     "test": "mocha"
