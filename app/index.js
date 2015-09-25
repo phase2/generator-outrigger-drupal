@@ -76,14 +76,16 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
-
+      options.themePath = 'src/themes/' + options.themeName;
+      //_.forEach(options, function (value, key) {
+      //  this.config.set(key, value);
+      //}, this);
       done();
     }.bind(this));
+
   },
 
   writing: function () {
-    options.themePath = 'src/themes/' + options.themeName;
-    
     this.composeWith('gadget', {
       options: _.assign(options, {
         themeScripts: {
@@ -94,9 +96,7 @@ module.exports = yeoman.generators.Base.extend({
     });
 
     if (options.frontEnd === 'patternLabStarter') {
-      this.composeWith('pattern-lab-starter', {
-        options: options
-      });
+      this.composeWith('pattern-lab-starter', { options: options });
     }
   },
 
