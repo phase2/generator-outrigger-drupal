@@ -77,9 +77,6 @@ module.exports = yeoman.generators.Base.extend({
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
       options.themePath = 'src/themes/' + options.themeName;
-      //_.forEach(options, function (value, key) {
-      //  this.config.set(key, value);
-      //}, this);
       done();
     }.bind(this));
 
@@ -88,6 +85,7 @@ module.exports = yeoman.generators.Base.extend({
   writing: function () {
     this.composeWith('gadget', {
       options: _.assign(options, {
+        "use-master": true,
         themeScripts: {
           "compile-theme": "npm run compile",
           "validate": "npm run test"
@@ -101,8 +99,8 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   install: function () {
-//    this.installDependencies({
-//      skipInstall: this.options['skip-install']
-//    });
+    this.installDependencies({
+      skipInstall: this.options['skip-install']
+    });
   }
 });

@@ -4,7 +4,10 @@
   "description": "Phase2 Yeoman generator",
   "license": "MIT",
   "main": "app/index.js",
-  "repository": "https://bitbucket.org/phase2tech/generator-p2",
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/phase2tech/generator-p2"
+  },
   "private": true,
   "engines": {
     "node": ">=0.12.0"
@@ -20,10 +23,12 @@
   ],
   "dependencies": {
     "chalk": "^1.0.0",
-    "generator-gadget": ">=0.1.0",
-    "generator-pattern-lab-starter": ">=0.0.6",
     "lodash": "^3.10.1",
     "yeoman-generator": "^0.20.3",
     "yosay": "^1.0.2"
+  },
+  "peerDependencies": {
+    "generator-gadget": "git@github.com:phase2/generator-gadget.git#master",
+    "generator-pattern-lab-starter": "git@github.com:phase2/generator-pattern-lab-starter.git#master"
   }
 }
