@@ -21,7 +21,7 @@ module.exports = yeoman.generators.Base.extend({
     var done = this.async();
     var prompts = [];
 
-    if (!options.projectName) {
+    if (_.isUndefined(options.projectName)) {
       prompts.push({
         name: 'projectName',
         message: 'Machine name of project?',
@@ -32,14 +32,14 @@ module.exports = yeoman.generators.Base.extend({
       });
     }
 
-    if (!options.projectDescription) {
+    if (_.isUndefined(options.projectDescription)) {
       prompts.push({
         name: 'projectDescription',
         message: 'Description of project?'
       });
     }
 
-    if (!options.backEnd) {
+    if (_.isUndefined(options.backEnd)) {
       var backEndChoices = [];
       backEndChoices.push({'name': 'Drupal 8', 'value': '8.x'});
       backEndChoices.push({'name': 'Drupal 7', 'value': '7.x'});
@@ -51,7 +51,7 @@ module.exports = yeoman.generators.Base.extend({
       })
     }
 
-    if (!options.frontEnd) {
+    if (_.isUndefined(options.frontEnd)) {
       var frontEndChoices = [];
       frontEndChoices.push({'name': 'Pattern Lab Starter', 'value': 'patternLabStarter'});
       frontEndChoices.push({'name': 'None', 'value': false});
@@ -63,7 +63,7 @@ module.exports = yeoman.generators.Base.extend({
       })
     }
 
-    if (!options.themeName) {
+    if (_.isUndefined(options.themeName)) {
       prompts.push({
         name: 'themeName',
         message: 'What would you like to name the theme?',
