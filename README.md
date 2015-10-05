@@ -1,27 +1,22 @@
-# `yo p2` - the Phase2 site generator
+# Yo P2! &mdash; the Phase2 Site Generator
 
-This project is a **Work In Progress** that is in the process of leaving alpha testing for beta testing. This project is currently being intended for internal use only.
+> Yeoman generator that weaves together multiple generators, tools, and Phase2
+best practices to kick off Drupal projects in style.
 
-## `yo p2` Overview
+This is an umbrella [Yeoman](http://yeoman.io/) generator that asks questions,
+then passes the answers to multiple "child" generators that handle their own
+aspect of the scaffolding. As the name implies, this generator focuses on Phase2
+practices, where some of the other generators in use are focused on broader industry
+best practices.
 
-Think of this as an umbrella yeoman generator that asks questions, then pass the answers to multiple other yeoman generators that handle their own aspect of the scaffolding. Here are the projects that come together to form the result:
+This project is **not ready for use**.
 
-### Grunt Drupal Tasks
-
-The installation and setup of [GDT](https://github.com/phase2/grunt-drupal-tasks) is handled by it's yeoman generator, [Gadget](https://github.com/phase2/generator-gadget). 
- 
-### Pattern Lab Starter
-
-The installation and setup of a theme using [Pattern Lab Starter](http://git.io/p2pls) is handled by it's [yeoman generator](https://github.com/phase2/generator-pattern-lab-starter).
-
-The back end handled by GDT and the front end handled by Pattern Lab Starter, are both linked using the [Theme Scripts of GDT](https://github.com/phase2/grunt-drupal-tasks/blob/master/CONFIG.md#theme-scripts) so that way a full site compile can happen by running `grunt` from the root.
-
-### Installation
+## Installation
 
 Dependencies:
 
 ```bash
-npm install --global yo
+npm install --global yo generator-gadget generator-pattern-lab-starter
 ```
 
 To install this generator:
@@ -30,8 +25,41 @@ To install this generator:
 npm install --global git+ssh://bitbucket.org/phase2tech/generator-p2.git#master
 ```
 
-Finally, make an empty folder, and initiate the generator:
+## Use the Tool
+
+Make an empty folder, and initiate the generator:
 
 ```bash
 yo p2
 ```
+
+Once all questions are answered a complete code scaffolding will be created.
+Generate a working codebase with another one-liner:
+
+```bash
+grunt
+```
+
+The backend is handled by GDT and the frontend is handled by Pattern Lab Starter.
+They are integrated with each other via the
+[Theme Scripts of GDT](https://github.com/phase2/grunt-drupal-tasks/blob/master/CONFIG.md#theme-scripts)
+so a full site compile can happen by running the project's default build task: `grunt`.
+
+## Leveraged Projects
+
+Here are the projects that are currently integrated as part of Yo P2.
+Each will need to be installed.
+
+### Grunt Drupal Tasks
+
+[Grunt Drupal Tasks](https://github.com/phase2/grunt-drupal-tasks) manages backend
+development, continuous integration, and overall project tooling for the Drupal
+application. It has its own generator which must be installed, you can find it
+on Github at [Gadget](https://github.com/phase2/generator-gadget).
+
+### Pattern Lab Starter
+
+[Pattern Lab Starter](http://git.io/p2pls) initializes new, Pattern-lab integrated
+themes and manages frontend development practices. It has its own generator which
+must be installe, you can find it on Github at
+[Generator PLS](https://github.com/phase2/generator-pattern-lab-starter).
