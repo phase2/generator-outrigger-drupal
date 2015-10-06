@@ -16,7 +16,7 @@ This project is **not ready for use**.
 Dependencies:
 
 ```bash
-npm install --global yo generator-gadget generator-pattern-lab-starter
+npm install --global yo git+ssh@github.com:phase2/generator-gadget.git#master git+ssh@github.com:phase2/generator-pattern-lab-starter.git#master
 ```
 
 To install this generator:
