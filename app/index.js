@@ -1,5 +1,7 @@
 'use strict';
 var yeoman = require('yeoman-generator');
+var path = require('path');
+var plPrompts = require(path.resolve(require.resolve('generator-pattern-lab-starter'), '../prompts.js'));
 var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
@@ -21,6 +23,12 @@ module.exports = yeoman.generators.Base.extend({
     var done = this.async();
     var prompts = [];
 
+    plPrompts.forEach(function (item) {
+      if (_.isUndefined(options[item])) {
+        prompts.push(item);
+      }
+    });
+
     if (_.isUndefined(options.projectName)) {
       prompts.push({
         name: 'projectName',
@@ -32,12 +40,12 @@ module.exports = yeoman.generators.Base.extend({
       });
     }
 
-    if (_.isUndefined(options.projectDescription)) {
-      prompts.push({
-        name: 'projectDescription',
-        message: 'Description of project?'
-      });
-    }
+    //if (_.isUndefined(options.projectDescription)) {
+    //  prompts.push({
+    //    name: 'projectDescription',
+    //    message: 'Description of project?'
+    //  });
+    //}
 
     if (_.isUndefined(options.backEnd)) {
       var backEndChoices = [];
@@ -63,16 +71,16 @@ module.exports = yeoman.generators.Base.extend({
       })
     }
 
-    if (_.isUndefined(options.themeName)) {
-      prompts.push({
-        name: 'themeName',
-        message: 'What would you like to name the theme?',
-        default: '',
-        when: function (answers) {
-          return answers.frontEnd !== false;
-        }
-      });
-    }
+    //if (_.isUndefined(options.themeName)) {
+    //  prompts.push({
+    //    name: 'themeName',
+    //    message: 'What would you like to name the theme?',
+    //    default: '',
+    //    when: function (answers) {
+    //      return answers.frontEnd !== false;
+    //    }
+    //  });
+    //}
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
