@@ -1,4 +1,4 @@
-# Yo P2! &mdash; the Phase2 Site Generator
+# Yo P2! – the Phase2 Site Generator
 
 > Yeoman generator that weaves together multiple generators, tools, and Phase2
 best practices to kick off Drupal projects in style.
