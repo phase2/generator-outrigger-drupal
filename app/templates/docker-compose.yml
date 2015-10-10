@@ -1,0 +1,20 @@
+db:
+  image: phase2/mariadb
+  environment:
+    DNSDOCK_NAME: db
+    DNSDOCK_IMAGE: <%= projectName %>
+    MYSQL_DATABASE: <%= projectName %>_drupal
+  volumes:
+    - /data/<%= projectName %>/mysql:/var/lib/mysql
+www:
+  image: <%= webImage %>
+  environment:
+    DNSDOCK_NAME: www
+    DNSDOCK_IMAGE: <%= projectName %>
+    PHP_XDEBUG: "<%= debugMode %>"
+    PHP_XHPROF: "<%= debugMode %>"
+  links:
+    - db
+  volumes:
+    - ./build/html:/var/www/html
+    - /data/<%= projectName %>/files:/var/www/html/sites/default/files
