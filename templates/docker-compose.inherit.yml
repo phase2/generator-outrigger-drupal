@@ -1,0 +1,12 @@
+db:
+  extends:
+    file: docker-compose.yml
+    service: db
+www:
+  environment:
+    PHP_XDEBUG: "<%= debugMode %>"
+    PHP_XHPROF: "<%= debugMode %>"
+    VIRTUAL_HOST: <%= virtualHost %>
+  extends:
+    file: docker-compose.yml
+    service: www
