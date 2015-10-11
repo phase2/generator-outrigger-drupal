@@ -1,5 +1,5 @@
 {
-  "name": "generator-p2-docker",
+  "name": "generator-p2-env",
   "version": "0.1.0",
   "description": "Phase2 yeoman generator to supply Drupal projects with Docker support.",
   "license": "MIT",
