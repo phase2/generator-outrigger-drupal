@@ -30,7 +30,7 @@ module.exports = yeoman.generators.Base.extend({
       return _.isUndefined(options[item.name]);
     });
 
-    // This is copied from generator-gadget so p2-docker can run standalone.
+    // This is copied from generator-gadget so p2-env can run standalone.
     if (_.isUndefined(options.projectName)) {
       prompts.push({
         type: 'input',
