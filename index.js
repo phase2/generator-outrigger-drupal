@@ -86,7 +86,10 @@ module.exports = yeoman.generators.Base.extend({
   dockerComposeBuild: function() {
     this.fs.copyTpl(
       this.templatePath('build.yml'),
-      this.destinationPath('build.yml')
+      this.destinationPath('build.yml'),
+      {
+        projectName: options.projectName
+      }
     );
   },
 
@@ -109,6 +112,16 @@ module.exports = yeoman.generators.Base.extend({
     this.fs.copyTpl(
       this.destinationPath('README.md'),
       this.destinationPath('README.md'),
+      {
+        projectName: options.projectName
+      }
+    );
+  },
+
+  drushConfig: function() {
+    this.fs.copyTpl(
+      this.templatePath('drush'),
+      this.destinationPath('env/etc/drush'),
       {
         projectName: options.projectName
       }
