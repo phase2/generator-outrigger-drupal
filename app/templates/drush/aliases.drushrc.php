@@ -8,15 +8,7 @@
  * Site alias for tuned Drush usage with the '<%= projectName %>' site.
  */
 
-function p2_env_get_url() {
-  if (isset($_ENV['VIRTUAL_HOST'])) {
-    return $_ENV['VIRTUAL_HOST'];
-  }
-
-  return 'http://www.<%= projectName %>.vm/';
-}
-
 $aliases['<%= projectName %>'] = array(
-  'url' => p2_env_get_url(),
+  'url' =>   'url' => isset($_ENV['VIRTUAL_HOST']) ? $_ENV['VIRTUAL_HOST'] : 'http://www.<%= projectName %>.vm/',
   'root' => '/var/www/html'
 );
