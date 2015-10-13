@@ -17,5 +17,4 @@ www:
     - db
   volumes:
     - ./build/html:/var/www/html
-    - ./env/etc/drush:/etc/drush
     - /data/<%= projectName %>/files:/var/www/html/sites/default/files
