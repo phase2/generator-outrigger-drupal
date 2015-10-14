@@ -7,7 +7,7 @@ cli:
   command: /bin/bash
   volumes:
     - .:/code/
-    - ./env/etc/drush:/etc/drush
+    - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
   links:
     - db
@@ -20,7 +20,7 @@ drush:
   entrypoint: [ "drush", "@<%= projectName %>" ]
   working_dir: /var/www/html
   volumes:
-    - ./env/etc/drush:/etc/drush
+    - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
   links:
     - db
@@ -33,7 +33,7 @@ grunt:
   working_dir: /code
   volumes:
     - .:/code/
-    - ./env/etc/drush:/etc/drush
+    - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
 
 # Bring in to reuse on our drush container
