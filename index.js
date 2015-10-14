@@ -121,7 +121,7 @@ module.exports = yeoman.generators.Base.extend({
   drushConfig: function() {
     this.fs.copyTpl(
       this.templatePath('drush'),
-      this.destinationPath('env/etc/drush'),
+      this.destinationPath('env/build/etc/drush'),
       {
         projectName: options.projectName
       }
