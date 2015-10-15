@@ -30,20 +30,6 @@ module.exports = yeoman.generators.Base.extend({
       return _.isUndefined(options[item.name]);
     });
 
-    // This is copied from generator-gadget so p2-env can run standalone.
-    if (_.isUndefined(options.projectName)) {
-      prompts.push({
-        type: 'input',
-        name: 'projectName',
-        message: 'Machine-name of your project?',
-        // Name of the parent directory.
-        default: _.last(process.cwd().split('/')),
-        validate: function (input) {
-          return (input.search(' ') === -1) ? true : 'No spaces allowed.';
-        }
-      });
-    }
-
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
       done();
@@ -94,18 +80,15 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   readmeAppend: function() {
-    var dockerUsagePath = this.templatePath('docker/dockerUsage.md');
+    var self = this;
 
     // Inject a partial include to the already generated README.
     // Our infrastructure section uses the standard template system.
-    this.fs.copy(
+    require('./partial').append(
+      self,
       this.destinationPath('README.md'),
       this.destinationPath('README.md'),
-      {
-        process: function(contents) {
-          return contents + '\n' + '<% include ' + dockerUsagePath + ' %>';
-        }
-      }
+      this.templatePath('docker/dockerUsage.md')
     );
 
     // Inject our new README section.
