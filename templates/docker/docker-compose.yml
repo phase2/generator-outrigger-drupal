@@ -16,5 +16,6 @@ www:
   links:
     - db
   volumes:
+    - .:/code/
     - ./build/html:/var/www/html
     - /data/<%= projectName %>/files:/var/www/html/sites/default/files
