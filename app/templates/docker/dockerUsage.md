@@ -7,7 +7,7 @@ repository](https://bitbucket.org/phase2tech/_devtools_vm).
 
 * **Start Servers:** `docker-compose up`
 * **Build the Site:** `docker-compose -f build.yml run grunt`
-* **SSH into Container:** `docker-compose -f build.yml run cli`
+* **Open an Interactive Terminal Session:** `docker-compose -f build.yml run cli`
 * **Run Drush Command:** `docker-compose -f build.yml run drush <command>`
 * **Run Grunt Command:** `docker-compose -f build.yml run grunt [<command>]`
 
