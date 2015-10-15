@@ -63,7 +63,7 @@ module.exports = yeoman.generators.Base.extend({
     };
 
     this.fs.copyTpl(
-      this.templatePath('docker-compose.yml'),
+      this.templatePath('docker/docker-compose.yml'),
       this.destinationPath('docker-compose.yml'),
       tokens
     );
@@ -77,7 +77,7 @@ module.exports = yeoman.generators.Base.extend({
     };
 
     this.fs.copyTpl(
-      this.templatePath('docker-compose.inherit.yml'),
+      this.templatePath('docker/docker-compose.inherit.yml'),
       this.destinationPath('docker-compose.int.yml'),
       tokens
     );
@@ -85,13 +85,16 @@ module.exports = yeoman.generators.Base.extend({
 
   dockerComposeBuild: function() {
     this.fs.copyTpl(
-      this.templatePath('build.yml'),
-      this.destinationPath('build.yml')
+      this.templatePath('docker/build.yml'),
+      this.destinationPath('build.yml'),
+      {
+        projectName: options.projectName
+      }
     );
   },
 
   readmeAppend: function() {
-    var dockerUsagePath = this.templatePath('dockerUsage.md');
+    var dockerUsagePath = this.templatePath('docker/dockerUsage.md');
 
     // Inject a partial include to the already generated README.
     // Our infrastructure section uses the standard template system.
@@ -109,6 +112,16 @@ module.exports = yeoman.generators.Base.extend({
     this.fs.copyTpl(
       this.destinationPath('README.md'),
       this.destinationPath('README.md'),
+      {
+        projectName: options.projectName
+      }
+    );
+  },
+
+  drushConfig: function() {
+    this.fs.copyTpl(
+      this.templatePath('drush'),
+      this.destinationPath('env/build/etc/drush'),
       {
         projectName: options.projectName
       }
