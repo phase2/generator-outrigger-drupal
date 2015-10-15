@@ -2,6 +2,7 @@
 var yeoman = require('yeoman-generator');
 var path = require('path');
 var plPrompts = require(path.resolve(require.resolve('generator-pattern-lab-starter'), '../prompts.js'));
+var gadgetPrompts = require(path.resolve(require.resolve('generator-gadget'), '../../lib/prompts.js'));
 var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
@@ -22,6 +23,12 @@ module.exports = yeoman.generators.Base.extend({
   prompting: function () {
     var done = this.async();
     var prompts = [];
+
+    gadgetPrompts.forEach(function (item) {
+      if (_.isUndefined(options[item])) {
+        prompts.push(item);
+      }
+    });
 
     plPrompts.forEach(function (item) {
       if (_.isUndefined(options[item])) {
@@ -47,29 +54,17 @@ module.exports = yeoman.generators.Base.extend({
     //  });
     //}
 
-    if (_.isUndefined(options.backEnd)) {
-      var backEndChoices = [];
-      backEndChoices.push({'name': 'Drupal 8', 'value': '8.x'});
-      backEndChoices.push({'name': 'Drupal 7', 'value': '7.x'});
-      prompts.push({
-        name: 'backEnd',
-        message: 'What Back End to use?',
-        type: 'list',
-        choices: backEndChoices
-      })
-    }
-
-    if (_.isUndefined(options.frontEnd)) {
-      var frontEndChoices = [];
-      frontEndChoices.push({'name': 'Pattern Lab Starter', 'value': 'patternLabStarter'});
-      frontEndChoices.push({'name': 'None', 'value': false});
-      prompts.push({
-        name: 'frontEnd',
-        message: 'What Front End to use?',
-        type: 'list',
-        choices: frontEndChoices
-      })
-    }
+    //if (_.isUndefined(options.frontEnd)) {
+    //  var frontEndChoices = [];
+    //  frontEndChoices.push({'name': 'Pattern Lab Starter', 'value': 'patternLabStarter'});
+    //  frontEndChoices.push({'name': 'None', 'value': false});
+    //  prompts.push({
+    //    name: 'frontEnd',
+    //    message: 'What Front End to use?',
+    //    type: 'list',
+    //    choices: frontEndChoices
+    //  })
+    //}
 
     //if (_.isUndefined(options.themeName)) {
     //  prompts.push({
@@ -81,6 +76,9 @@ module.exports = yeoman.generators.Base.extend({
     //    }
     //  });
     //}
+
+    // ensuring we only ask questions with the same `name` value once; earlier questions take priority
+    prompts = _.uniq(prompts, 'name');
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
@@ -101,9 +99,9 @@ module.exports = yeoman.generators.Base.extend({
       })
     });
 
-    if (options.frontEnd === 'patternLabStarter') {
+    //if (options.frontEnd === 'patternLabStarter') {
       this.composeWith('pattern-lab-starter', { options: options });
-    }
+    //}
   },
 
   install: function () {
