@@ -1,6 +1,18 @@
 'use strict';
 
+var _ = require('lodash');
+
 var prompts = [
+  {
+    type: 'input',
+    name: 'projectName',
+    message: 'Machine-name of your project?',
+    // Name of the parent directory.
+    default: _.last(process.cwd().split('/')),
+    validate: function (input) {
+      return (input.search(' ') === -1) ? true : 'No spaces allowed.';
+    }
+  },
   {
     type: 'list',
     name: 'webserver',
