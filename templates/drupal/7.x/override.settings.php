@@ -6,7 +6,22 @@
 // Forcibly disable poorman's cron.
 $conf['cron_safe_threshold'] = 0;
 
-
+// Database connection settings.
+$databases = array (
+  'default' =>
+  array (
+    'default' =>
+    array (
+      'database' => '<%= projectName %>_drupal',
+      'username' => 'admin',
+      'password' => 'admin',
+      'host' => 'db.<%= projectName %>.vm',
+      'port' => '',
+      'driver' => 'mysql',
+      'prefix' => '',
+    ),
+  ),
+);
 <% if(cacheLink) { %>
 // Add Memcache for internal caching.
 $conf['cache_backends'][] = 'sites/all/modules/contrib/memcache/memcache.inc';
@@ -21,4 +36,4 @@ $conf['memcache_bins'] = array(
  'cache' => 'default',
 );
 $conf['memcache_key_prefix'] = '<%= projectName %>_';
-<% } %>
+<% } -%>
