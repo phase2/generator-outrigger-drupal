@@ -109,5 +109,29 @@ module.exports = yeoman.generators.Base.extend({
         projectName: options.projectName
       }
     );
+  },
+
+  gruntConfig: function() {
+    var gcfg = this.fs.readJSON('Gruntconfig.json');
+    if (!gcfg.buildPaths) {
+      gcfg.buildPaths = {};
+    }
+    gcfg.buildPaths.html = '/var/www/html';
+
+    if (!gcfg.generated) {
+      gcfg.generated = { name: 'hand-crafted', version: '0.0.0' };
+    }
+    if (!gcfg.generated.modified) {
+      gcfg.generated.modified = [];
+    }
+    gcfg.generated.modified.push({name: this.pkg.name, version: this.pkg.version});
+    this.fs.writeJSON('Gruntconfig.json', gcfg);
+  },
+
+  gruntDockerConfig: function() {
+    this.fs.copy(
+      this.templatePath('grunt'),
+      this.destinationPath('bin/grunt')
+    );
   }
 });
