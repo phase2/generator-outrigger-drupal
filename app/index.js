@@ -117,6 +117,10 @@ module.exports = yeoman.generators.Base.extend({
       gcfg.buildPaths = {};
     }
     gcfg.buildPaths.html = '/var/www/html';
+
+    if (!gcfg.generated) {
+      gcfg.generated = { name: 'hand-crafted', version: '0.0.0' };
+    }
     if (!gcfg.generated.modified) {
       gcfg.generated.modified = [];
     }
