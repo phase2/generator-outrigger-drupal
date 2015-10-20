@@ -134,7 +134,7 @@ module.exports = yeoman.generators.Base.extend({
   drupalSettings: function() {
     var name = 'override.settings.php';
     this.fs.copyTpl(
-      this.templatePath('drupal/override.settings.php'),
+      this.templatePath('drupal/7.x/override.settings.php'),
       this.destinationPath('src/sites/' + name),
       tokens
     );
