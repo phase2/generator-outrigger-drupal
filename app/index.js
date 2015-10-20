@@ -7,6 +7,14 @@ var _ = require('lodash');
 var options = {},
   tokens = {};
 
+var webImage = function(webserver) {
+  var webImage = {
+    apache: 'phase2/apache24php55',
+    nginx: 'phase2/nginx16-php55'
+  };
+  return webImage[webserver];
+};
+
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
     this.pkg = require('../package.json');
@@ -34,16 +42,11 @@ module.exports = yeoman.generators.Base.extend({
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
 
-      var webImage = {
-        apache: 'phase2/apache24php55',
-        nginx: 'phase2/nginx16-php55'
-      };
-
       tokens = {
         debugMode: 'true',
         projectName: options.projectName,
-        webImage: webImage[options.webserver] || options.webImage,
-        cacheInternal: options.cacheInternal == 'memcache',
+        webImage: webImage(options.webserver) || options.webImage,
+        cacheInternal: options.cacheInternal != 'database',
         cacheLink: "\n    - cache",
         virtualHost: options.projectName + '.ci.p2devcloud.com'
       };
@@ -137,6 +140,7 @@ module.exports = yeoman.generators.Base.extend({
     );
 
     this.log('Please include src/sites/' + name + ' at the end of your site settings.php file.');
+    this.log("'==> require __DIR__ . '/../override.settings.php'");
     if (tokens.cacheInternal) {
       this.log('Add the memcache module to your makefile! https://www.drupal.org/project/memcache');
     }

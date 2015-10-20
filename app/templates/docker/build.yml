@@ -20,6 +20,7 @@ drush:
   entrypoint: [ "drush", "@<%= projectName %>" ]
   working_dir: /var/www/html
   volumes:
+    - .:/code/
     - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
   links:
