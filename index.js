@@ -6,6 +6,14 @@ var _ = require('lodash');
 
 var options = {};
 
+var webImage = function(webserver) {
+  var webImage = {
+    apache: 'phase2/apache24php55',
+    nginx: 'phase2/nginx16-php55'
+  };
+  return webImage[webserver];
+};
+
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
     this.pkg = require('../package.json');
@@ -37,15 +45,10 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   dockerComposeDefault: function() {
-    var webImage = {
-      apache: 'phase2/apache24php55',
-      nginx: 'phase2/nginx16-php55'
-    }
-
     var tokens = {
       debugMode: 'true',
       projectName: options.projectName,
-      webImage: webImage[options.webserver] || options.webImage
+      webImage: webImage(options.webserver) || options.webImage
     };
 
     this.fs.copyTpl(
@@ -59,7 +62,8 @@ module.exports = yeoman.generators.Base.extend({
     var tokens = {
       debugMode: 'true',
       projectName: options.projectName,
-      virtualHost: options.projectName + '.ci.p2devcloud.com'
+      virtualHost: options.projectName + '.ci.p2devcloud.com',
+      webImage: webImage(options.webserver) || options.webImage
     };
 
     this.fs.copyTpl(
