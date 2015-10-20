@@ -4,7 +4,8 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
 
-var options = {};
+var options = {},
+  tokens = {};
 
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
@@ -32,22 +33,26 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
+
+      var webImage = {
+        apache: 'phase2/apache24php55',
+        nginx: 'phase2/nginx16-php55'
+      };
+
+      tokens = {
+        debugMode: 'true',
+        projectName: options.projectName,
+        webImage: webImage[options.webserver] || options.webImage,
+        cacheInternal: options.cacheInternal == 'memcache',
+        cacheLink: "\n    - cache",
+        virtualHost: options.projectName + '.ci.p2devcloud.com'
+      };
+
       done();
     }.bind(this));
   },
 
   dockerComposeDefault: function() {
-    var webImage = {
-      apache: 'phase2/apache24php55',
-      nginx: 'phase2/nginx16-php55'
-    }
-
-    var tokens = {
-      debugMode: 'true',
-      projectName: options.projectName,
-      webImage: webImage[options.webserver] || options.webImage
-    };
-
     this.fs.copyTpl(
       this.templatePath('docker/docker-compose.yml'),
       this.destinationPath('docker-compose.yml'),
@@ -56,12 +61,6 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   dockerComposeInt: function() {
-    var tokens = {
-      debugMode: 'true',
-      projectName: options.projectName,
-      virtualHost: options.projectName + '.ci.p2devcloud.com'
-    };
-
     this.fs.copyTpl(
       this.templatePath('docker/docker-compose.inherit.yml'),
       this.destinationPath('docker-compose.int.yml'),
@@ -73,9 +72,7 @@ module.exports = yeoman.generators.Base.extend({
     this.fs.copyTpl(
       this.templatePath('docker/build.yml'),
       this.destinationPath('build.yml'),
-      {
-        projectName: options.projectName
-      }
+      tokens
     );
   },
 
@@ -95,9 +92,7 @@ module.exports = yeoman.generators.Base.extend({
     this.fs.copyTpl(
       this.destinationPath('README.md'),
       this.destinationPath('README.md'),
-      {
-        projectName: options.projectName
-      }
+      tokens
     );
   },
 
@@ -105,9 +100,7 @@ module.exports = yeoman.generators.Base.extend({
     this.fs.copyTpl(
       this.templatePath('drush'),
       this.destinationPath('env/build/etc/drush'),
-      {
-        projectName: options.projectName
-      }
+      tokens
     );
   },
 
@@ -133,5 +126,19 @@ module.exports = yeoman.generators.Base.extend({
       this.templatePath('grunt'),
       this.destinationPath('bin/grunt')
     );
+  },
+
+  drupalSettings: function() {
+    var name = 'override.settings.php';
+    this.fs.copyTpl(
+      this.templatePath('drupal/override.settings.php'),
+      this.destinationPath('src/sites/' + name),
+      tokens
+    );
+
+    this.log('Please include src/sites/' + name + ' at the end of your site settings.php file.');
+    if (tokens.cacheInternal) {
+      this.log('Add the memcache module to your makefile! https://www.drupal.org/project/memcache');
+    }
   }
 });

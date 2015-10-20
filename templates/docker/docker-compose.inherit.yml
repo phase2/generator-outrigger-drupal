@@ -2,6 +2,12 @@ db:
   extends:
     file: docker-compose.yml
     service: db
+<% if (cacheInternal) { %>
+cache:
+  extends:
+    file: docker-compose.yml
+    service: cache
+<% } %>
 www:
   environment:
     PHP_XDEBUG: "<%= debugMode %>"
