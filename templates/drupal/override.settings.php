@@ -3,6 +3,10 @@
  * Additional site settings.
  */
 
+// Forcibly disable poorman's cron.
+$conf['cron_safe_threshold'] = 0;
+
+
 <% if(cacheLink) { %>
 // Add Memcache for internal caching.
 $conf['cache_backends'][] = 'sites/all/modules/contrib/memcache/memcache.inc';
