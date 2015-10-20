@@ -3,10 +3,14 @@ db:
     file: docker-compose.yml
     service: db
 www:
+  image: <%= webImage %>
   environment:
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
     VIRTUAL_HOST: <%= virtualHost %>
-  extends:
-    file: docker-compose.yml
-    service: www
+  links:
+    - db
+  volumes:
+    - .:/code/
+    - ./build/html:/var/www/html
+    - /data/<%= projectName %>/files:/var/www/html/sites/default/files
