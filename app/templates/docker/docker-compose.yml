@@ -6,6 +6,9 @@ db:
     MYSQL_DATABASE: <%= projectName %>_drupal
   volumes:
     - /data/<%= projectName %>/mysql:/var/lib/mysql
+<% if (cacheInternal) { %>
+<%- include cache.partial.yml -%>
+<% } %>
 www:
   image: <%= webImage %>
   environment:
@@ -14,7 +17,7 @@ www:
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
   links:
-    - db
+    - db<% if (cacheInternal) { %><%= cacheLink %><% } %>
   volumes:
     - .:/code/
     - ./build/html:/var/www/html

@@ -2,6 +2,12 @@ db:
   extends:
     file: docker-compose.yml
     service: db
+<% if (cacheInternal) { %>
+cache:
+  extends:
+    file: docker-compose.yml
+    service: cache
+<% } %>
 www:
   image: <%= webImage %>
   environment:
@@ -9,7 +15,7 @@ www:
     PHP_XHPROF: "<%= debugMode %>"
     VIRTUAL_HOST: <%= virtualHost %>
   links:
-    - db
+    - db<% if (cacheInternal) { %><%= cacheLink %><% } %>
   volumes:
     - .:/code/
     - ./build/html:/var/www/html
