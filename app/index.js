@@ -1,8 +1,6 @@
 'use strict';
 var yeoman = require('yeoman-generator');
 var path = require('path');
-var plPrompts = require('generator-pattern-lab-starter/app/prompts.js');
-var gadgetPrompts = require('generator-gadget/lib/prompts.js');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
@@ -24,18 +22,30 @@ module.exports = yeoman.generators.Base.extend({
     var done = this.async();
     var prompts = [];
 
+    var gadgetPrompts = require('generator-gadget/lib/prompts.js');
     gadgetPrompts.forEach(function (item) {
       if (_.isUndefined(options[item])) {
         prompts.push(item);
       }
     });
 
+    prompts.push({
+      name: 'usePLS',
+      type: 'confirm',
+      message: 'Use Pattern Lab Starter?'
+    });
+    var plPrompts = require('generator-pattern-lab-starter/app/prompts.js');
     plPrompts.forEach(function (item) {
       if (_.isUndefined(options[item])) {
+        var validate = item.when;
+        item.when = function(answers) {
+          return answers['usePLS'] && (!_.isFunction(validate) || validate());
+        }
         prompts.push(item);
       }
     });
 
+    // Minimally necessary prompt as a fallback if the other generators drop it.
     if (_.isUndefined(options.projectName)) {
       prompts.push({
         name: 'projectName',
@@ -46,36 +56,6 @@ module.exports = yeoman.generators.Base.extend({
         }
       });
     }
-
-    //if (_.isUndefined(options.projectDescription)) {
-    //  prompts.push({
-    //    name: 'projectDescription',
-    //    message: 'Description of project?'
-    //  });
-    //}
-
-    //if (_.isUndefined(options.frontEnd)) {
-    //  var frontEndChoices = [];
-    //  frontEndChoices.push({'name': 'Pattern Lab Starter', 'value': 'patternLabStarter'});
-    //  frontEndChoices.push({'name': 'None', 'value': false});
-    //  prompts.push({
-    //    name: 'frontEnd',
-    //    message: 'What Front End to use?',
-    //    type: 'list',
-    //    choices: frontEndChoices
-    //  })
-    //}
-
-    //if (_.isUndefined(options.themeName)) {
-    //  prompts.push({
-    //    name: 'themeName',
-    //    message: 'What would you like to name the theme?',
-    //    default: '',
-    //    when: function (answers) {
-    //      return answers.frontEnd !== false;
-    //    }
-    //  });
-    //}
 
     // ensuring we only ask questions with the same `name` value once; earlier questions take priority
     prompts = _.uniq(prompts, 'name');
