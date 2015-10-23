@@ -82,9 +82,11 @@ module.exports = yeoman.generators.Base.extend({
       local: require.resolve('generator-gadget')
     });
 
-    this.composeWith('pattern-lab-starter', { options: options }, {
-      local: require.resolve('generator-pattern-lab-starter')
-    });
+    if (options.usePLS) {
+      this.composeWith('pattern-lab-starter', { options: options }, {
+        local: require.resolve('generator-pattern-lab-starter')
+      });
+    }
   },
 
   install: function () {
