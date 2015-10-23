@@ -39,7 +39,7 @@ module.exports = yeoman.generators.Base.extend({
       if (_.isUndefined(options[item])) {
         var validate = item.when;
         item.when = function(answers) {
-          return answers['usePLS'] && (!_.isFunction(validate) || validate());
+          return answers['usePLS'] && (!_.isFunction(validate) || validate(answers));
         }
         prompts.push(item);
       }
@@ -82,7 +82,7 @@ module.exports = yeoman.generators.Base.extend({
       local: require.resolve('generator-gadget')
     });
 
-    if (options.usePLS) {
+    if (options['usePLS']) {
       this.composeWith('pattern-lab-starter', { options: options }, {
         local: require.resolve('generator-pattern-lab-starter')
       });
