@@ -13,14 +13,6 @@ This project is **not ready for use**.
 
 ## Installation
 
-Dependencies:
-
-```bash
-npm install --global yo git+ssh@github.com:phase2/generator-gadget.git#master git+ssh@github.com:phase2/generator-pattern-lab-starter.git#master
-```
-
-To install this generator:
-
 ```bash
 npm install --global git+ssh://bitbucket.org/phase2tech/generator-p2.git#master
 ```
