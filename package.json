@@ -24,6 +24,7 @@
   "dependencies": {
     "chalk": "^1.0.0",
     "generator-gadget": "git+ssh@github.com:phase2/generator-gadget.git#master",
+    "generator-p2-env": "git+ssh://git@bitbucket.org/phase2tech/generator-p2-env.git#master",
     "generator-pattern-lab-starter": "git+ssh@github.com:phase2/generator-pattern-lab-starter.git#master",
     "lodash": "^3.10.1",
     "yeoman-generator": "^0.20.3",

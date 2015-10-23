@@ -30,6 +30,22 @@ module.exports = yeoman.generators.Base.extend({
     });
 
     prompts.push({
+      name: 'useENV',
+      type: 'confirm',
+      message: 'Use Phase2 DevTools/Docker Environment?'
+    });
+    var envPrompts = require('generator-p2-env/lib/prompts.js');
+    envPrompts.forEach(function (item) {
+      if (_.isUndefined(options[item])) {
+        var validate = item.when;
+        item.when = function(answers) {
+          return answers['useENV'] && (!_.isFunction(validate) || validate(answers));
+        }
+        prompts.push(item);
+      }
+    });
+
+    prompts.push({
       name: 'usePLS',
       type: 'confirm',
       message: 'Use Pattern Lab Starter?'
@@ -81,6 +97,12 @@ module.exports = yeoman.generators.Base.extend({
     {
       local: require.resolve('generator-gadget')
     });
+
+    if (options['useENV']) {
+      this.composeWith('p2-env', { options: options }, {
+        local: require.resolve('generator-p2-env')
+      });
+    }
 
     if (options.usePLS) {
       this.composeWith('pattern-lab-starter', { options: options }, {

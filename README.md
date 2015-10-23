@@ -55,3 +55,10 @@ on Github at [Gadget](https://github.com/phase2/generator-gadget).
 themes and manages frontend development practices. It has its own generator which
 must be installe, you can find it on Github at
 [Generator PLS](https://github.com/phase2/generator-pattern-lab-starter).
+
+### Phase2 Environment
+
+[Phase2 Environment](https://bitbucket.org/phase2tech/generator-p2-env) initializes
+support for Docker-based development with Phase2's DevTools, including Drush
+configuration enabled by controlling the server environment and Grunt-Drupal-Tasks
+changes needed for Docker compatibility.
