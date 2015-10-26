@@ -9,6 +9,6 @@
  */
 
 $aliases['<%= projectName %>'] = array(
-  'uri' => isset($_ENV['VIRTUAL_HOST']) ? $_ENV['VIRTUAL_HOST'] : 'http://www.<%= projectName %>.vm/',
+  'uri' => isset($_ENV['VIRTUAL_HOST']) ? $_ENV['VIRTUAL_HOST'] : 'http://www.<%= domain %>.vm/',
   'root' => '/var/www/html'
 );

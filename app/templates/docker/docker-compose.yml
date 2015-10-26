@@ -3,7 +3,7 @@ db:
   environment:
     DNSDOCK_NAME: db
     DNSDOCK_IMAGE: <%= projectName %>
-    MYSQL_DATABASE: <%= projectName %>_drupal
+    MYSQL_DATABASE: <%= machineName %>_drupal
   volumes:
     - /data/<%= projectName %>/mysql:/var/lib/mysql
 <% if (cacheInternal) { %>
@@ -13,7 +13,7 @@ www:
   image: <%= webImage %>
   environment:
     DNSDOCK_NAME: www
-    DNSDOCK_IMAGE: <%= projectName %>
+    DNSDOCK_IMAGE: <%= domain %>
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
   links:

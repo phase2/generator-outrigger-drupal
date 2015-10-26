@@ -12,7 +12,7 @@ $databases = array (
   array (
     'default' =>
     array (
-      'database' => '<%= projectName %>_drupal',
+      'database' => '<%= machineName %>_drupal',
       'username' => 'admin',
       'password' => 'admin',
       'host' => 'db.<%= projectName %>.vm',
@@ -35,5 +35,5 @@ $conf['memcache_servers'] = array(
 $conf['memcache_bins'] = array(
  'cache' => 'default',
 );
-$conf['memcache_key_prefix'] = '<%= projectName %>_';
+$conf['memcache_key_prefix'] = '<%= machineName %>_';
 <% } -%>

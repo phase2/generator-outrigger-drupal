@@ -48,11 +48,25 @@ module.exports = yeoman.generators.Base.extend({
         webImage: webImage(options.webserver) || options.webImage,
         cacheInternal: options.cacheInternal != 'database',
         cacheLink: "\n    - cache",
-        virtualHost: options.projectName + '.ci.p2devcloud.com'
+        virtualHost: options.projectName + '.ci.p2devcloud.com',
+        machineName: options.projectName.replace('-', '_'),
+        domain: options.domain,
       };
 
-      done();
+      var prompts = [{
+        type: 'input',
+        name: 'domain',
+        message: 'Domain for local development?',
+        default: options.projectName
+      }];
+      this.prompt(prompts, function (props) {
+        options = _.assign(options, props);
+        tokens.domain = options.domain;
+        done();
+      }.bind(this));
     }.bind(this));
+
+
   },
 
   dockerComposeDefault: function() {
@@ -132,15 +146,15 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   drupalSettings: function() {
-    var name = 'override.settings.php';
+    var name = 'settings.common.php';
     this.fs.copyTpl(
-      this.templatePath('drupal/7.x/override.settings.php'),
+      this.templatePath('drupal/7.x/' + name),
       this.destinationPath('src/sites/' + name),
       tokens
     );
 
     this.log('Please include src/sites/' + name + ' at the end of your site settings.php file.');
-    this.log("'==> require __DIR__ . '/../override.settings.php'");
+    this.log("'==> require __DIR__ . '/../" + name + "'");
     if (tokens.cacheInternal) {
       this.log('Add the memcache module to your makefile! https://www.drupal.org/project/memcache');
     }
