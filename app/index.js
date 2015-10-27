@@ -138,10 +138,11 @@ module.exports = yeoman.generators.Base.extend({
     this.fs.writeJSON('Gruntconfig.json', gcfg);
   },
 
-  gruntDockerConfig: function() {
-    this.fs.copy(
-      this.templatePath('grunt'),
-      this.destinationPath('bin/grunt')
+  bin: function() {
+    this.fs.copyTpl(
+      this.templatePath('bin'),
+      this.destinationPath('bin'),
+      tokens
     );
   },
 
