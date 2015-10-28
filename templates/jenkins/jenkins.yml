@@ -4,6 +4,7 @@
 #   - `docker-compose -f jenkins.yml run jenkins`
 jenkins:
   build: .
+  container_name: <%= projectName %>_jenkins
   volumes:
     - ./env/jobs:/var/jenkins_home/jobs
     - ./env/plugins.txt:/usr/share/jenkins/plugins.txt
