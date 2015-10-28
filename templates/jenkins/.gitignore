@@ -1,0 +1,5 @@
+env/jobs/*/builds
+env/jobs/*/lastStable
+env/jobs/*/lastSuccessful
+env/jobs/*/workspace
+env/jobs/*/nextBuildNumber
