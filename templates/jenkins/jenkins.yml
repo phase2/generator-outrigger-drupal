@@ -15,23 +15,3 @@ jenkins:
   environment:
     DNSDOCK_NAME: jenkins
     DNSDOCK_IMAGE: <%= projectName %>
-
-# Container for running Jenkins on a Mac with a local jobs volume
-# Run this image via
-#   - `docker-compose -f jenkins.yml build jenkins-mac`
-#   - `docker-compose -f jenkins.yml run jenkins-mac`
-jenkins-mac:
-  build: .
-  volumes:
-    - ./env/jobs:/var/jenkins_home/jobs
-    - ./env/plugins.txt:/usr/share/jenkins/plugins.txt
-    # Mount the docker from inside boot2docker
-    - /usr/local/bin/docker:/usr/bin/docker
-    # Compose is not installedin boot2docker so mount
-    # the Linux one from our vendored binaries
-    - ../../bin/Linux/docker-compose:/usr/bin/docker-compose
-    # Mount the docker socket so we can execute from within this container
-    - /var/run/docker.sock:/var/run/docker.sock
-  environment:
-    DNSDOCK_NAME: jenkins
-    DNSDOCK_IMAGE: <%= projectName %>
