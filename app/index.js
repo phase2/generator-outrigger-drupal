@@ -159,5 +159,13 @@ module.exports = yeoman.generators.Base.extend({
     if (tokens.cacheInternal) {
       this.log('Add the memcache module to your makefile! https://www.drupal.org/project/memcache');
     }
+  },
+
+  jenkins: function() {
+    this.fs.copyTpl(
+      this.templatePath('jenkins'),
+      this.destinationPath('jenkins'),
+      tokens
+    );
   }
 });
