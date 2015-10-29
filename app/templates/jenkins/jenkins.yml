@@ -7,13 +7,14 @@ jenkins:
   container_name: <%= projectName %>_jenkins
   volumes:
     - ./env/jenkins/jobs:/var/jenkins_home/jobs
-    - /opt/development/<%= projectName %>/jenkins/env/workspace/<%= projectName %>:/opt/development/<%= projectName %>/jenkins/env/workspace/<%= projectName %>
     - ./env/jenkins/plugins.txt:/usr/share/jenkins/plugins.txt
     # Install the commands to make docker work inside the container
     - /usr/bin/docker:/usr/bin/docker
     - /usr/bin/docker-compose:/usr/bin/docker-compose
     # Mount the docker socket so we can execute from within this container
     - /var/run/docker.sock:/var/run/docker.sock
+    # Mount a stable location for the Jenkins workspace
+    - /opt/development/<%= projectName %>/jenkins/env/workspace/<%= projectName %>:/opt/development/<%= projectName %>/jenkins/env/workspace/<%= projectName %>
   environment:
     DNSDOCK_NAME: jenkins
     DNSDOCK_IMAGE: <%= projectName %>
