@@ -43,9 +43,10 @@
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
   <triggers>
-    <hudson.triggers.TimerTrigger>
-      <spec>H 1 * * *</spec>
-    </hudson.triggers.TimerTrigger>
+    <hudson.triggers.SCMTrigger>
+      <spec>* * * * *</spec>
+      <ignorePostCommitHooks>false</ignorePostCommitHooks>
+    </hudson.triggers.SCMTrigger>
   </triggers>
   <concurrentBuild>false</concurrentBuild>
   <builders>
@@ -53,13 +54,29 @@
       <command>docker-compose -f build.yml run cli sh -c &quot;\
     npm install &amp;&amp; \
     grunt --force &amp;&amp; \
-    grunt install &quot;
+    grunt analyze &amp;&amp; \
+    grunt install&quot;
 
-DATE=$(date +%Y-%m-%d:%H:%M:%S)
-docker-compose -f build.yml run cli bash bin/db-export.sh nightlies/$DATE</command>
+docker-compose -f docker-compose.int.yml up -d
+
+docker-compose -f build.yml run cli sh -c &quot;\
+    GDT_DOMAIN=&apos;<%= virtualHost %>&apos; grunt test --force&quot;
+
+sleep 300
+
+docker-compose -f docker-compose.int.yml stop
+docker-compose -f docker-compose.int.yml rm -f
+</command>
     </hudson.tasks.Shell>
   </builders>
-  <publishers/>
+  <publishers>
+    <hudson.plugins.logparser.LogParserPublisher plugin="log-parser@2.0">
+      <unstableOnWarning>true</unstableOnWarning>
+      <failBuildOnError>true</failBuildOnError>
+      <showGraphs>true</showGraphs>
+      <useProjectRule>false</useProjectRule>
+    </hudson.plugins.logparser.LogParserPublisher>
+  </publishers>
   <buildWrappers>
     <org.jenkinsci.plugins.buildnamesetter.BuildNameSetter plugin="build-name-setter@1.3">
       <template>#${BUILD_NUMBER} - ${GIT_BRANCH}</template>
