@@ -23,10 +23,11 @@
   ],
   "dependencies": {
     "chalk": "^1.0.0",
+    "generator-gadget": "git+ssh@github.com:phase2/generator-gadget.git#master",
+    "generator-pattern-lab-starter": "git+ssh@github.com:phase2/generator-pattern-lab-starter.git#master",
     "lodash": "^3.10.1",
     "yeoman-generator": "^0.20.3",
     "yosay": "^1.0.2"
   },
-  "peerDependencies": {
-  }
+  "peerDependencies": {}
 }

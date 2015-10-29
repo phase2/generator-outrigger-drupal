@@ -1,8 +1,8 @@
 'use strict';
 var yeoman = require('yeoman-generator');
 var path = require('path');
-var plPrompts = require(path.resolve(require.resolve('generator-pattern-lab-starter'), '../prompts.js'));
-var gadgetPrompts = require(path.resolve(require.resolve('generator-gadget'), '../../lib/prompts.js'));
+var plPrompts = require('generator-pattern-lab-starter/app/prompts.js');
+var gadgetPrompts = require('generator-gadget/lib/prompts.js');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
@@ -97,11 +97,14 @@ module.exports = yeoman.generators.Base.extend({
           "validate": "npm run test"
         }
       })
+    },
+    {
+      local: require.resolve('generator-gadget')
     });
 
-    //if (options.frontEnd === 'patternLabStarter') {
-      this.composeWith('pattern-lab-starter', { options: options });
-    //}
+    this.composeWith('pattern-lab-starter', { options: options }, {
+      local: require.resolve('generator-pattern-lab-starter')
+    });
   },
 
   install: function () {
