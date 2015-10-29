@@ -3,11 +3,11 @@
 #   - `docker-compose -f jenkins.yml build jenkins`
 #   - `docker-compose -f jenkins.yml run jenkins`
 jenkins:
-  build: .
+  build: ./jenkins
   container_name: <%= projectName %>_jenkins
   volumes:
-    - ./env/jobs:/var/jenkins_home/jobs
-    - ./env/plugins.txt:/usr/share/jenkins/plugins.txt
+    - ./env/jenkins/jobs:/var/jenkins_home/jobs
+    - ./env/jenkins/plugins.txt:/usr/share/jenkins/plugins.txt
     # Install the commands to make docker work inside the container
     - /usr/bin/docker:/usr/bin/docker
     - /usr/bin/docker-compose:/usr/bin/docker-compose

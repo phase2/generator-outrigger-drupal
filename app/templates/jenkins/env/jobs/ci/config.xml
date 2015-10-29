@@ -69,14 +69,7 @@ docker-compose -f docker-compose.int.yml rm -f
 </command>
     </hudson.tasks.Shell>
   </builders>
-  <publishers>
-    <hudson.plugins.logparser.LogParserPublisher plugin="log-parser@2.0">
-      <unstableOnWarning>true</unstableOnWarning>
-      <failBuildOnError>true</failBuildOnError>
-      <showGraphs>true</showGraphs>
-      <useProjectRule>false</useProjectRule>
-    </hudson.plugins.logparser.LogParserPublisher>
-  </publishers>
+  <publishers/>
   <buildWrappers>
     <org.jenkinsci.plugins.buildnamesetter.BuildNameSetter plugin="build-name-setter@1.3">
       <template>#${BUILD_NUMBER} - ${GIT_BRANCH}</template>
