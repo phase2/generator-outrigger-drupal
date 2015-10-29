@@ -7,6 +7,7 @@ jenkins:
   container_name: <%= projectName %>_jenkins
   volumes:
     - ./env/jenkins/jobs:/var/jenkins_home/jobs
+    - /opt/development/<%= projectName %>/jenkins/env/workspace/<%= projectName %>:/opt/development/<%= projectName %>/jenkins/env/workspace/<%= projectName %>
     - ./env/jenkins/plugins.txt:/usr/share/jenkins/plugins.txt
     # Install the commands to make docker work inside the container
     - /usr/bin/docker:/usr/bin/docker
