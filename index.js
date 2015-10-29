@@ -163,8 +163,18 @@ module.exports = yeoman.generators.Base.extend({
 
   jenkins: function() {
     this.fs.copyTpl(
-      this.templatePath('jenkins'),
+      this.templatePath('jenkins/jenkins.yml'),
+      this.destinationPath('jenkins.yml'),
+      tokens
+    );
+    this.fs.copyTpl(
+      this.templatePath('jenkins/docker'),
       this.destinationPath('jenkins'),
+      tokens
+    );
+    this.fs.copyTpl(
+      this.templatePath('jenkins/env'),
+      this.destinationPath('env/jenkins'),
       tokens
     );
   }
