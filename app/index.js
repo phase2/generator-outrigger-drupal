@@ -79,35 +79,56 @@ module.exports = yeoman.generators.Base.extend({
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
       options.themePath = 'src/themes/' + options.themeName;
+      options['skip-readme'] = true;
       done();
     }.bind(this));
 
   },
 
-  writing: function () {
-    this.composeWith('gadget', {
-      options: _.assign(options, {
-        "use-master": true,
-        themeScripts: {
-          "compile-theme": "npm run compile",
-          "validate": "npm run test"
-        }
-      })
+  writing: {
+    gadget: function () {
+      this.composeWith('gadget', {
+        options: _.assign(options, {
+          "use-master": true,
+          themeScripts: {
+            "compile-theme": "npm run compile",
+            "validate": "npm run test"
+          }
+        })
+      },
+      {
+        local: require.resolve('generator-gadget')
+      });
     },
-    {
-      local: require.resolve('generator-gadget')
-    });
+    env: function() {
+      if (options['useENV']) {
+        this.composeWith('p2-env', { options: options }, {
+          local: require.resolve('generator-p2-env')
+        });
+      }
+    },
+    pls: function() {
+      if (options['usePLS']) {
+        this.composeWith('pattern-lab-starter', { options: options }, {
+          local: require.resolve('generator-pattern-lab-starter')
+        });
+      }
+    },
 
-    if (options['useENV']) {
-      this.composeWith('p2-env', { options: options }, {
-        local: require.resolve('generator-p2-env')
-      });
-    }
+    readme: function() {
+      if (options['useENV']) {
+        var tokens = require('generator-gadget/lib/util').tokens(options);
+        // Yeoman's dependencies cannot handle dynamic partial includes.
+        // This is not currently used.
+        tokens.gadgetPath = path.resolve(require.resolve('generator-gadget'), 'app/templates/README.md');
+        tokens = _.merge(options, tokens);
 
-    if (options.usePLS) {
-      this.composeWith('pattern-lab-starter', { options: options }, {
-        local: require.resolve('generator-pattern-lab-starter')
-      });
+        this.fs.copyTpl(
+          this.templatePath('README.md'),
+          this.destinationPath('README.md'),
+          tokens
+        );
+      }
     }
   },
 
