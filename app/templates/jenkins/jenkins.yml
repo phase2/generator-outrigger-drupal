@@ -12,6 +12,8 @@ jenkins:
     - /usr/bin/docker-compose:/usr/bin/docker-compose
     # Mount the docker socket so we can execute from within this container
     - /var/run/docker.sock:/var/run/docker.sock
+    # Mount a stable location for the Jenkins workspace
+    - /opt/development/<%= projectName %>/jenkins/env/workspace/<%= projectName %>:/opt/development/<%= projectName %>/jenkins/env/workspace/<%= projectName %>
   environment:
     DNSDOCK_NAME: jenkins
     DNSDOCK_IMAGE: <%= projectName %>
