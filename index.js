@@ -65,95 +65,105 @@ module.exports = yeoman.generators.Base.extend({
         done();
       }.bind(this));
     }.bind(this));
-
-
   },
 
-  dockerComposeDefault: function() {
-    this.fs.copyTpl(
-      this.templatePath('docker/docker-compose.yml'),
-      this.destinationPath('docker-compose.yml'),
-      tokens
-    );
-  },
+  writing: {
+    dockerComposeDefault: function() {
+      this.fs.copyTpl(
+        this.templatePath('docker/docker-compose.yml'),
+        this.destinationPath('docker-compose.yml'),
+        tokens
+      );
+    },
 
-  dockerComposeInt: function() {
-    this.fs.copyTpl(
-      this.templatePath('docker/docker-compose.inherit.yml'),
-      this.destinationPath('docker-compose.int.yml'),
-      tokens
-    );
-  },
+    dockerComposeInt: function() {
+      this.fs.copyTpl(
+        this.templatePath('docker/docker-compose.inherit.yml'),
+        this.destinationPath('docker-compose.int.yml'),
+        tokens
+      );
+    },
 
-  dockerComposeBuild: function() {
-    this.fs.copyTpl(
-      this.templatePath('docker/build.yml'),
-      this.destinationPath('build.yml'),
-      tokens
-    );
-  },
+    dockerComposeBuild: function() {
+      this.fs.copyTpl(
+        this.templatePath('docker/build.yml'),
+        this.destinationPath('build.yml'),
+        tokens
+      );
+    },
 
-  readmeAppend: function() {
-    var self = this;
+    readmeAppend: function() {
+      if (!options['skip-readme']) {
+        var self = this;
 
-    // Inject a partial include to the already generated README.
-    // Our infrastructure section uses the standard template system.
-    require('./partial').append(
-      self,
-      this.destinationPath('README.md'),
-      this.destinationPath('README.md'),
-      this.templatePath('docker/dockerUsage.md')
-    );
+        // Inject our new README section.
+        this.fs.copyTpl(
+          this.templatePath('README.md'),
+          this.destinationPath('DOCKER.md'),
+          tokens
+        );
+      }
+    },
 
-    // Inject our new README section.
-    this.fs.copyTpl(
-      this.destinationPath('README.md'),
-      this.destinationPath('README.md'),
-      tokens
-    );
-  },
+    drushConfig: function() {
+      this.fs.copyTpl(
+        this.templatePath('drush'),
+        this.destinationPath('env/build/etc/drush'),
+        tokens
+      );
+    },
 
-  drushConfig: function() {
-    this.fs.copyTpl(
-      this.templatePath('drush'),
-      this.destinationPath('env/build/etc/drush'),
-      tokens
-    );
-  },
+    gruntConfig: function() {
+      // @todo ensure this begins after Gruntconfig is initialized by gadget.
+      var gcfg = this.fs.readJSON('Gruntconfig.json');
+      if (!gcfg.buildPaths) {
+        gcfg.buildPaths = {};
+      }
+      gcfg.buildPaths.html = '/var/www/html';
 
-  gruntConfig: function() {
-    var gcfg = this.fs.readJSON('Gruntconfig.json');
-    if (!gcfg.buildPaths) {
-      gcfg.buildPaths = {};
+      if (!options['useENV']) {
+        if (!gcfg.generated) {
+          gcfg.generated = { name: 'hand-crafted', version: '0.0.0' };
+        }
+        if (!gcfg.generated.modified) {
+          gcfg.generated.modified = [];
+        }
+
+        var index = _.findIndex(gcfg.generated.modified, function(item) {
+          return item.name == this.pkg.name;
+        }.bind(this));
+        var item = {name: this.pkg.name, version: this.pkg.version};
+        if (index == -1) {
+          gcfg.generated.modified.push(item);
+        }
+        else {
+          gcfg.generated.modified[index] = item;
+        }
+      }
+
+      this.fs.writeJSON('Gruntconfig.json', gcfg);
+    },
+
+    drupalSettings: function() {
+      var name = 'settings.common.php';
+      this.fs.copyTpl(
+        this.templatePath('drupal/7.x/' + name),
+        this.destinationPath('src/sites/' + name),
+        tokens
+      );
+    },
+
+    bin: function() {
+      this.fs.copyTpl(
+        this.templatePath('bin'),
+        this.destinationPath('bin'),
+        tokens
+      );
     }
-    gcfg.buildPaths.html = '/var/www/html';
-
-    if (!gcfg.generated) {
-      gcfg.generated = { name: 'hand-crafted', version: '0.0.0' };
-    }
-    if (!gcfg.generated.modified) {
-      gcfg.generated.modified = [];
-    }
-    gcfg.generated.modified.push({name: this.pkg.name, version: this.pkg.version});
-    this.fs.writeJSON('Gruntconfig.json', gcfg);
   },
 
-  bin: function() {
-    this.fs.copyTpl(
-      this.templatePath('bin'),
-      this.destinationPath('bin'),
-      tokens
-    );
-  },
-
-  drupalSettings: function() {
+  end: function() {
     var name = 'settings.common.php';
-    this.fs.copyTpl(
-      this.templatePath('drupal/7.x/' + name),
-      this.destinationPath('src/sites/' + name),
-      tokens
-    );
-
     this.log('Please include src/sites/' + name + ' at the end of your site settings.php file.');
     this.log("'==> require __DIR__ . '/../" + name + "'");
     if (tokens.cacheInternal) {
