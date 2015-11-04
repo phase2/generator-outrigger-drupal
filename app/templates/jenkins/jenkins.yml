@@ -6,7 +6,7 @@ jenkins:
   build: ./jenkins
   volumes:
     - ./env/jenkins/jobs:/var/jenkins_home/jobs
-    - ./env/jenkins/plugins.txt:/usr/share/jenkins/plugins.txt
+    - ./jenkins/plugins.txt:/usr/share/jenkins/plugins.txt
     # Install the commands to make docker work inside the container
     - /usr/bin/docker:/usr/bin/docker
     - /usr/bin/docker-compose:/usr/bin/docker-compose
