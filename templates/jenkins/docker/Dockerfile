@@ -3,7 +3,7 @@ FROM jenkins
 USER root
 
 # Add Jenkins system config file
-COPY env/config.xml /var/jenkins_home/config.xml
+COPY config.xml /var/jenkins_home/config.xml
 
 COPY plugins.txt /usr/share/jenkins/plugins.txt
 
