@@ -98,7 +98,7 @@ module.exports = yeoman.generators.Base.extend({
 
         // Inject our new README section.
         this.fs.copyTpl(
-          this.destinationPath('README.md'),
+          this.templatePath('README.md'),
           this.destinationPath('DOCKER.md'),
           tokens
         );
@@ -114,6 +114,7 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     gruntConfig: function() {
+      // @todo ensure this begins after Gruntconfig is initialized by gadget.
       var gcfg = this.fs.readJSON('Gruntconfig.json');
       if (!gcfg.buildPaths) {
         gcfg.buildPaths = {};
@@ -130,7 +131,7 @@ module.exports = yeoman.generators.Base.extend({
 
         var index = _.findIndex(gcfg.generated.modified, function(item) {
           return item.name == this.pkg.name;
-        });
+        }.bind(this));
         var item = {name: this.pkg.name, version: this.pkg.version};
         if (index == -1) {
           gcfg.generated.modified.push(item);
@@ -143,18 +144,19 @@ module.exports = yeoman.generators.Base.extend({
       this.fs.writeJSON('Gruntconfig.json', gcfg);
     },
 
-    gruntDockerConfig: function() {
-      this.fs.copy(
-        this.templatePath('grunt'),
-        this.destinationPath('bin/grunt')
-      );
-    },
-
     drupalSettings: function() {
       var name = 'settings.common.php';
       this.fs.copyTpl(
         this.templatePath('drupal/7.x/' + name),
         this.destinationPath('src/sites/' + name),
+        tokens
+      );
+    },
+
+    bin: function() {
+      this.fs.copyTpl(
+        this.templatePath('bin'),
+        this.destinationPath('bin'),
         tokens
       );
     }
