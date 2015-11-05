@@ -9,8 +9,6 @@ aspect of the scaffolding. As the name implies, this generator focuses on Phase2
 practices, where some of the other generators in use are focused on broader industry
 best practices.
 
-This project is **not ready for use**.
-
 ## Installation
 
 ```bash
