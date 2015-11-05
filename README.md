@@ -24,29 +24,29 @@ yo p2-env
 ## Features
 
 * **Docker Defaults**
-  * `docker-compose.yml` file for local development.
-  * `docker-compose.int.yml` file for integration environments.
-  * `build.yml` for running development operations on your Drupal site.
-  * Support for MariaDB, optional Memcache, and choice of web images (Apache 2.4/PHP 5.5 or Custom)
-  * Generates a DOCKER.md describing how to use these, from `yo p2` it is appended to the main README.
+    * `docker-compose.yml` file for local development.
+    * `docker-compose.int.yml` file for integration environments.
+    * `build.yml` for running development operations on your Drupal site.
+    * Support for MariaDB, optional Memcache, and choice of web images (Apache 2.4/PHP 5.5 or Custom)
+     * Generates a DOCKER.md describing how to use these, from `yo p2` it is appended to the main README.
 * **Drupal Settings Generation (Currently D7-only)**
-  * `src/sites/settings.common.php` ships configuration for a single Drupal site.
-  * Includes Database credentials, Memcache config, poormans cron suppression, and support for `src/sites/settings.local.php` overrides.
+    * `src/sites/settings.common.php` ships configuration for a single Drupal site.
+    * Includes Database credentials, Memcache config, poormans cron suppression, and support for `src/sites/settings.local.php` overrides.
 * **Drush Configuration**
-  * Default Site Alias (named for project)
-  * Global Drush commands in /etc/drush/commands
-  * Global Drush aliases in /etc/drush.
-  * Lean database dumps
-  * (Revise or add configuration files by editing `env/build/etc/drush`)
-* Grunt-Drupal-Tasks integration
-  * All `bin/grunt/*.js` files will be loaded as grunt plugins.
-  * `grunt install` will attempt to load the database created by `bin/db-export.sh` (The script that powers the Jenkin's db-export-nightly job.)
-* Project-specific Jenkins
-  * Fire up the project Jenkins locally or via a Docker hosting server.
-  * Ready-to-go with key Jenkins plugins out of the box.
-  * Default jobs to get started out of the box.
-    * CI for all branches
-    * Nightly database dumps
+    * Default Site Alias (named for project)
+    * Global Drush commands in /etc/drush/commands
+    * Global Drush aliases in /etc/drush.
+    * Lean database dumps
+    * (Revise or add configuration files by editing `env/build/etc/drush`)
+* **Grunt-Drupal-Tasks integration**
+    * All `bin/grunt/*.js` files will be loaded as grunt plugins.
+    * `grunt install` will attempt to load the database created by `bin/db-export.sh` (The script that powers the Jenkin's db-export-nightly job.)
+* **Project-specific Jenkins**
+    * Fire up the project Jenkins locally or via a Docker hosting server.
+    * Ready-to-go with key Jenkins plugins out of the box.
+    * Default jobs to get started out of the box.
+        * CI for all branches
+        * Nightly database dumps
 
 ## F.A.Q.
 
