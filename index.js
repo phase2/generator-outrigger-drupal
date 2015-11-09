@@ -173,13 +173,18 @@ module.exports = yeoman.generators.Base.extend({
         tokens
       );
       this.fs.copyTpl(
-        this.templatePath('jenkins/docker'),
-        this.destinationPath('jenkins'),
+        this.templatePath('jenkins/config.xml'),
+        this.destinationPath('env/jenkins/config.xml'),
         tokens
       );
       this.fs.copyTpl(
-        this.templatePath('jenkins/env'),
-        this.destinationPath('env/jenkins'),
+        this.templatePath('jenkins/jobs'),
+        this.destinationPath('env/jenkins/jobs'),
+        tokens
+      );
+      this.fs.copyTpl(
+        this.templatePath('jenkins/JENKINS.md'),
+        this.destinationPath('JENKINS.md'),
         tokens
       );
     },
