@@ -121,6 +121,11 @@ module.exports = yeoman.generators.Base.extend({
       }
       gcfg.buildPaths.html = '/var/www/html';
 
+      if (!gcfg.project) {
+        gcfg.project = {};
+      }
+      gcfg.project.db = '/opt/backups/latest.sql.gz';
+
       if (!options['useENV']) {
         if (!gcfg.generated) {
           gcfg.generated = { name: 'hand-crafted', version: '0.0.0' };

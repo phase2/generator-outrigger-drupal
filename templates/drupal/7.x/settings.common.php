@@ -37,3 +37,9 @@ $conf['memcache_bins'] = array(
 );
 $conf['memcache_key_prefix'] = '<%= machineName %>_';
 <% } -%>
+
+// Include local settings file as an override.
+// settings.local.php should not be committed to the Git repository.
+if (file_exists(__DIR__ . '/settings.local.php')) {
+  include __DIR__ . '/settings.local.php';
+}
