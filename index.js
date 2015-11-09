@@ -182,6 +182,14 @@ module.exports = yeoman.generators.Base.extend({
         this.destinationPath('env/jenkins'),
         tokens
       );
+    },
+
+    gitignore: function() {
+      this.fs.copyTpl(
+        this.templatePath('gitignore'),
+        this.destinationPath('env/.gitignore'),
+        tokens
+      );
     }
   },
 
