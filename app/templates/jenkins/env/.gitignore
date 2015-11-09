@@ -1,5 +1,0 @@
-jobs/*/builds
-jobs/*/lastStable
-jobs/*/lastSuccessful
-jobs/*/workspace
-jobs/*/nextBuildNumber
