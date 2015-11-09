@@ -1,6 +1,5 @@
 # Container for running Jenkins with a local jobs volume
 # Run this image via
-#   - `docker-compose -f jenkins.yml build jenkins`
 #   - `docker-compose -f jenkins.yml run jenkins`
 jenkins:
   image: phase2/jenkins-docker
