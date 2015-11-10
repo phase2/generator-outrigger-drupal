@@ -46,9 +46,12 @@ module.exports = yeoman.generators.Base.extend({
         debugMode: 'true',
         projectName: options.projectName,
         webImage: webImage(options.webserver) || options.webImage,
+        hostINT: 'int.' + options.projectName + '.ci.p2devcloud.com',
+        hostDEV: 'dev.' + options.projectName + '.ci.p2devcloud.com',
+        hostQA: 'qa.' + options.projectName + '.ci.p2devcloud.com',
+        hostMS: options.projectName + '.ci.p2devcloud.com',
         cacheInternal: options.cacheInternal != 'database',
         cacheLink: "\n    - cache",
-        virtualHost: options.projectName + '.ci.p2devcloud.com',
         machineName: options.projectName.replace('-', '_'),
         domain: options.domain,
       };
@@ -76,12 +79,50 @@ module.exports = yeoman.generators.Base.extend({
       );
     },
 
-    dockerComposeInt: function() {
+    dockerComposeINT: function() {
+      tokens.virtualHost = tokens.hostINT;
+
       this.fs.copyTpl(
         this.templatePath('docker/docker-compose.inherit.yml'),
         this.destinationPath('docker-compose.int.yml'),
         tokens
       );
+    },
+
+    dockerComposeQA: function() {
+      if (options.environments.indexOf('qa') != -1) {
+        tokens.virtualHost = tokens.hostQA;
+
+        this.fs.copyTpl(
+          this.templatePath('docker/docker-compose.inherit.yml'),
+          this.destinationPath('docker-compose.qa.yml'),
+          tokens
+        );
+      }
+    },
+
+    dockerComposeDEV: function() {
+      if (options.environments.indexOf('dev') != -1) {
+        tokens.virtualHost = tokens.hostDEV;
+
+        this.fs.copyTpl(
+          this.templatePath('docker/docker-compose.inherit.yml'),
+          this.destinationPath('docker-compose.dev.yml'),
+          tokens
+        );
+      }
+    },
+
+    dockerComposeMS: function() {
+      if (options.environments.indexOf('ms') != -1) {
+        tokens.virtualHost = tokens.hostMS;
+
+        this.fs.copyTpl(
+          this.templatePath('docker/docker-compose.inherit.yml'),
+          this.destinationPath('docker-compose.ms.yml'),
+          tokens
+        );
+      }
     },
 
     dockerComposeBuild: function() {
@@ -187,6 +228,36 @@ module.exports = yeoman.generators.Base.extend({
         this.destinationPath('JENKINS.md'),
         tokens
       );
+
+      if (options.environments.indexOf('dev') != -1) {
+        tokens.virtualHost = tokens.hostDEV;
+        tokens.environment = 'dev';
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/deploy-env'),
+          this.destinationPath('env/jenkins/jobs/deploy-dev'),
+          tokens
+        );
+      }
+
+      if (options.environments.indexOf('qa') != -1) {
+        tokens.virtualHost = tokens.hostQA;
+        tokens.environment = 'qa';
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/deploy-env'),
+          this.destinationPath('env/jenkins/jobs/deploy-qa'),
+          tokens
+        );
+      }
+
+      if (options.environments.indexOf('ms') != -1) {
+        tokens.virtualHost = tokens.hostMS;
+        tokens.environment = 'ms';
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/deploy-env'),
+          this.destinationPath('env/jenkins/jobs/deploy-ms'),
+          tokens
+        );
+      }
     },
 
     gitignore: function() {
