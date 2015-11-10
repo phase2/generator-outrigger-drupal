@@ -1,12 +1,11 @@
 # Container for running Jenkins with a local jobs volume
 # Run this image via
-#   - `docker-compose -f jenkins.yml build jenkins`
 #   - `docker-compose -f jenkins.yml run jenkins`
 jenkins:
-  build: ./jenkins
+  image: phase2/jenkins-docker
   volumes:
+    - ./env/jenkins/config.xml:/var/jenkins_home/config.xml
     - ./env/jenkins/jobs:/var/jenkins_home/jobs
-    - ./jenkins/plugins.txt:/usr/share/jenkins/plugins.txt
     # Install the commands to make docker work inside the container
     - /usr/bin/docker:/usr/bin/docker
     - /usr/bin/docker-compose:/usr/bin/docker-compose
@@ -15,6 +14,7 @@ jenkins:
     # Mount a stable location for the Jenkins workspace
     - /opt/development/<%= projectName %>/jenkins/env/workspace/<%= projectName %>:/opt/development/<%= projectName %>/jenkins/env/workspace/<%= projectName %>
   environment:
+    DEVTOOLS_PRIVATE_KEY:
     DNSDOCK_NAME: jenkins
     DNSDOCK_IMAGE: <%= projectName %>
     VIRTUAL_HOST: build.<%= projectName %>.ci.p2devcloud.com
