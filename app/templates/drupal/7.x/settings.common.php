@@ -15,7 +15,7 @@ $databases = array (
       'database' => '<%= machineName %>_drupal',
       'username' => 'admin',
       'password' => 'admin',
-      'host' => 'db.<%= projectName %>.vm',
+      'host' => 'db',
       'port' => '',
       'driver' => 'mysql',
       'prefix' => '',
@@ -30,7 +30,7 @@ $conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
 $conf['lock_inc'] = 'sites/all/modules/contrib/memcache/memcache-lock.inc';
 $conf['memcache_stampede_protection'] = TRUE;
 $conf['memcache_servers'] = array(
-  'cache.<%= projectName %>.vm:11211' => 'default',
+  'cache:11211' => 'default',
 );
 $conf['memcache_bins'] = array(
  'cache' => 'default',

@@ -59,7 +59,7 @@
     npm install &amp;&amp; \
     grunt --force &amp;&amp; \
     grunt analyze &amp;&amp; \
-    grunt install --db-url mysql://admin:admin@db.<%= projectName %>.vm/<%= machineName %>_drupal&quot;
+    grunt install --db-url mysql://admin:admin@db/<%= machineName %>_drupal&quot;
 
 docker-compose -f docker-compose.int.yml up -d
 
