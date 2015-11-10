@@ -15,7 +15,7 @@
         <hudson.model.StringParameterDefinition>
           <name>GIT_REF</name>
           <description>Git branch, tag, or commit revision to build.</description>
-          <defaultValue></defaultValue>
+          <defaultValue>develop</defaultValue>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
