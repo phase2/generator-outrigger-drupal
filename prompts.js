@@ -47,6 +47,33 @@ var prompts = [
       'memcache',
       'database'
     ]
+  },
+  {
+    type: 'checkbox',
+    name: 'environments',
+    message: 'Select default standing environments:',
+    default: [
+      'dev',
+      'qa',
+      'ms'
+    ],
+    choices: [
+      {
+        value: 'dev',
+        name: 'Development - Automatically updates when PRs are merged.',
+        short: 'Development'
+      },
+      {
+        value: 'qa',
+        name: 'QA - Regularly scheduled deployments for manual Phase2 testing.',
+        short: 'QA'
+      },
+      {
+        value: 'ms',
+        name: 'Review - Milestone review sandbox for client use.',
+        short: 'Review'
+      }
+    ]
   }
 ];
 
