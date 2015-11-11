@@ -28,7 +28,7 @@
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
-        <url>https://bitbucket.org/phase2tech/<%= projectName %>.git</url>
+        <url>git@bitbucket.org:phase2tech/<%= projectName %>.git</url>
       </hudson.plugins.git.UserRemoteConfig>
     </userRemoteConfigs>
     <branches>
