@@ -1,15 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description>Automatically run a test suite against any code change.</description>
-  <logRotator class="hudson.tasks.LogRotator">
-    <daysToKeep>-1</daysToKeep>
-    <numToKeep>5</numToKeep>
-    <artifactDaysToKeep>-1</artifactDaysToKeep>
-    <artifactNumToKeep>-1</artifactNumToKeep>
-  </logRotator>
+  <description>Deploy changes to '<%= virtualHost %>'.</description>
   <keepDependencies>false</keepDependencies>
-  <properties>
+  <% if (environment != 'dev') { %><properties>
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
         <hudson.model.StringParameterDefinition>
@@ -23,7 +17,8 @@
       <autoRebuild>false</autoRebuild>
       <rebuildDisabled>false</rebuildDisabled>
     </com.sonyericsson.rebuild.RebuildSettings>
-  </properties>
+  </properties><% } else { %>
+  <properties/><% } -%>
   <scm class="hudson.plugins.git.GitSCM" plugin="git@2.4.0">
     <configVersion>2</configVersion>
     <userRemoteConfigs>
@@ -33,43 +28,40 @@
     </userRemoteConfigs>
     <branches>
       <hudson.plugins.git.BranchSpec>
-        <name>**</name>
+        <name>develop</name>
       </hudson.plugins.git.BranchSpec>
     </branches>
     <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
     <submoduleCfg class="list"/>
-    <extensions>
-      <hudson.plugins.git.extensions.impl.CleanCheckout/>
-    </extensions>
+    <extensions/>
   </scm>
   <canRoam>true</canRoam>
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers>
+  <% if (environment == 'dev') { %><triggers>
     <hudson.triggers.SCMTrigger>
       <spec>* * * * *</spec>
       <ignorePostCommitHooks>false</ignorePostCommitHooks>
     </hudson.triggers.SCMTrigger>
-  </triggers>
+  </triggers><% } else { %>
+  <triggers/><% } -%>
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>docker-compose -f build.yml run cli sh -c &quot;\
-    npm install &amp;&amp; \
-    grunt --force &amp;&amp; \
-    grunt analyze &amp;&amp; \
-    grunt install --db-url mysql://admin:admin@db/<%= machineName %>_drupal&quot;
-
-docker-compose -f docker-compose.int.yml up -d
+      <command>docker-compose -f docker-compose.<%= environment %>.yml stop
+docker-compose -f docker-compose.<%= environment %>.yml rm -f
 
 docker-compose -f build.yml run cli sh -c &quot;\
-    GDT_DOMAIN=&apos;<%= hostINT %>&apos; grunt test --force&quot;
+npm install &amp;&amp; \
+grunt --force &amp;&amp; \
+grunt analyze &amp;&amp; \
+grunt install --db-url mysql://admin:admin@db/<%= machineName %>_drupal&quot;
 
-sleep 300
+docker-compose -f docker-compose.<%= environment %>.yml up -d
 
-docker-compose -f docker-compose.int.yml stop
-docker-compose -f docker-compose.int.yml rm -f
+docker-compose -f build.yml run cli sh -c &quot;\
+    GDT_DOMAIN=&apos;<%= virtualHost %>&apos; grunt test --force&quot;
 </command>
     </hudson.tasks.Shell>
   </builders>
@@ -263,7 +255,7 @@ docker-compose -f docker-compose.int.yml rm -f
       <colorMapName>xterm</colorMapName>
     </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
     <org.jenkinsci.plugins.buildnamesetter.BuildNameSetter plugin="build-name-setter@1.3">
-      <template>#${BUILD_NUMBER} - ${GIT_BRANCH}</template>
+      <template>#${BUILD_NUMBER} - ${GIT_REVISION,length=8}</template>
     </org.jenkinsci.plugins.buildnamesetter.BuildNameSetter>
   </buildWrappers>
 </project>

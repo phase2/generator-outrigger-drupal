@@ -15,7 +15,7 @@
         <hudson.model.StringParameterDefinition>
           <name>GIT_REF</name>
           <description>Git branch, tag, or commit revision to build.</description>
-          <defaultValue></defaultValue>
+          <defaultValue>develop</defaultValue>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
@@ -55,7 +55,7 @@
       <command>docker-compose -f build.yml run cli sh -c &quot;\
     npm install &amp;&amp; \
     grunt --force &amp;&amp; \
-    grunt install --db-url mysql://admin:admin@db.<%= projectName %>.vm/<%= machineName %>_drupal&quot;
+    grunt install --db-url mysql://admin:admin@db/<%= machineName %>_drupal&quot;
 
 DATE=$(date +%Y-%m-%d_%H:%M:%S)
 docker-compose -f build.yml run cli bash bin/db-export.sh nightlies/$DATE.sql</command>
