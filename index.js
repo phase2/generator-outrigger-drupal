@@ -81,6 +81,7 @@ module.exports = yeoman.generators.Base.extend({
 
     dockerComposeINT: function() {
       tokens.virtualHost = tokens.hostINT;
+      tokens.environment = 'int';
 
       this.fs.copyTpl(
         this.templatePath('docker/docker-compose.inherit.yml'),
@@ -92,6 +93,7 @@ module.exports = yeoman.generators.Base.extend({
     dockerComposeQA: function() {
       if (options.environments.indexOf('qa') != -1) {
         tokens.virtualHost = tokens.hostQA;
+        tokens.environment = 'qa';
 
         this.fs.copyTpl(
           this.templatePath('docker/docker-compose.inherit.yml'),
@@ -104,6 +106,7 @@ module.exports = yeoman.generators.Base.extend({
     dockerComposeDEV: function() {
       if (options.environments.indexOf('dev') != -1) {
         tokens.virtualHost = tokens.hostDEV;
+        tokens.environment = 'dev';
 
         this.fs.copyTpl(
           this.templatePath('docker/docker-compose.inherit.yml'),
@@ -116,6 +119,7 @@ module.exports = yeoman.generators.Base.extend({
     dockerComposeMS: function() {
       if (options.environments.indexOf('ms') != -1) {
         tokens.virtualHost = tokens.hostMS;
+        tokens.environment = 'ms';
 
         this.fs.copyTpl(
           this.templatePath('docker/docker-compose.inherit.yml'),
