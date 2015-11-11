@@ -9,7 +9,7 @@ cli:
     - .:/code/
     - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
-    - /data/<%= projectName %>/backups:/opt/backups
+    - /data/backups/<%= projectName %>:/opt/backups
   links:
     - db<% if (cacheInternal) { %><%= cacheLink %><% } %>
 
@@ -24,7 +24,7 @@ drush:
     - .:/code/
     - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
-    - /data/<%= projectName %>/backups:/opt/backups
+    - /data/backups/<%= projectName %>:/opt/backups
   links:
     - db<% if (cacheInternal) { %><%= cacheLink %><% } %>
 
@@ -38,7 +38,7 @@ grunt:
     - .:/code/
     - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
-    - /data/<%= projectName %>/backups:/opt/backups
+    - /data/backups/<%= projectName %>:/opt/backups
 
 # Bring in to reuse on our drush container
 db:
