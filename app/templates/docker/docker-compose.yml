@@ -5,7 +5,7 @@ db:
     DNSDOCK_IMAGE: <%= projectName %>
     MYSQL_DATABASE: <%= machineName %>_drupal
   volumes:
-    - /data/<%= projectName %>/mysql:/var/lib/mysql
+    - /data/<%= projectName %>_local/mysql:/var/lib/mysql
 <% if (cacheInternal) { %>
 <%- include cache.partial.yml -%>
 <% } %>
@@ -21,4 +21,4 @@ www:
   volumes:
     - .:/code/
     - ./build/html:/var/www/html
-    - /data/<%= projectName %>/files:/var/www/html/sites/default/files
+    - /data/<%= projectName %>_local/files:/var/www/html/sites/default/files

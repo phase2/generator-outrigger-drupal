@@ -9,7 +9,7 @@ cli:
     - .:/code/
     - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
-    - /data/backups/<%= projectName %>:/opt/backups
+    - /data/backups/<%= projectName %>_<%= environment %>:/opt/backups
   links:
     - db<% if (cacheInternal) { %><%= cacheLink %><% } %>
 
@@ -24,7 +24,7 @@ drush:
     - .:/code/
     - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
-    - /data/backups/<%= projectName %>:/opt/backups
+    - /data/backups/<%= projectName %>_<%= environment %>:/opt/backups
   links:
     - db<% if (cacheInternal) { %><%= cacheLink %><% } %>
 
@@ -38,16 +38,18 @@ grunt:
     - .:/code/
     - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
-    - /data/backups/<%= projectName %>:/opt/backups
+    - /data/backups/<%= projectName %>_<%= environment %>:/opt/backups
 
 # Bring in to reuse on our drush container
 db:
   extends:
-    file: docker-compose.yml
+    file: docker-compose.<%= dockerComposeExt %>yml
     service: db
+  volumes:
+    - /data/drupal8_<%= environment %>/mysql:/var/lib/mysql
 <% if(cacheInternal) { %>
 cache:
   extends:
-    file: docker-compose.yml
+    file: docker-compose.<%= dockerComposeExt %>yml
     service: cache
 <% } -%>
