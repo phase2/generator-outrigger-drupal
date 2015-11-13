@@ -171,6 +171,14 @@ module.exports = yeoman.generators.Base.extend({
       }
       gcfg.project.db = '/opt/backups/latest.sql.gz';
 
+      if (!gcfg.scripts) {
+        gcfg.scripts = {};
+      }
+
+      if (!gcfg.scripts['pre-install']) {
+        gcfg.scripts['pre-install'] = 'bash bin/pre-install.sh';
+      }
+
       if (!options['useENV']) {
         if (!gcfg.generated) {
           gcfg.generated = { name: 'hand-crafted', version: '0.0.0' };
