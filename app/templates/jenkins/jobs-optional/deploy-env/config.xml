@@ -49,16 +49,16 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>docker-compose -f docker-compose.<%= environment %>.yml stop
-docker-compose -f docker-compose.<%= environment %>.yml rm -f
+      <command>docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f
 
-docker-compose -f build.yml run cli sh -c &quot;\
+docker-compose -f build.<%= dockerComposeExt %>yml run --rm cli sh -c &quot;\
 npm install &amp;&amp; \
 grunt --force &amp;&amp; \
 grunt analyze --force &amp;&amp; \
 grunt install --db-url mysql://admin:admin@db/<%= machineName %>_drupal&quot;
 
-docker-compose -f docker-compose.<%= environment %>.yml up -d
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml up -d
 
 docker-compose -f build.yml run cli sh -c &quot;\
     GDT_DOMAIN=&apos;<%= virtualHost %>&apos; grunt test --force&quot;

@@ -55,7 +55,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>docker-compose -f build.yml run cli sh -c &quot;\
+      <command>docker-compose -f build.yml run --rm cli sh -c &quot;\
     npm install &amp;&amp; \
     grunt --force &amp;&amp; \
     grunt analyze --force &amp;&amp; \
