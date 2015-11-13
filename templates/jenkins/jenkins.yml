@@ -12,7 +12,7 @@ jenkins:
     # Mount the docker socket so we can execute from within this container
     - /var/run/docker.sock:/var/run/docker.sock
     # Mount a stable location for the Jenkins workspace
-    - /opt/development/<%= projectName %>/jenkins/env/workspace/<%= projectName %>:/opt/development/<%= projectName %>/jenkins/env/workspace/<%= projectName %>
+    - /opt/development/<%= projectName %>/jenkins/env/workspace:/opt/development/<%= projectName %>/jenkins/env/workspace
   environment:
     DEVTOOLS_PRIVATE_KEY:
     DNSDOCK_NAME: jenkins
