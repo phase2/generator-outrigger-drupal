@@ -1,4 +1,5 @@
 db:
+  container_name: <%= projectName %>_local_db
   image: phase2/mariadb
   environment:
     DNSDOCK_NAME: db
@@ -10,6 +11,7 @@ db:
 <%- include cache.partial.yml -%>
 <% } %>
 www:
+  container_name: <%= projectName %>_local_www
   image: <%= webImage %>
   environment:
     DNSDOCK_NAME: www
