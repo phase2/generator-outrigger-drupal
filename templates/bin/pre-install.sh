@@ -20,5 +20,6 @@ if [ ! -f src/sites/default/settings.php ]; then
   echo -e "\nrequire __DIR__ . '/../settings.common.php';" >> src/sites/default/settings.php
 else
   echo "'src/sites/default/settings.php' already exists."
-  exit 2
 fi
+
+exit 0
