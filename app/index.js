@@ -54,6 +54,8 @@ module.exports = yeoman.generators.Base.extend({
         cacheLink: "\n    - cache",
         machineName: options.projectName.replace('-', '_'),
         domain: options.domain,
+        environment: '',
+        dockerComposeExt: '',
       };
 
       var prompts = [{
@@ -81,11 +83,17 @@ module.exports = yeoman.generators.Base.extend({
 
     dockerComposeINT: function() {
       tokens.virtualHost = tokens.hostINT;
-      tokens.environment = 'int';
+      tokens.environment = '_int';
+      tokens.dockerComposeExt = 'int.';
 
       this.fs.copyTpl(
         this.templatePath('docker/docker-compose.inherit.yml'),
         this.destinationPath('docker-compose.int.yml'),
+        tokens
+      );
+      this.fs.copyTpl(
+        this.templatePath('docker/build.yml'),
+        this.destinationPath('build.int.yml'),
         tokens
       );
     },
@@ -93,11 +101,17 @@ module.exports = yeoman.generators.Base.extend({
     dockerComposeQA: function() {
       if (options.environments.indexOf('qa') != -1) {
         tokens.virtualHost = tokens.hostQA;
-        tokens.environment = 'qa';
+        tokens.environment = '_qa';
+        tokens.dockerComposeExt = 'qa.';
 
         this.fs.copyTpl(
           this.templatePath('docker/docker-compose.inherit.yml'),
           this.destinationPath('docker-compose.qa.yml'),
+          tokens
+        );
+        this.fs.copyTpl(
+          this.templatePath('docker/build.yml'),
+          this.destinationPath('build.qa.yml'),
           tokens
         );
       }
@@ -106,11 +120,17 @@ module.exports = yeoman.generators.Base.extend({
     dockerComposeDEV: function() {
       if (options.environments.indexOf('dev') != -1) {
         tokens.virtualHost = tokens.hostDEV;
-        tokens.environment = 'dev';
+        tokens.environment = '_dev';
+        tokens.dockerComposeExt = 'dev.';
 
         this.fs.copyTpl(
           this.templatePath('docker/docker-compose.inherit.yml'),
           this.destinationPath('docker-compose.dev.yml'),
+          tokens
+        );
+        this.fs.copyTpl(
+          this.templatePath('docker/build.yml'),
+          this.destinationPath('build.dev.yml'),
           tokens
         );
       }
@@ -119,17 +139,26 @@ module.exports = yeoman.generators.Base.extend({
     dockerComposeMS: function() {
       if (options.environments.indexOf('ms') != -1) {
         tokens.virtualHost = tokens.hostMS;
-        tokens.environment = 'ms';
+        tokens.environment = '_ms';
+        tokens.dockerComposeExt = 'ms.';
 
         this.fs.copyTpl(
           this.templatePath('docker/docker-compose.inherit.yml'),
           this.destinationPath('docker-compose.ms.yml'),
           tokens
         );
+        this.fs.copyTpl(
+          this.templatePath('docker/build.yml'),
+          this.destinationPath('build.ms.yml'),
+          tokens
+        );
       }
     },
 
     dockerComposeBuild: function() {
+      tokens.dockerComposeExt = '';
+      tokens.environment = '';
+
       this.fs.copyTpl(
         this.templatePath('docker/build.yml'),
         this.destinationPath('build.yml'),
@@ -235,7 +264,8 @@ module.exports = yeoman.generators.Base.extend({
 
       if (options.environments.indexOf('dev') != -1) {
         tokens.virtualHost = tokens.hostDEV;
-        tokens.environment = 'dev';
+        tokens.environment = '_dev';
+        tokens.dockerComposeExt = 'dev.';
         this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/deploy-env'),
           this.destinationPath('env/jenkins/jobs/deploy-dev'),
@@ -245,7 +275,8 @@ module.exports = yeoman.generators.Base.extend({
 
       if (options.environments.indexOf('qa') != -1) {
         tokens.virtualHost = tokens.hostQA;
-        tokens.environment = 'qa';
+        tokens.environment = '_qa';
+        tokens.dockerComposeExt = 'qa.';
         this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/deploy-env'),
           this.destinationPath('env/jenkins/jobs/deploy-qa'),
@@ -255,7 +286,8 @@ module.exports = yeoman.generators.Base.extend({
 
       if (options.environments.indexOf('ms') != -1) {
         tokens.virtualHost = tokens.hostMS;
-        tokens.environment = 'ms';
+        tokens.environment = '_ms';
+        tokens.dockerComposeExt = 'ms.';
         this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/deploy-env'),
           this.destinationPath('env/jenkins/jobs/deploy-ms'),

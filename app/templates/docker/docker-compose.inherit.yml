@@ -1,17 +1,17 @@
 db:
-  container_name: <%= projectName %>_<%= environment %>_db
+  container_name: <%= projectName %><%= environment %>_db
   extends:
     file: docker-compose.yml
     service: db
 <% if (cacheInternal) { %>
 cache:
-  container_name: <%= projectName %>_<%= environment %>_cache
+  container_name: <%= projectName %><%= environment %>_cache
   extends:
     file: docker-compose.yml
     service: cache
 <% } %>
 www:
-  container_name: <%= projectName %>_<%= environment %>_www
+  container_name: <%= projectName %><%= environment %>_www
   image: <%= webImage %>
   environment:
     PHP_XDEBUG: "<%= debugMode %>"
@@ -22,4 +22,4 @@ www:
   volumes:
     - .:/code/
     - ./build/html:/var/www/html
-    - /data/<%= projectName %>/files:/var/www/html/sites/default/files
+    - /data/<%= projectName %><%= environment %>/files:/var/www/html/sites/default/files
