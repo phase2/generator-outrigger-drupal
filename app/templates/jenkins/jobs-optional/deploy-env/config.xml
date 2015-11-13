@@ -52,13 +52,18 @@
       <command>docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop
 docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f
 
-docker-compose -f docker-compose.<%= dockerComposeExt %>yml up -d
+docker-compose -f build.<%= dockerComposeExt %>yml run --rm cli sh -c &quot;\
+npm install &amp;&amp; \
+grunt --force &amp;&amp; \
+grunt analyze --force &amp;&amp; \
+grunt install&quot;
 
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml up -d
 docker-compose -f build.<%= dockerComposeExt %>yml run --rm cli sh -c &quot;\
     npm install &amp;&amp; \
     grunt --force &amp;&amp; \
     grunt analyze --force &amp;&amp; \
-    grunt install --db-url mysql://admin:admin@db/<%= machineName %>_drupal &amp;&amp; \
+    grunt install &amp;&amp; \
     GDT_DOMAIN=&apos;<%= virtualHost %>&apos; grunt test --force&quot;
 </command>
     </hudson.tasks.Shell>
