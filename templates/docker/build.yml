@@ -46,7 +46,7 @@ db:
     file: docker-compose.<%= dockerComposeExt %>yml
     service: db
   volumes:
-    - /data/drupal8_<%= environment %>/mysql:/var/lib/mysql
+    - /data/<%= projectName %>_<%= environment %>/mysql:/var/lib/mysql
 <% if(cacheInternal) { %>
 cache:
   extends:
