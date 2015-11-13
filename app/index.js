@@ -52,6 +52,8 @@ module.exports = yeoman.generators.Base.extend({
         hostMS: options.projectName + '.ci.p2devcloud.com',
         cacheInternal: options.cacheInternal != 'database',
         cacheLink: "\n    - cache",
+        cacheExtLink: "\n    - " + options.projectName + "_local_cache:cache",
+        dbExtLink: options.projectName + "_local_db:db",
         machineName: options.projectName.replace('-', '_'),
         domain: options.domain,
         environment: '',
@@ -85,6 +87,8 @@ module.exports = yeoman.generators.Base.extend({
       tokens.virtualHost = tokens.hostINT;
       tokens.environment = 'int';
       tokens.dockerComposeExt = 'int.';
+      tokens.cacheExtLink = "\n    - " + options.projectName + "_int_cache:cache";
+      tokens.dbExtLink = options.projectName + "_int_db:db";
 
       this.fs.copyTpl(
         this.templatePath('docker/docker-compose.inherit.yml'),
@@ -103,6 +107,8 @@ module.exports = yeoman.generators.Base.extend({
         tokens.virtualHost = tokens.hostQA;
         tokens.environment = 'qa';
         tokens.dockerComposeExt = 'qa.';
+        tokens.cacheExtLink = "\n    - " + options.projectName + "_qa_cache:cache";
+        tokens.dbExtLink = options.projectName + "_qa_db:db";
 
         this.fs.copyTpl(
           this.templatePath('docker/docker-compose.inherit.yml'),
@@ -122,6 +128,8 @@ module.exports = yeoman.generators.Base.extend({
         tokens.virtualHost = tokens.hostDEV;
         tokens.environment = 'dev';
         tokens.dockerComposeExt = 'dev.';
+        tokens.cacheExtLink = "\n    - " + options.projectName + "_dev_cache:cache";
+        tokens.dbExtLink = options.projectName + "_dev_db:db";
 
         this.fs.copyTpl(
           this.templatePath('docker/docker-compose.inherit.yml'),
@@ -141,6 +149,8 @@ module.exports = yeoman.generators.Base.extend({
         tokens.virtualHost = tokens.hostMS;
         tokens.environment = 'ms';
         tokens.dockerComposeExt = 'ms.';
+        tokens.cacheExtLink = "\n    - " + options.projectName + "_ms_cache:cache";
+        tokens.dbExtLink = options.projectName + "_ms_db:db";
 
         this.fs.copyTpl(
           this.templatePath('docker/docker-compose.inherit.yml'),
@@ -158,6 +168,8 @@ module.exports = yeoman.generators.Base.extend({
     dockerComposeBuild: function() {
       tokens.dockerComposeExt = '';
       tokens.environment = 'local';
+      tokens.cacheExtLink = "\n    - " + options.projectName + "_local_cache:cache";
+      tokens.dbExtLink = options.projectName + "_local_db:db";
 
       this.fs.copyTpl(
         this.templatePath('docker/build.yml'),
