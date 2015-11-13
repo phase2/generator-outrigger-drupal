@@ -22,4 +22,4 @@ www:
   volumes:
     - .:/code/
     - ./build/html:/var/www/html
-    - /data/<%= projectName %>/files:/var/www/html/sites/default/files
+    - /data/<%= projectName %>_<%= environment %>/files:/var/www/html/sites/default/files
