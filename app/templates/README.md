@@ -11,6 +11,13 @@ repository](https://bitbucket.org/phase2tech/_devtools_vm).
 * **Run Drush Command:** `docker-compose -f build.yml run drush <command>`
 * **Run Grunt Command:** `docker-compose -f build.yml run grunt [<command>]`
 
-Navigate to your site at **[http://www.<%= projectName %>.vm](http://www.<%= projectName %>.vm)**.
+## Install the Site (First Time)
 
-Connect to your database at **`db.<%= projectName %>.vm`**.
+1. **Start Servers:** `docker-compose up`
+2. **Install Grunt Dependencies:** `docker-compose -f build.yml run cli npm install`
+3. **Build the Site** (See above)
+4. **Run Installation:** `docker-compose -f build.yml run grunt install`
+
+Navigate to your site at **[http://www.<%= domain %>.vm](http://www.<%= domain %>.vm)**.
+
+Connect to your database at **`db.<%= domain %>.vm`**.
