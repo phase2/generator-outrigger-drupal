@@ -200,6 +200,14 @@ module.exports = yeoman.generators.Base.extend({
       }
       gcfg.project.db = '/opt/backups/latest.sql.gz';
 
+      if (!gcfg.scripts) {
+        gcfg.scripts = {};
+      }
+
+      if (!gcfg.scripts['pre-install']) {
+        gcfg.scripts['pre-install'] = 'bash bin/pre-install.sh';
+      }
+
       if (!options['useENV']) {
         if (!gcfg.generated) {
           gcfg.generated = { name: 'hand-crafted', version: '0.0.0' };
@@ -306,11 +314,8 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   end: function() {
-    var name = 'settings.common.php';
-    this.log('Please include src/sites/' + name + ' at the end of your site settings.php file.');
-    this.log("'==> require __DIR__ . '/../" + name + "'");
     if (tokens.cacheInternal) {
-      this.log('Add the memcache module to your makefile! https://www.drupal.org/project/memcache');
+      this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
     }
   }
 });
