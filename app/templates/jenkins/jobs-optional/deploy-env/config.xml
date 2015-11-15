@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description>Deploy changes to '<%= virtualHost %>'.</description>
+  <description>Deploy changes to '<%= virtualHost %>'.  This job is managed in the project code repository, changes made via UI will be lost.</description>
   <keepDependencies>false</keepDependencies>
   <% if (environment != 'dev') { %><properties>
     <hudson.model.ParametersDefinitionProperty>

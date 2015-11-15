@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description>Automatically run a test suite against any code change. Does not process changes to the 'develop' branch, for that see "deploy-dev".</description>
+  <description>Automatically run a test suite against any code change. Does not process changes to the 'develop' branch, for that see "deploy-dev". This job is managed in the project code repository, changes made via UI will be lost.
+  </description>
   <logRotator class="hudson.tasks.LogRotator">
     <daysToKeep>-1</daysToKeep>
     <numToKeep>5</numToKeep>
