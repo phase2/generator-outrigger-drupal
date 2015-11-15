@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description>Perform a nightly export of the Drupal database.</description>
+  <description>Perform a nightly export of the Drupal database.  This job is managed in the project code repository, changes made via UI will be lost.</description>
   <logRotator class="hudson.tasks.LogRotator">
     <daysToKeep>-1</daysToKeep>
     <numToKeep>5</numToKeep>
@@ -52,13 +52,13 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>docker-compose -f build.yml run cli sh -c &quot;\
+      <command>docker-compose -f build.int.yml run cli sh -c &quot;\
     npm install &amp;&amp; \
     grunt --force &amp;&amp; \
     grunt install --no-db-load&quot;
 
 DATE=$(date +%Y-%m-%d_%H:%M:%S)
-docker-compose -f build.yml run cli bash bin/db-export.sh nightlies/$DATE.sql</command>
+docker-compose -f build.int.yml run cli bash bin/db-export.sh nightlies/$DATE.sql</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
