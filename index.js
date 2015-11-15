@@ -219,9 +219,6 @@ module.exports = yeoman.generators.Base.extend({
       if (!gcfg.scripts['pre-install']) {
         gcfg.scripts['pre-install'] = 'bash bin/pre-install.sh';
       }
-      if (!gcfg.scripts['post-install']) {
-        gcfg.scripts['post-install'] = 'bash bin/fix-perms.sh';
-      }
 
       if (!options['useENV']) {
         if (!gcfg.generated) {
