@@ -52,12 +52,25 @@
       <command>docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop
 docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f
 
-docker-compose -f docker-compose.<%= dockerComposeExt %>yml up -d
+# Web container might take file locks on existing code, blocking the build process.
+# Only spin up necessary services.
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml up -d cache db
+
 docker-compose -f build.<%= dockerComposeExt %>yml run --rm cli sh -c &quot;\
     npm install &amp;&amp; \
     grunt --force &amp;&amp; \
     grunt analyze --force &amp;&amp; \
-    grunt install &amp;&amp; \
+    grunt install&quot;
+
+# Correct any issues in the web container.
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml run --rm www sh -c &quot;\
+    bash /code/bin/pre-install.sh&quot;
+
+# Now safe to activate web container to support end-to-end testing.
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml up www
+
+# Run Behat Tests
+docker-compose -f build.<%= dockerComposeExt %>yml run cli sh -c &quot;\
     GDT_DOMAIN=&apos;<%= virtualHost %>&apos; grunt test --force&quot;
 </command>
     </hudson.tasks.Shell>
