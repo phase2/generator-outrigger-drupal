@@ -72,7 +72,7 @@ docker-compose -f docker-compose.int.yml run --rm www sh -c &quot;\
     bash /code/bin/fix-perms.sh&quot;
 
 # Now safe to activate web container to support end-to-end testing.
-docker-compose -f docker-compose.int.yml up www
+docker-compose -f docker-compose.int.yml up -d www
 
 # Run Behat Tests
 docker-compose -f build.int.yml run cli sh -c &quot;\
