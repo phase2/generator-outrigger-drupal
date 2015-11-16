@@ -60,17 +60,7 @@ module.exports = yeoman.generators.Base.extend({
         dockerComposeExt: '',
       };
 
-      var prompts = [{
-        type: 'input',
-        name: 'domain',
-        message: 'Domain for local development?',
-        default: options.projectName
-      }];
-      this.prompt(prompts, function (props) {
-        options = _.assign(options, props);
-        tokens.domain = options.domain;
-        done();
-      }.bind(this));
+      done();
     }.bind(this));
   },
 
