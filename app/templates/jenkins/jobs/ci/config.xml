@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description>Automatically run a test suite against any code change. Does not process changes to the 'develop' branch, for that see "deploy-dev".</description>
+  <description>Automatically run a test suite against any code change. Does not process changes to the 'develop' branch, for that see "deploy-dev". This job is managed in the project code repository, changes made via UI will be lost.
+  </description>
   <logRotator class="hudson.tasks.LogRotator">
     <daysToKeep>-1</daysToKeep>
     <numToKeep>5</numToKeep>
@@ -55,20 +56,27 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>docker-compose -f docker-compose.int.yml up -d
+      <command># Web container might take file locks on existing code, blocking the build process.
+# Only spin up necessary services.
+docker-compose -f docker-compose.int.yml up -d cache db
 
-docker-compose -f build.yml run --rm cli sh -c &quot;\
+# Build, run static analysis, and install the site.
+docker-compose -f build.int.yml run --rm cli sh -c &quot;\
     npm install &amp;&amp; \
     grunt --force &amp;&amp; \
     grunt analyze --force &amp;&amp; \
     grunt install&quot;
 
-docker-compose -f docker-compose.int.yml up -d
+# Correct any issues in the web container.
+docker-compose -f docker-compose.int.yml run --rm www sh -c &quot;\
+    bash /code/bin/fix-perms.sh&quot;
 
-docker-compose -f build.yml run cli sh -c &quot;\
+# Now safe to activate web container to support end-to-end testing.
+docker-compose -f docker-compose.int.yml up -d www
+
+# Run Behat Tests
+docker-compose -f build.int.yml run cli sh -c &quot;\
     GDT_DOMAIN=&apos;<%= hostINT %>&apos; grunt test --force&quot;
-
-sleep 300
 
 docker-compose -f docker-compose.int.yml stop
 docker-compose -f docker-compose.int.yml rm -f

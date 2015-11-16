@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description>Deploy changes to '<%= virtualHost %>'.</description>
+  <description>Deploy changes to '<%= virtualHost %>'.  This job is managed in the project code repository, changes made via UI will be lost.</description>
   <keepDependencies>false</keepDependencies>
   <% if (environment != 'dev') { %><properties>
     <hudson.model.ParametersDefinitionProperty>
@@ -28,7 +28,7 @@
     </userRemoteConfigs>
     <branches>
       <hudson.plugins.git.BranchSpec>
-        <name>develop</name>
+        <name><% if (environment == 'dev') { %>develop<% } else { %>**<% }%></name>
       </hudson.plugins.git.BranchSpec>
     </branches>
     <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
@@ -52,12 +52,25 @@
       <command>docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop
 docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f
 
-docker-compose -f docker-compose.<%= dockerComposeExt %>yml up -d
+# Web container might take file locks on existing code, blocking the build process.
+# Only spin up necessary services.
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml up -d cache db
+
 docker-compose -f build.<%= dockerComposeExt %>yml run --rm cli sh -c &quot;\
     npm install &amp;&amp; \
     grunt --force &amp;&amp; \
     grunt analyze --force &amp;&amp; \
-    grunt install &amp;&amp; \
+    grunt install&quot;
+
+# Correct any issues in the web container.
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml run --rm www sh -c &quot;\
+    bash /code/bin/pre-install.sh&quot;
+
+# Now safe to activate web container to support end-to-end testing.
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml up -d www
+
+# Run Behat Tests
+docker-compose -f build.<%= dockerComposeExt %>yml run cli sh -c &quot;\
     GDT_DOMAIN=&apos;<%= virtualHost %>&apos; grunt test --force&quot;
 </command>
     </hudson.tasks.Shell>
