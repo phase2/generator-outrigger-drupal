@@ -66,7 +66,7 @@ docker-compose -f build.<%= dockerComposeExt %>yml run --rm cli sh -c &quot;\
 docker-compose -f docker-compose.<%= dockerComposeExt %>yml up -d www
 
 # Correct any issues in the web container.
-docker exec openatrium2_<%= environment %>_www sh -c "\
+docker exec <%= projectName %>_<%= environment %>_www sh -c "\
     chmod +x /code/bin/fix-perms.sh &amp;&amp; \
     /code/bin/fix-perms.sh"
 
