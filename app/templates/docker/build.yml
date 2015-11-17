@@ -10,6 +10,7 @@ cli:
     - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
     - /data/backups/<%= projectName %>_<%= environment %>:/opt/backups
+<% if (environment != 'local') { %><% include build-environment.partial.yml %><% } -%>
   external_links:
     - <%= dbExtLink %><% if (cacheInternal) { %><%= cacheExtLink %><% } %>
 
@@ -25,6 +26,7 @@ drush:
     - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
     - /data/backups/<%= projectName %>_<%= environment %>:/opt/backups
+<% if (environment != 'local') { %><% include build-environment.partial.yml %><% } -%>
   external_links:
     - <%= dbExtLink %><% if (cacheInternal) { %><%= cacheExtLink %><% } %>
 
@@ -39,3 +41,6 @@ grunt:
     - ./env/build/etc/drush:/etc/drush
     - ./build/html:/var/www/html
     - /data/backups/<%= projectName %>_<%= environment %>:/opt/backups
+<% if (environment != 'local') { %><% include build-environment.partial.yml %><% } -%>
+  external_links:
+    - <%= dbExtLink %><% if (cacheInternal) { %><%= cacheExtLink %><% } %>
