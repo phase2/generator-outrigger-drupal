@@ -67,12 +67,19 @@ docker-compose -f build.int.yml run --rm cli sh -c &quot;\
     grunt analyze --force &amp;&amp; \
     grunt install&quot;
 
-# Correct any issues in the web container.
-docker-compose -f docker-compose.int.yml run --rm www sh -c &quot;\
-    bash /code/bin/fix-perms.sh&quot;
-
 # Now safe to activate web container to support end-to-end testing.
 docker-compose -f docker-compose.int.yml up -d www
+
+# Correct any issues in the web container.
+docker exec <%= projectName %>_int_www sh -c "\
+    chmod +x /code/bin/fix-perms.sh &amp;&amp; \
+    /code/bin/fix-perms.sh"
+
+# Wipe cache after permissions fix.
+docker-compose -f build.int.yml run drush cc all
+
+# Warm cache and review HTTP response headers
+curl -I -vvv <%= hostINT %>
 
 # Run Behat Tests
 docker-compose -f build.int.yml run cli sh -c &quot;\
