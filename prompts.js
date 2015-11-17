@@ -78,7 +78,7 @@ var prompts = [
   {
     type: 'input',
     name: 'domain',
-    message: 'Domain for local development:',
+    message: 'Domain for local development (www.<domain>.vm):',
     default: _.last(process.cwd().split('/')).replace(/_|\s/, '-'),
     validate: function (input) {
       return input.match(/_|\s/) == undefined ? true : 'Please use a value qualified for use as a domain name. No spaces or underscores allowed.';
