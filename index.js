@@ -60,17 +60,7 @@ module.exports = yeoman.generators.Base.extend({
         dockerComposeExt: '',
       };
 
-      var prompts = [{
-        type: 'input',
-        name: 'domain',
-        message: 'Domain for local development?',
-        default: options.projectName
-      }];
-      this.prompt(prompts, function (props) {
-        options = _.assign(options, props);
-        tokens.domain = options.domain;
-        done();
-      }.bind(this));
+      done();
     }.bind(this));
   },
 
@@ -202,6 +192,11 @@ module.exports = yeoman.generators.Base.extend({
     gruntConfig: function() {
       // @todo ensure this begins after Gruntconfig is initialized by gadget.
       var gcfg = this.fs.readJSON('Gruntconfig.json');
+      if (!gcfg) {
+        this.log(chalk.red('You must have a valid Grunt-Drupal-Tasks compatible codebase before running p2-env.'));
+        this.log(chalk.yellow('Try running `yo p2` or `yo gadget` first!'));
+        this.env.error('Project not ready for p2-env processing.');
+      }
       if (!gcfg.buildPaths) {
         gcfg.buildPaths = {};
       }
