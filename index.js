@@ -197,6 +197,9 @@ module.exports = yeoman.generators.Base.extend({
         this.log(chalk.yellow('Try running `yo p2` or `yo gadget` first!'));
         this.env.error('Project not ready for p2-env processing.');
       }
+
+      gcfg.domain = 'www.' + options.domain + '.vm';
+
       if (!gcfg.buildPaths) {
         gcfg.buildPaths = {};
       }
@@ -215,6 +218,7 @@ module.exports = yeoman.generators.Base.extend({
         gcfg.scripts['pre-install'] = 'bash bin/pre-install.sh';
       }
 
+      // Lack of a useENV option means it was not invoked by a parent generator.
       if (!options['useENV']) {
         if (!gcfg.generated) {
           gcfg.generated = { name: 'hand-crafted', version: '0.0.0' };
