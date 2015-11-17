@@ -52,13 +52,31 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>docker-compose -f build.int.yml run cli sh -c &quot;\
+      <command>docker-compose -f docker-compose.int.yml up -d cache db
+
+# Build, run static analysis, and install the site.
+docker-compose -f build.int.yml run --rm cli sh -c &quot;\
     npm install &amp;&amp; \
     grunt --force &amp;&amp; \
     grunt install --no-db-load&quot;
 
+# Now safe to activate web container to support end-to-end testing.
+docker-compose -f docker-compose.ms.yml up -d www
+
+# Correct any issues in the web container.
+docker exec openatrium2_int_www sh -c "\
+    chmod +x /code/bin/fix-perms.sh &amp;&amp; \
+    /code/bin/fix-perms.sh"
+
+# Wipe cache after permissions fix.
+docker-compose -f build.int.yml run drush cc all
+
 DATE=$(date +%Y-%m-%d_%H:%M:%S)
 docker-compose -f build.int.yml run cli bash bin/db-export.sh nightlies/$DATE.sql</command>
+
+# Tear-down
+docker-compose -f docker-compose.int.yml stop
+docker-compose -f docker-compose.int.yml rm -f
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
