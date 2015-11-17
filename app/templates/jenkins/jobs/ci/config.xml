@@ -71,7 +71,7 @@ docker-compose -f build.int.yml run --rm cli sh -c &quot;\
 docker-compose -f docker-compose.int.yml up -d www
 
 # Correct any issues in the web container.
-docker exec openatrium2_int_www sh -c "\
+docker exec <%= projectName %>_int_www sh -c "\
     chmod +x /code/bin/fix-perms.sh &amp;&amp; \
     /code/bin/fix-perms.sh"
 
@@ -79,7 +79,7 @@ docker exec openatrium2_int_www sh -c "\
 docker-compose -f build.int.yml run drush cc all
 
 # Warm cache and review HTTP response headers
-curl -I -vvv int.openatrium2.ci.p2devcloud.com
+curl -I -vvv <%= hostINT %>
 
 # Run Behat Tests
 docker-compose -f build.int.yml run cli sh -c &quot;\
