@@ -79,6 +79,8 @@ curl -I -vvv <%= virtualHost %>
 # Run Behat Tests
 docker-compose -f build.<%= dockerComposeExt %>yml run cli sh -c &quot;\
     grunt test --force&quot;
+
+docker-compose -f build.<%= dockerComposeExt %>yml run drush uli
 </command>
     </hudson.tasks.Shell>
   </builders>
