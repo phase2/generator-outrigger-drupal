@@ -78,7 +78,7 @@ curl -I -vvv <%= virtualHost %>
 
 # Run Behat Tests
 docker-compose -f build.<%= dockerComposeExt %>yml run cli sh -c &quot;\
-    GDT_DOMAIN=&apos;<%= virtualHost %>&apos; grunt test --force&quot;
+    grunt test --force&quot;
 </command>
     </hudson.tasks.Shell>
   </builders>
@@ -272,7 +272,7 @@ docker-compose -f build.<%= dockerComposeExt %>yml run cli sh -c &quot;\
       <colorMapName>xterm</colorMapName>
     </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
     <org.jenkinsci.plugins.buildnamesetter.BuildNameSetter plugin="build-name-setter@1.3">
-      <template>#${BUILD_NUMBER} - ${GIT_REVISION,length=8}</template>
+      <template>#${BUILD_NUMBER} - ${GIT_REF} - ${GIT_REVISION,length=8}</template>
     </org.jenkinsci.plugins.buildnamesetter.BuildNameSetter>
   </buildWrappers>
 </project>
