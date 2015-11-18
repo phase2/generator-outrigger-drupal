@@ -83,7 +83,7 @@ curl -I -vvv <%= hostINT %>
 
 # Run Behat Tests
 docker-compose -f build.int.yml run cli sh -c &quot;\
-    GDT_DOMAIN=&apos;<%= hostINT %>&apos; grunt test --force&quot;
+    grunt test --force&quot;
 
 docker-compose -f docker-compose.int.yml stop
 docker-compose -f docker-compose.int.yml rm -f
