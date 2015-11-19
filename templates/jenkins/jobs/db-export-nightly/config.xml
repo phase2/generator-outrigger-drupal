@@ -52,25 +52,10 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>docker-compose -f docker-compose.int.yml up -d cache db
+      <command># Set up and install site
+bash bin/start.sh int
 
-# Build, run static analysis, and install the site.
-docker-compose -f build.int.yml run --rm cli sh -c &quot;\
-    npm install &amp;&amp; \
-    grunt --force &amp;&amp; \
-    grunt install --no-db-load&quot;
-
-# Now safe to activate web container to support end-to-end testing.
-docker-compose -f docker-compose.int.yml up -d www
-
-# Correct any issues in the web container.
-docker exec <%= projectName %>_int_www sh -c "\
-    chmod +x /code/bin/fix-perms.sh &amp;&amp; \
-    /code/bin/fix-perms.sh"
-
-# Wipe cache after permissions fix.
-docker-compose -f build.int.yml run drush cc all
-
+# Export database
 DATE=$(date +%Y-%m-%d_%H:%M:%S)
 docker-compose -f build.int.yml run cli bash bin/db-export.sh nightlies/$DATE.sql</command>
 
