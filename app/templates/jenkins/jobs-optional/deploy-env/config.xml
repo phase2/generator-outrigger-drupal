@@ -52,26 +52,11 @@
       <command>docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop
 docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f
 
-# Web container might take file locks on existing code, blocking the build process.
-# Only spin up necessary services.
-docker-compose -f docker-compose.<%= dockerComposeExt %>yml up -d cache db
+# Set up and install site
+bash bin/start.sh <%= environment %>
 
-docker-compose -f build.<%= dockerComposeExt %>yml run --rm cli sh -c &quot;\
-    npm install &amp;&amp; \
-    grunt --force &amp;&amp; \
-    grunt analyze --force &amp;&amp; \
-    grunt install&quot;
-
-# Now safe to activate web container to support end-to-end testing.
-docker-compose -f docker-compose.<%= dockerComposeExt %>yml up -d www
-
-# Correct any issues in the web container.
-docker exec <%= projectName %>_<%= environment %>_www sh -c "\
-    chmod +x /code/bin/fix-perms.sh &amp;&amp; \
-    /code/bin/fix-perms.sh"
-
-# Wipe cache after permissions fix.
-docker-compose -f build.<%= dockerComposeExt %>yml run drush cc all
+# Generate Static Analysis Reports
+docker-compose -f build.<%= dockerComposeExt %>yml run grunt analyze
 
 # Warm cache and review HTTP response headers
 curl -I -vvv <%= virtualHost %>
