@@ -3,6 +3,8 @@ db:
   extends:
     file: docker-compose.yml
     service: db
+  volumes:
+    - /data/<%= projectName %>_<%= environment %>/mysql:/var/lib/mysql
 <% if (cacheInternal) { %>
 cache:
   container_name: <%= projectName %>_<%= environment %>_cache
