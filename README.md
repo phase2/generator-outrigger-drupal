@@ -37,9 +37,9 @@ so a full site compile can happen by running the project's default build task: `
 
 ### Command-line Options
 
-* **--use-master**: Will make a point of leveraging the master version of 
+* `--use-master`: Will make a point of leveraging the master version of 
 grunt-drupal-tasks.
-* **--skip-install**: Will skip running `npm install` at the end of the 
+* `--skip-install`: Will skip running `npm install` at the end of the 
 generation process.
 
 ## Leveraged Projects
