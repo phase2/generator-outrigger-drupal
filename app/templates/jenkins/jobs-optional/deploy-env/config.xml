@@ -49,25 +49,34 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop
-docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f
-
-# Set up and install site
+      <command># Tear down the environment in case the previous run failed.
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f</command>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
+      <command># Set up and install site
 bash bin/start.sh <%= environment %>
 
-# Generate Static Analysis Reports
-docker-compose -f build.<%= dockerComposeExt %>yml run grunt analyze
-
 # Warm cache and review HTTP response headers
+echo "Warm cache and review HTTP response headers..."
 curl -I -vvv <%= virtualHost %>
 
 # Run Behat Tests
-docker-compose -f build.<%= dockerComposeExt %>yml run cli sh -c &quot;\
-    grunt test --force&quot;
+docker-compose -f build.<%= dockerComposeExt %>yml run grunt test --force --timer
 
+# Run Features Health Check
+docker-compose -f build.<%= dockerComposeExt %>yml run cli bash bin/features-health.sh || true
+
+# Generate a one-time password reset link.
+echo "Generating a one-time password-reset link..."
 docker-compose -f build.<%= dockerComposeExt %>yml run drush uli
 </command>
     </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
+      <command># Generate Static Analysis Reports
+docker-compose -f build.<%= dockerComposeExt %>yml run grunt analyze --timer</command>
+    </hudson.tasks.Shell>
+
   </builders>
   <publishers>
     <hudson.plugins.checkstyle.CheckStylePublisher plugin="checkstyle@3.43">

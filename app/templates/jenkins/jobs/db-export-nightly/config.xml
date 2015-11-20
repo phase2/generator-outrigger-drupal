@@ -52,16 +52,22 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
+      <command># Tear down the environment in case the previous run failed.
+docker-compose -f docker-compose.int.yml stop || true
+docker-compose -f docker-compose.int.yml rm -f || true</command>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
       <command># Set up and install site
 bash bin/start.sh int
 
-# Export database
+# Export database. This process preserves the latest 5 databases.
 DATE=$(date +%Y-%m-%d_%H:%M:%S)
 docker-compose -f build.int.yml run cli bash bin/db-export.sh nightlies/$DATE.sql</command>
-
-# Tear-down
+    </hudson.tasks.Shell>
+<hudson.tasks.Shell>
+  <command># Tear-down
 docker-compose -f docker-compose.int.yml stop
-docker-compose -f docker-compose.int.yml rm -f
+docker-compose -f docker-compose.int.yml rm -f</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
