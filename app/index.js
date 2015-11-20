@@ -40,7 +40,7 @@ module.exports = yeoman.generators.Base.extend({
         var validate = item.when;
         item.when = function(answers) {
           return answers['useENV'] && (!_.isFunction(validate) || validate(answers));
-        }
+        };
         prompts.push(item);
       }
     });
@@ -56,7 +56,7 @@ module.exports = yeoman.generators.Base.extend({
         var validate = item.when;
         item.when = function(answers) {
           return answers['usePLS'] && (!_.isFunction(validate) || validate(answers));
-        }
+        };
         prompts.push(item);
       }
     });
