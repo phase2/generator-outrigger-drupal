@@ -1,6 +1,6 @@
 {
   "name": "generator-p2",
-  "version": "1.0.0",
+  "version": "0.9.0",
   "description": "Phase2 Yeoman generator",
   "license": "MIT",
   "main": "app/index.js",
