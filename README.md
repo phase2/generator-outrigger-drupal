@@ -35,6 +35,13 @@ They are integrated with each other via the
 [Theme Scripts of GDT](https://github.com/phase2/grunt-drupal-tasks/blob/master/CONFIG.md#theme-scripts)
 so a full site compile can happen by running the project's default build task: `grunt`.
 
+### Command-line Options
+
+* **--use-master**: Will make a point of leveraging the master version of 
+grunt-drupal-tasks.
+* **--skip-install**: Will skip running `npm install` at the end of the 
+generation process.
+
 ## Leveraged Projects
 
 Here are the projects that are currently integrated as part of Yo P2.
@@ -60,3 +67,20 @@ must be installe, you can find it on Github at
 support for Docker-based development with Phase2's DevTools, including Drush
 configuration enabled by controlling the server environment and Grunt-Drupal-Tasks
 changes needed for Docker compatibility.
+
+## Testing Changes
+
+If you would like to test out changes to generator-p2 or one of the above 
+projects, please take the following steps:
+
+1. `git clone git@bitbucket.org:phase2tech/generator-p2.git`
+2. Run `npm link` to use this copy as the global version. (May require `sudo`)
+3. Check out the alternate branch of generator-p2. If testing alternate 
+branches of one of the other generators, edit the package.json dependency entry
+according to the [package.json dependency 
+documenation](https://docs.npmjs.com/files/package.json#git-urls-as-dependencies).
+
+If you would like to take it a step further and develop in the other generators 
+while testing with `yo p2`, clone those repositories as well and replace the 
+version installed in `generator-2/node_modules` with a symlink. **Note this may 
+not work in npm v3.x.**
