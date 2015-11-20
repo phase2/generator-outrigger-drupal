@@ -3,7 +3,7 @@ db:
   image: phase2/mariadb
   environment:
     DNSDOCK_NAME: db
-    DNSDOCK_IMAGE: <%= projectName %>
+    DNSDOCK_IMAGE: <%= domain %>
     MYSQL_DATABASE: <%= machineName %>_drupal
   volumes:
     - /data/<%= projectName %>_local/mysql:/var/lib/mysql
