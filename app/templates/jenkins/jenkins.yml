@@ -16,6 +16,6 @@ jenkins:
   environment:
     DEVTOOLS_PRIVATE_KEY:
     DNSDOCK_NAME: jenkins
-    DNSDOCK_IMAGE: <%= projectName %>
+    DNSDOCK_IMAGE: <%= domain %>
     VIRTUAL_HOST: build.<%= projectName %>.ci.p2devcloud.com
     VIRTUAL_PORT: 8080
