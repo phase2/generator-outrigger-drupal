@@ -89,7 +89,6 @@ module.exports = yeoman.generators.Base.extend({
     gadget: function () {
       this.composeWith('gadget', {
         options: _.assign(options, {
-          "use-master": true,
           themeScripts: {
             "compile-theme": "npm run compile",
             "validate": "npm run test"
