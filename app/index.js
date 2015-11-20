@@ -11,7 +11,7 @@ module.exports = yeoman.generators.Base.extend({
     this.pkg = require('../package.json');
     // Have Yeoman greet the user.
     this.log(yosay(
-      'Welcome to the fantabulous ' + chalk.red('Phase2') + ' generator!'
+      'Welcome to the fantabulous ' + chalk.red('Phase2') + ' generator! ' + this.pkg.version
     ));
     options = _.assign({
       skipWelcome: true
