@@ -3,12 +3,11 @@
 cli:
   image: phase2/devtools-build
   entrypoint: []
-  working_dir: /code
+  working_dir: /var/www
   command: /bin/bash
   volumes:
-    - .:/code/
+    - .:/var/www/
     - ./env/build/etc/drush:/etc/drush
-    - ./build/html:/var/www/html
     - /data/backups/<%= projectName %>_<%= environment %>:/opt/backups
 <% if (environment != 'local') { %><% include build-environment.partial.yml %><% } -%>
   external_links:
@@ -20,11 +19,10 @@ cli:
 drush:
   image: phase2/devtools-build
   entrypoint: [ "drush", "@<%= projectName %>" ]
-  working_dir: /var/www/html
+  working_dir: /var/www
   volumes:
-    - .:/code/
+    - .:/var/www/
     - ./env/build/etc/drush:/etc/drush
-    - ./build/html:/var/www/html
     - /data/backups/<%= projectName %>_<%= environment %>:/opt/backups
 <% if (environment != 'local') { %><% include build-environment.partial.yml %><% } -%>
   external_links:
@@ -35,11 +33,10 @@ drush:
 grunt:
   image: phase2/devtools-build
   entrypoint: [ "grunt" ]
-  working_dir: /code
+  working_dir: /var/www
   volumes:
-    - .:/code/
+    - .:/var/www/
     - ./env/build/etc/drush:/etc/drush
-    - ./build/html:/var/www/html
     - /data/backups/<%= projectName %>_<%= environment %>:/opt/backups
 <% if (environment != 'local') { %><% include build-environment.partial.yml %><% } -%>
   external_links:

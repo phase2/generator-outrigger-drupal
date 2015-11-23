@@ -16,12 +16,12 @@ www:
   container_name: <%= projectName %>_<%= environment %>_www
   image: <%= webImage %>
   environment:
+    DOCROOT: /var/www/build/html
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
     VIRTUAL_HOST: <%= virtualHost %>
   links:
     - db<% if (cacheInternal) { %><%= cacheLink %><% } %>
   volumes:
-    - .:/code/
-    - ./build/html:/var/www/html
-    - /data/<%= projectName %>_<%= environment %>/files:/var/www/html/sites/default/files
+    - .:/var/www/
+    - /data/<%= projectName %>_<%= environment %>/files:/var/www/build/html/sites/default/files

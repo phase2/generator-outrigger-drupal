@@ -200,11 +200,6 @@ module.exports = yeoman.generators.Base.extend({
 
       gcfg.domain = 'www.' + options.domain + '.vm';
 
-      if (!gcfg.buildPaths) {
-        gcfg.buildPaths = {};
-      }
-      gcfg.buildPaths.html = '/var/www/html';
-
       if (!gcfg.project) {
         gcfg.project = {};
       }
