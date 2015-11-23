@@ -12,5 +12,5 @@ $host = getenv('VIRTUAL_HOST');
 
 $aliases['<%= projectName %>'] = array(
   'uri' => $host ? $host : 'http://www.<%= domain %>.vm/',
-  'root' => '/var/www/html'
+  'root' => '/var/www/build/html'
 );
