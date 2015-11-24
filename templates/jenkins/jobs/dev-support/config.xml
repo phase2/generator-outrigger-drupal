@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description>Perform a nightly export of the Drupal database.  This job is managed in the project code repository, changes made via UI will be lost.</description>
+  <description>Perform nightly maintenance and checks against the develop branch. This includes clean database generation and module update checks.</description>
   <logRotator class="hudson.tasks.LogRotator">
     <daysToKeep>-1</daysToKeep>
     <numToKeep>5</numToKeep>
@@ -59,6 +59,9 @@ docker-compose -f docker-compose.int.yml rm -f || true</command>
     <hudson.tasks.Shell>
       <command># Set up and install site
 bash bin/start.sh int
+
+# Perform a scan for module updates.
+docker-compose -f build.int.yml run cli bash bin/update-scanner.sh
 
 # Export database. This process preserves the latest 5 databases.
 DATE=$(date +%Y-%m-%d_%H:%M:%S)
