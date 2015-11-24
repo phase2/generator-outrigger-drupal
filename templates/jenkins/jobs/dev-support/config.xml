@@ -60,12 +60,15 @@ docker-compose -f docker-compose.int.yml rm -f || true</command>
       <command># Set up and install site
 bash bin/start.sh int
 
-# Perform a scan for module updates.
-docker-compose -f build.int.yml run cli bash bin/update-scanner.sh
+# Run cron for maximized database freshness.
+docker-compose -f build.<%= dockerComposeExt %>yml run drush cron
 
 # Export database. This process preserves the latest 5 databases.
 DATE=$(date +%Y-%m-%d_%H:%M:%S)
-docker-compose -f build.int.yml run cli bash bin/db-export.sh nightlies/$DATE.sql</command>
+docker-compose -f build.int.yml run cli bash bin/db-export.sh nightlies/$DATE.sql
+
+# Perform a scan for module updates.
+docker-compose -f build.int.yml run cli bash bin/update-scanner.sh</command>
     </hudson.tasks.Shell>
 <hudson.tasks.Shell>
   <command># Tear-down
