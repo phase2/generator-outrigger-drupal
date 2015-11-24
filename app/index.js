@@ -182,9 +182,10 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     todos: function() {
-      this.fs.copy(
+      this.fs.copyTpl(
         this.templatePath('TODOS.md'),
-        this.destinationPath('TODOS.md')
+        this.destinationPath('TODOS.md'),
+        tokens
       );
     },
 
