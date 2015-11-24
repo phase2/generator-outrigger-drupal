@@ -35,7 +35,13 @@
       <command>docker-compose -f build.<%= dockerComposeExt %>yml run drush cron</command>
     </hudson.tasks.Shell>
   </builders>
-  <publishers/>
+  <publishers>
+    <disableFailedJob.disableFailedJob.DisableFailedJob plugin="disable-failed-job@1.15">
+      <whenDisable>Only Failure</whenDisable>
+      <failureTimes>2</failureTimes>
+      <optionalBrockChecked>true</optionalBrockChecked>
+    </disableFailedJob.disableFailedJob.DisableFailedJob>
+  </publishers>
   <buildWrappers>
     <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.4.2">
       <colorMapName>xterm</colorMapName>
