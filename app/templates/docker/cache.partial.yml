@@ -3,4 +3,4 @@ cache:
   image: phase2/memcache
   environment:
     DNSDOCK_NAME: cache
-    DNSDOCK_IMAGE: <%= machineName %>
+    DNSDOCK_IMAGE: <%= domain %>
