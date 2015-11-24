@@ -1,19 +1,19 @@
 ## Running on Docker
 
-If you are running this project using Docker, you will not need to follow the
-installation steps above. Instead, installation and hosting is combined into
-the Docker plumbing. Read more about how Phase2 uses Docker in the [_devtools
-repository](https://bitbucket.org/phase2tech/_devtools_vm).
+If you are running this project using Docker, you will not need to follow typical installation steps. By setting up a Docker system in your local or server environment, the Docker configuration and related tooling in this repository will facilitate **all the dependencies and actions** needed to get the application up and running. Read more about how Phase2 uses Docker in the [_devtools_vm repository](https://bitbucket.org/phase2tech/_devtools_vm).
 
 ### First-time Setup
 
-Once the repository is cloned, all you need to do to build the system and get a
-working Drupal site is run the start script in the `bin/` directory. This script
-is also used in Jenkins jobs, so customizations should be made with care.
+Get the code and run the start script to set up Docker containers, build the codebase, and install the site.
 
-```bash bin/start.sh```
+```bash
+git clone git@bitbucket.org:phase2tech/<%= projectName %>
+bash bin/start.sh
+```
 
 ### Common Operations
+
+These operations are for local development.
 
 * **Start Servers:** `docker-compose up`
 * **Build the Site:** `docker-compose -f build.yml run grunt`
@@ -21,7 +21,16 @@ is also used in Jenkins jobs, so customizations should be made with care.
 * **Run Drush Command:** `docker-compose -f build.yml run drush <command>`
 * **Run Grunt Command:** `docker-compose -f build.yml run grunt [<command>]`
 
+Reduce your keystrokes with an alias such as:
+
+```bash
+alias fr="docker-compose -f build.yml run"
+```
+
 ### Resources
 
 * **Website:** [http://www.<%= domain %>.vm](http://www.<%= domain %>.vm)
 * **Database:** `db.<%= domain %>.vm`
+<% if(cacheInternal) { %>
+* **Memcache:** `cache.<%= domain %>.vm`
+<% } %>
