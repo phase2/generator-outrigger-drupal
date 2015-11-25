@@ -26,7 +26,7 @@ drush @<%= projectName %> variable-set features_rebuild_on_flush 0 -y --exact
 drush @<%= projectName %> sql-dump --gzip --ordered-dump --result-file="$FILE" -yv
 
 # Maintain a symlink to the most recently generated database export for ease of download.
-ln -fsv "$FILE".gz /opt/backups/latest.sql.gz
+ln -fsv "./$1.gz" /opt/backups/latest.sql.gz
 
 # Purge all but the most recent 5 database exports in this directory.
 cd $DIR && ls -t | awk 'NR>5' | xargs rm -f
