@@ -35,8 +35,8 @@ docker-compose -f docker-compose$COMPOSE_EXT.yml up -d www
 
 # Correct any issues in the web container.
 docker exec <%= projectName %>_$DOCKER_ENV_www sh -c "\
-chmod +x /code/bin/fix-perms.sh && \
-/code/bin/fix-perms.sh"
+chmod +x /var/www/bin/fix-perms.sh && \
+/var/www/bin/fix-perms.sh"
 
 # Wipe cache after permissions fix.
 docker-compose -f build$COMPOSE_EXT.yml run drush cc all
