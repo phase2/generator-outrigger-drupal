@@ -7,6 +7,6 @@
 ##
 
 set -x
-chown -R apache:apache /var/www/html/sites/default
-chown -R apache:apache /var/www/html/sites/default/files
-chmod -R 755 /var/www/html/sites/default/files
+chown -R apache:apache /var/www/build/html/sites/default
+chown -R apache:apache /var/www/build/html/sites/default/files
+chmod -R 755 /var/www/build/html/sites/default/files

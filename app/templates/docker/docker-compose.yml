@@ -16,11 +16,11 @@ www:
   environment:
     DNSDOCK_NAME: www
     DNSDOCK_IMAGE: <%= domain %>
+    DOCROOT: /var/www/build/html
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
   links:
     - db<% if (cacheInternal) { %><%= cacheLink %><% } %>
   volumes:
-    - .:/code/
-    - ./build/html:/var/www/html
-    - /data/<%= projectName %>_local/files:/var/www/html/sites/default/files
+    - .:/var/www/
+    - /data/<%= projectName %>_local/files:/var/www/build/html/sites/default/files
