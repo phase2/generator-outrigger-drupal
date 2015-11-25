@@ -19,7 +19,7 @@ cli:
 drush:
   image: phase2/devtools-build
   entrypoint: [ "drush", "@<%= projectName %>" ]
-  working_dir: /var/www
+  working_dir: /var/www/build/html
   volumes:
     - .:/var/www/
     - ./env/build/etc/drush:/etc/drush
