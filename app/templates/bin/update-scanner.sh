@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 ##
-# Test whether features are in a bad state.
+# Update Scanner
+#
+# Uses drush pm-updatestatus to identify those modules that are outdated
+# due to regular updates or important security releases. This produces
+# clean output that focuses on action items and will cleanly fail so
+# Jenkins jobs can report that module health is in an error state.
 ##
 
 DATA=`drush @<%= projectName %> pm-updatestatus 2> /dev/null`
