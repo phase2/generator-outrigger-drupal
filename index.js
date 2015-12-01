@@ -168,7 +168,7 @@ module.exports = yeoman.generators.Base.extend({
       );
     },
 
-    readmeAppend: function() {
+    readme: function() {
       if (!options['skip-readme']) {
         var self = this;
 
@@ -179,6 +179,14 @@ module.exports = yeoman.generators.Base.extend({
           tokens
         );
       }
+    },
+
+    todos: function() {
+      this.fs.copyTpl(
+        this.templatePath('TODOS.md'),
+        this.destinationPath('TODOS.md'),
+        tokens
+      );
     },
 
     drushConfig: function() {
@@ -335,8 +343,7 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   end: function() {
-    if (tokens.cacheInternal) {
-      this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
-    }
+    this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
+    this.log(chalk.yellow('Please read TODOS.md for manual follow-up steps.'));
   }
 });
