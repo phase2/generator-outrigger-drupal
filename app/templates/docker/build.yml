@@ -1,5 +1,5 @@
 # Container for starting a cli for build commands
-# Usage: docker-compose -y build.yml run cli
+# Usage: docker-compose -f build.yml run cli
 cli:
   image: phase2/devtools-build
   entrypoint: []
@@ -14,7 +14,7 @@ cli:
     - <%= dbExtLink %><% if (cacheInternal) { %><%= cacheExtLink %><% } %>
 
 # Container for running drush in the docroot.
-# Usage: docker-compose -y build.yml run drush <command>
+# Usage: docker-compose -f build.yml run drush <command>
 # Where <command> is a direct drush command like cache-rebuild
 drush:
   image: phase2/devtools-build
