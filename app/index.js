@@ -168,7 +168,7 @@ module.exports = yeoman.generators.Base.extend({
       );
     },
 
-    readmeAppend: function() {
+    readme: function() {
       if (!options['skip-readme']) {
         var self = this;
 
@@ -179,6 +179,14 @@ module.exports = yeoman.generators.Base.extend({
           tokens
         );
       }
+    },
+
+    todos: function() {
+      this.fs.copyTpl(
+        this.templatePath('TODOS.md'),
+        this.destinationPath('TODOS.md'),
+        tokens
+      );
     },
 
     drushConfig: function() {
@@ -285,6 +293,11 @@ module.exports = yeoman.generators.Base.extend({
           this.destinationPath('env/jenkins/jobs/deploy-dev'),
           tokens
         );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/cron-env'),
+          this.destinationPath('env/jenkins/jobs/cron-dev'),
+          tokens
+        );
       }
 
       if (options.environments.indexOf('qa') != -1) {
@@ -296,6 +309,11 @@ module.exports = yeoman.generators.Base.extend({
           this.destinationPath('env/jenkins/jobs/deploy-qa'),
           tokens
         );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/cron-env'),
+          this.destinationPath('env/jenkins/jobs/cron-qa'),
+          tokens
+        );
       }
 
       if (options.environments.indexOf('ms') != -1) {
@@ -305,6 +323,11 @@ module.exports = yeoman.generators.Base.extend({
         this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/deploy-env'),
           this.destinationPath('env/jenkins/jobs/deploy-ms'),
+          tokens
+        );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/cron-env'),
+          this.destinationPath('env/jenkins/jobs/cron-ms'),
           tokens
         );
       }
@@ -320,8 +343,7 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   end: function() {
-    if (tokens.cacheInternal) {
-      this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
-    }
+    this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
+    this.log(chalk.yellow('Please read TODOS.md for manual follow-up steps.'));
   }
 });
