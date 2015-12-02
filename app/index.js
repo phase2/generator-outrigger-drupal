@@ -19,17 +19,6 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   prompting: function () {
-    var addBehaviors = function() {
-      if (options['themeName']) {
-        options.themePath = 'src/themes/' + options.themeName;
-      }
-      options['skip-readme'] = true;
-      // If using Docker-based environment defer running install locally.
-      if (options['useENV']) {
-        options['skip-install'] = true;
-      }
-    }
-
     if (options['replay']) {
       options = _.assign(options, this.config.getAll());
       // Ensure the drupalDistro plugin is loaded for this value when sidestepping
@@ -38,80 +27,92 @@ module.exports = yeoman.generators.Base.extend({
         var distros = require('generator-gadget/app/distros');
         options.drupalDistro = distros[options.drupalDistro];
       }
-      addBehaviors();
     }
-    else {
-      var done = this.async();
-      var prompts = [];
 
-      var gadgetPrompts = require('generator-gadget/lib/prompts.js');
-      gadgetPrompts.forEach(function (item) {
-        if (_.isUndefined(options[item])) {
-          item.default = this.config.get(item.name) || item.default;
-          prompts.push(item);
-        }
-      }.bind(this));
+    // Even if replay mode is active, we need to process the prompts in case there
+    // are new ones since the last time this was asked.
+    var done = this.async();
+    var prompts = [];
 
+    var gadgetPrompts = require('generator-gadget/lib/prompts.js');
+    gadgetPrompts.forEach(function (item) {
+      if (_.isUndefined(options[item.name])) {
+        item.default = this.config.get(item.name) || item.default;
+        prompts.push(item);
+      }
+    }.bind(this));
+
+    if (_.isUndefined(options['useENV'])) {
       prompts.push({
         name: 'useENV',
         type: 'confirm',
         message: 'Use Phase2 DevTools/Docker Environment?'
       });
-      var envPrompts = require('generator-p2-env/lib/prompts.js');
-      envPrompts.forEach(function (item) {
-        if (_.isUndefined(options[item])) {
-          var validate = item.when;
-          item.when = function(answers) {
-            return answers['useENV'] && (!_.isFunction(validate) || validate(answers));
-          };
-          item.default = this.config.get(item.name) || item.default;
+    }
+    var envPrompts = require('generator-p2-env/lib/prompts.js');
+    envPrompts.forEach(function (item) {
+      if (_.isUndefined(options[item.name])) {
+        var validate = item.when;
+        item.when = function(answers) {
+          return answers['useENV'] && (!_.isFunction(validate) || validate(answers));
+        };
+        item.default = this.config.get(item.name) || item.default;
 
-          prompts.push(item);
-        }
-      }.bind(this));
+        prompts.push(item);
+      }
+    }.bind(this));
 
+    if (_.isUndefined(options['usePLS'])) {
       prompts.push({
         name: 'usePLS',
         type: 'confirm',
         message: 'Use Pattern Lab Starter?'
       });
-      var plPrompts = require('generator-pattern-lab-starter/app/prompts.js');
-      plPrompts.forEach(function (item) {
-        if (_.isUndefined(options[item])) {
-          var validate = item.when;
-          item.when = function(answers) {
-            return answers['usePLS'] && (!_.isFunction(validate) || validate(answers));
-          };
-          item.default = this.config.get(item.name) || item.default;
-
-          prompts.push(item);
-        }
-      }.bind(this));
-
-      // Minimally necessary prompt as a fallback if the other generators drop it.
-      if (_.isUndefined(options.projectName)) {
-        prompts.push({
-          name: 'projectName',
-          message: 'Machine name of project?',
-          default: this.config.get('projectName') || _.last(this.env.cwd.split('/')), // parent folder
-          validate: function (input) {
-            return (input.search(' ') === -1) ? true : 'No spaces allowed.';
-          }
-        });
-      }
-
-      // ensuring we only ask questions with the same `name` value once; earlier questions take priority
-      prompts = _.uniq(prompts, 'name');
-
-      this.prompt(prompts, function (props) {
-        options = _.assign(options, props);
-        // The complete distro includes callbacks that break when serialized to a file.
-        props.drupalDistro = props.drupalDistro.id;
-        this.config.set(props);
-        addBehaviors();
-        done();
-      }.bind(this));
     }
+    var plPrompts = require('generator-pattern-lab-starter/app/prompts.js');
+    plPrompts.forEach(function (item) {
+      if (_.isUndefined(options[item.name])) {
+        var validate = item.when;
+        item.when = function(answers) {
+          return answers['usePLS'] && (!_.isFunction(validate) || validate(answers));
+        };
+        item.default = this.config.get(item.name) || item.default;
+
+        prompts.push(item);
+      }
+    }.bind(this));
+
+    // Minimally necessary prompt as a fallback if the other generators drop it.
+    if (_.isUndefined(options.projectName)) {
+      prompts.push({
+        name: 'projectName',
+        message: 'Machine name of project?',
+        default: this.config.get('projectName') || _.last(this.env.cwd.split('/')), // parent folder
+        validate: function (input) {
+          return (input.search(' ') === -1) ? true : 'No spaces allowed.';
+        }
+      });
+    }
+
+    // ensuring we only ask questions with the same `name` value once; earlier questions take priority
+    prompts = _.uniq(prompts, 'name');
+
+    this.prompt(prompts, function (props) {
+      options = _.assign(options, props);
+      // The complete distro includes callbacks that break when serialized to a file.
+      options.drupalDistro = options.drupalDistro.id;
+      if (options['themeName']) {
+        options.themePath = 'src/themes/' + options.themeName;
+      }
+      this.config.set(options);
+
+      options['skip-readme'] = true;
+      // If using Docker-based environment defer running install locally.
+      if (options['useENV']) {
+        options['skip-install'] = true;
+      }
+      done();
+    }.bind(this));
   },
 
   writing: {
@@ -165,7 +166,7 @@ module.exports = yeoman.generators.Base.extend({
 
   install: function () {
     if (!options['skip-install']) {
-      this.installDependencies();
+      this.npmInstall();
     }
   }
 
