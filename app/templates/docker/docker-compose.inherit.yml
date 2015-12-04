@@ -5,7 +5,7 @@ db:
     service: db
   volumes:
     - /data/<%= projectName %>_<%= environment %>/mysql:/var/lib/mysql
-<% if (cacheInternal) { %>
+<% if (cacheExternal) { %>
 cache:
   container_name: <%= projectName %>_<%= environment %>_cache
   extends:
@@ -21,7 +21,7 @@ www:
     PHP_XHPROF: "<%= debugMode %>"
     VIRTUAL_HOST: <%= virtualHost %>
   links:
-    - db<% if (cacheInternal) { %><%= cacheLink %><% } %>
+    - db<% if (cacheExternal) { %><%= cacheLink %><% } %>
   volumes:
     - .:/var/www/
     - /data/<%= projectName %>_<%= environment %>/files:/var/www/build/html/sites/default/files
