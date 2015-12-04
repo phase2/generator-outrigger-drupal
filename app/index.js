@@ -50,7 +50,7 @@ module.exports = yeoman.generators.Base.extend({
         hostDEV: 'dev.' + options.projectName + '.ci.p2devcloud.com',
         hostQA: 'qa.' + options.projectName + '.ci.p2devcloud.com',
         hostMS: options.projectName + '.ci.p2devcloud.com',
-        cacheInternal: options.cacheInternal != 'database',
+        cacheExternal: options.cacheInternal != 'database',
         cacheLink: "\n    - cache",
         cacheExtLink: "\n    - " + options.projectName + "_local_cache:cache",
         dbExtLink: options.projectName + "_local_db:db",
