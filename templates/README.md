@@ -31,6 +31,6 @@ alias fr="docker-compose -f build.yml run"
 
 * **Website:** [http://www.<%= domain %>.vm](http://www.<%= domain %>.vm)
 * **Database:** `db.<%= domain %>.vm`
-<% if(cacheInternal) { %>
+<% if(cacheExternal) { %>
 * **Memcache:** `cache.<%= domain %>.vm`
 <% } %>
