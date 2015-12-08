@@ -170,8 +170,6 @@ module.exports = yeoman.generators.Base.extend({
 
     readme: function() {
       if (!options['skip-readme']) {
-        var self = this;
-
         // Inject our new README section.
         this.fs.copyTpl(
           this.templatePath('README.md'),
@@ -207,6 +205,7 @@ module.exports = yeoman.generators.Base.extend({
       }
 
       gcfg.domain = 'www.' + options.domain + '.vm';
+      gcfg.alias = '@' + options.projectName;
 
       if (!gcfg.project) {
         gcfg.project = {};
@@ -219,6 +218,15 @@ module.exports = yeoman.generators.Base.extend({
 
       if (!gcfg.scripts['pre-install']) {
         gcfg.scripts['pre-install'] = 'bash bin/pre-install.sh';
+      }
+
+      if (!gcfg.scripts['cache-clear']) {
+        if (options.drupalDistroVersion == '8.x') {
+          gcfg.scripts['cache-clear'] = '<%= config.drush.cmd %> <%= config.alias %> cache-rebuild';
+        }
+        else {
+          gcfg.scripts['cache-clear'] = '<%= config.drush.cmd %> <%= config.alias %> cache-clear all';
+        }
       }
 
       // Lack of a useENV option means it was not invoked by a parent generator.
@@ -248,7 +256,7 @@ module.exports = yeoman.generators.Base.extend({
     drupalSettings: function() {
       var name = 'settings.common.php';
       this.fs.copyTpl(
-        this.templatePath('drupal/7.x/' + name),
+        this.templatePath('drupal/' + name),
         this.destinationPath('src/sites/' + name),
         tokens
       );
