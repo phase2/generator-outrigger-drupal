@@ -34,7 +34,7 @@ grunt install --no-db-load"
 docker-compose -f docker-compose$COMPOSE_EXT.yml up -d www
 
 # Correct any issues in the web container.
-docker exec <%= projectName %>_$DOCKER_ENV_www sh -c "\
+docker exec <%= projectName %>_${DOCKER_ENV}_www sh -c "\
 chmod +x /var/www/bin/fix-perms.sh && \
 /var/www/bin/fix-perms.sh"
 
