@@ -41,20 +41,21 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
+      options.machineName = options.projectName.replace('-', '_');
 
       tokens = {
         debugMode: 'true',
         projectName: options.projectName,
         webImage: webImage(options.webserver) || options.webImage,
-        hostINT: 'int.' + options.projectName + '.ci.p2devcloud.com',
-        hostDEV: 'dev.' + options.projectName + '.ci.p2devcloud.com',
-        hostQA: 'qa.' + options.projectName + '.ci.p2devcloud.com',
-        hostMS: options.projectName + '.ci.p2devcloud.com',
+        hostINT: 'int.' + options.machineName + '.ci.p2devcloud.com',
+        hostDEV: 'dev.' + options.machineName + '.ci.p2devcloud.com',
+        hostQA: 'qa.' + options.machineName + '.ci.p2devcloud.com',
+        hostMS: options.machineName + '.ci.p2devcloud.com',
         cacheExternal: options.cacheInternal != 'database',
         cacheLink: "\n    - cache",
         cacheExtLink: "\n    - " + options.projectName + "_local_cache:cache",
         dbExtLink: options.projectName + "_local_db:db",
-        machineName: options.projectName.replace('-', '_'),
+        machineName: options.machineName,
         domain: options.domain,
         environment: '',
         dockerComposeExt: '',
