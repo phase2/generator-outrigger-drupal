@@ -343,7 +343,9 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   end: function() {
-    this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
-    this.log(chalk.yellow('Please read TODOS.md for manual follow-up steps.'));
+    if (!options['skipGoodbye']) {
+      this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
+      this.log(chalk.yellow('Please read TODOS.md for manual follow-up steps.'));
+    }
   }
 });
