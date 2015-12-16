@@ -7,9 +7,9 @@ var _ = require('lodash');
 var options = {},
   tokens = {};
 
-var webImage = function(webserver) {
+var webImage = function(webserver, majorVersion) {
   var webImage = {
-    apache: 'phase2/apache24php55',
+    apache: majorVersion == '8.x' ? 'phase2/apache24php70' : 'phase2/apache24php55',
     nginx: 'phase2/nginx16-php55'
   };
   return webImage[webserver];
@@ -46,7 +46,7 @@ module.exports = yeoman.generators.Base.extend({
       tokens = {
         debugMode: 'true',
         projectName: options.projectName,
-        webImage: webImage(options.webserver) || options.webImage,
+        webImage: webImage(options.webserver, options.drupalDistroVersion) || options.webImage,
         hostINT: 'int.' + options.machineName + '.ci.p2devcloud.com',
         hostDEV: 'dev.' + options.machineName + '.ci.p2devcloud.com',
         hostQA: 'qa.' + options.machineName + '.ci.p2devcloud.com',
