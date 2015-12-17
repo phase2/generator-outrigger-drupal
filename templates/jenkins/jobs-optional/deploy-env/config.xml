@@ -268,7 +268,7 @@ docker-compose -f build.<%= dockerComposeExt %>yml run grunt analyze --timer</co
       <colorMapName>xterm</colorMapName>
     </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
     <org.jenkinsci.plugins.buildnamesetter.BuildNameSetter plugin="build-name-setter@1.3">
-      <template>#${BUILD_NUMBER} - ${GIT_REF} - ${GIT_REVISION,length=8}</template>
+      <template>#${BUILD_NUMBER} - <% if (environment != 'dev') { %>${GIT_REF} - <% } %>${GIT_REVISION,length=8}</template>
     </org.jenkinsci.plugins.buildnamesetter.BuildNameSetter>
   </buildWrappers>
 </project>
