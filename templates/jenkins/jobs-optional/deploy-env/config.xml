@@ -50,8 +50,8 @@
   <builders>
     <hudson.tasks.Shell>
       <command># Tear down the environment in case the previous run failed.
-docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop
-docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f</command>
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> stop
+docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> rm -f</command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
       <command># Set up and install site
@@ -62,19 +62,19 @@ echo "Warm cache and review HTTP response headers..."
 curl -I -vvv <%= virtualHost %>
 
 # Run Behat Tests
-docker-compose -f build.<%= dockerComposeExt %>yml run grunt test --force --timer
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run grunt test --force --timer
 
 # Run Features Health Check
-docker-compose -f build.<%= dockerComposeExt %>yml run cli bash bin/features-health.sh || true
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run cli bash bin/features-health.sh || true
 
 # Generate a one-time password reset link.
 echo "Generating a one-time password-reset link..."
-docker-compose -f build.<%= dockerComposeExt %>yml run drush uli
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run drush uli
 </command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
       <command># Generate Static Analysis Reports
-docker-compose -f build.<%= dockerComposeExt %>yml run grunt analyze --timer</command>
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run grunt analyze --timer</command>
     </hudson.tasks.Shell>
 
   </builders>
