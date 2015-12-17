@@ -22,7 +22,7 @@ fi
 
 COMPOSE_PROJECT=$2
 if [[ -z $COMPOSE_PROJECT ]]; then
-  COMPOSE_PROJECT="-p <%= projectName %>_${COMPOSE_EXT}"
+  COMPOSE_PROJECT="-p <%= projectName %>_${DOCKER_ENV}"
 fi
 
 if [[ $DOCKER_ENV == 'local' ]]; then
