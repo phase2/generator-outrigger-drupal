@@ -49,4 +49,4 @@ chmod +x /var/www/bin/fix-perms.sh && \
 /var/www/bin/fix-perms.sh"
 
 # Wipe cache after permissions fix.
-docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run drush cc all
+docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run grunt cache-clear
