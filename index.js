@@ -214,6 +214,12 @@ module.exports = yeoman.generators.Base.extend({
       }
       gcfg.project.db = '/opt/backups/latest.sql.gz';
 
+      // Backups configuration is introduced by p2-env.
+      gcfg.project.backups = {
+        url: 'http://backups.ci.p2devcloud.com/' + options.projectName,
+        env: 'int'
+      };
+
       if (!gcfg.scripts) {
         gcfg.scripts = {};
       }
@@ -260,6 +266,10 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath('bin'),
         this.destinationPath('bin'),
         tokens
+      );
+      this.fs.copy(
+        this.templatePath('grunt'),
+        this.destinationPath('bin/grunt')
       );
     },
 
