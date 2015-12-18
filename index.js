@@ -7,9 +7,9 @@ var _ = require('lodash');
 var options = {},
   tokens = {};
 
-var webImage = function(webserver) {
+var webImage = function(webserver, majorVersion) {
   var webImage = {
-    apache: 'phase2/apache24php55',
+    apache: majorVersion == '8.x' ? 'phase2/apache24php70' : 'phase2/apache24php55',
     nginx: 'phase2/nginx16-php55'
   };
   return webImage[webserver];
@@ -41,20 +41,21 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
+      options.machineName = options.projectName.replace('-', '_');
 
       tokens = {
         debugMode: 'true',
         projectName: options.projectName,
-        webImage: webImage(options.webserver) || options.webImage,
-        hostINT: 'int.' + options.projectName + '.ci.p2devcloud.com',
-        hostDEV: 'dev.' + options.projectName + '.ci.p2devcloud.com',
-        hostQA: 'qa.' + options.projectName + '.ci.p2devcloud.com',
-        hostMS: options.projectName + '.ci.p2devcloud.com',
+        webImage: webImage(options.webserver, options.drupalDistroVersion) || options.webImage,
+        hostINT: 'int.' + options.machineName + '.ci.p2devcloud.com',
+        hostDEV: 'dev.' + options.machineName + '.ci.p2devcloud.com',
+        hostQA: 'qa.' + options.machineName + '.ci.p2devcloud.com',
+        hostMS: options.machineName + '.ci.p2devcloud.com',
         cacheExternal: options.cacheInternal != 'database',
         cacheLink: "\n    - cache",
         cacheExtLink: "\n    - " + options.projectName + "_local_cache:cache",
         dbExtLink: options.projectName + "_local_db:db",
-        machineName: options.projectName.replace('-', '_'),
+        machineName: options.machineName,
         domain: options.domain,
         environment: '',
         dockerComposeExt: '',
@@ -212,6 +213,12 @@ module.exports = yeoman.generators.Base.extend({
       }
       gcfg.project.db = '/opt/backups/latest.sql.gz';
 
+      // Backups configuration is introduced by p2-env.
+      gcfg.project.backups = {
+        url: 'http://backups.ci.p2devcloud.com/' + options.projectName,
+        env: 'int'
+      };
+
       if (!gcfg.scripts) {
         gcfg.scripts = {};
       }
@@ -267,6 +274,10 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath('bin'),
         this.destinationPath('bin'),
         tokens
+      );
+      this.fs.copy(
+        this.templatePath('grunt'),
+        this.destinationPath('bin/grunt')
       );
     },
 
@@ -351,7 +362,9 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   end: function() {
-    this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
-    this.log(chalk.yellow('Please read TODOS.md for manual follow-up steps.'));
+    if (!options['skipGoodbye']) {
+      this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
+      this.log(chalk.yellow('Please read TODOS.md for manual follow-up steps.'));
+    }
   }
 });

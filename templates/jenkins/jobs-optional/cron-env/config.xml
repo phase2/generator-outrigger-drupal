@@ -32,7 +32,7 @@
   <customWorkspace>/opt/development/hold/jenkins/env/workspace/deploy-<%= environment %></customWorkspace>
   <builders>
     <hudson.tasks.Shell>
-      <command>docker-compose -f build.<%= dockerComposeExt %>yml run drush cron</command>
+      <command>docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run drush cron</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
