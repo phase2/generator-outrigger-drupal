@@ -120,8 +120,8 @@ module.exports = yeoman.generators.Base.extend({
       var gadgetOptions = {}
       if (options['usePLS']) {
         gadgetOptions.themeScripts = {
-          "compile-theme": "npm run compile",
-          "validate": "npm run test"
+          "compile-theme": "npm run compile --unsafe-perm",
+          "validate": "npm run test --unsafe-perm"
         };
       }
 
