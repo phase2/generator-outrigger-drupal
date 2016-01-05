@@ -12,5 +12,9 @@ $host = getenv('VIRTUAL_HOST');
 
 $aliases['<%= projectName %>'] = array(
   'uri' => $host ? $host : 'http://www.<%= domain %>.vm/',
-  'root' => '/var/www/build/html'
+  'root' => '/var/www/build/html',
+  'path-aliases' => array(
+    '%drush' => '/var/www/vendor/drush/drush',
+    '%drush-script' => '/var/www/vendor/bin/drush',
+  ),
 );
