@@ -14,7 +14,8 @@ module.exports = yeoman.generators.Base.extend({
       'Welcome to the fantabulous ' + chalk.red('Phase2') + ' generator! ' + this.pkg.version
     ));
     options = _.assign({
-      skipWelcome: true
+      skipWelcome: true,
+      skipGoodbye: true
     }, this.options);
   },
 
@@ -167,6 +168,27 @@ module.exports = yeoman.generators.Base.extend({
   install: function () {
     if (!options['skip-install']) {
       this.npmInstall();
+    }
+  },
+
+  end: function() {
+    var version = {
+      gadget: require('generator-gadget/package.json').version,
+      env: require('generator-p2-env/package.json').version,
+      pls: require('generator-pattern-lab-starter/package.json').version,
+    }
+
+    this.log(yosay('Yo P2 has completed generation of your Drupal project.'));
+    this.log('Primary scaffolding created by ' + chalk.red('generator-gadget v' + version.gadget) + '.');
+    this.log('Check out your new READMEs to get oriented.');
+    if (options['useENV']) {
+      this.log('You have chosen a ' + chalk.bold('Docker-based development environment') + ' created by ' + chalk.red('generator-p2-env v' + version.env) + '.');
+      this.log(chalk.yellow('All tools and application code should be run via the Docker containers.'))
+      this.log(chalk.green('A handy TODOS.md checklist has been created for your next steps.'));
+      this.log('Want to see a running Drupal site without opening a text editor? Run ' + chalk.bold('bash bin/start.sh') + ' now.');
+    }
+    if (options['usePLS']) {
+      this.log('You have created a new theme ' + chalk.green(options.themeName) + ' at ' + chalk.red(options.themePath) + ' with ' + chalk.red('generator-pattern-lab-starter v' + version.pls) + '.');
     }
   }
 
