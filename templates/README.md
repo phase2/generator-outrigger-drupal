@@ -25,9 +25,6 @@ These operations are for local development.
 
 * **Website:** [http://www.<%= domain %>.vm](http://www.<%= domain %>.vm)
 * **Database:** `db.<%= domain %>.vm`
-<% if(cacheInternal) { %>
-* **Memcache:** `cache.<%= domain %>.vm`
-<% } %>
 
 ## Further Reading
 

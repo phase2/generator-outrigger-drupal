@@ -22,7 +22,7 @@ $databases = array (
     ),
   ),
 );
-<% if(cacheLink) { %>
+<% if(cacheExternal) { %>
 // Add Memcache for internal caching.
 $conf['cache_backends'][] = 'sites/all/modules/contrib/memcache/memcache.inc';
 $conf['cache_default_class'] = 'MemCacheDrupal';

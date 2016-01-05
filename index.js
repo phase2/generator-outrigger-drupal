@@ -7,9 +7,9 @@ var _ = require('lodash');
 var options = {},
   tokens = {};
 
-var webImage = function(webserver) {
+var webImage = function(webserver, majorVersion) {
   var webImage = {
-    apache: 'phase2/apache24php55',
+    apache: majorVersion == '8.x' ? 'phase2/apache24php70' : 'phase2/apache24php55',
     nginx: 'phase2/nginx16-php55'
   };
   return webImage[webserver];
@@ -41,20 +41,21 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
+      options.machineName = options.projectName.replace('-', '_');
 
       tokens = {
         debugMode: 'true',
         projectName: options.projectName,
-        webImage: webImage(options.webserver) || options.webImage,
-        hostINT: 'int.' + options.projectName + '.ci.p2devcloud.com',
-        hostDEV: 'dev.' + options.projectName + '.ci.p2devcloud.com',
-        hostQA: 'qa.' + options.projectName + '.ci.p2devcloud.com',
-        hostMS: options.projectName + '.ci.p2devcloud.com',
-        cacheInternal: options.cacheInternal != 'database',
+        webImage: webImage(options.webserver, options.drupalDistroVersion) || options.webImage,
+        hostINT: 'int.' + options.machineName + '.ci.p2devcloud.com',
+        hostDEV: 'dev.' + options.machineName + '.ci.p2devcloud.com',
+        hostQA: 'qa.' + options.machineName + '.ci.p2devcloud.com',
+        hostMS: options.machineName + '.ci.p2devcloud.com',
+        cacheExternal: options.cacheInternal != 'database',
         cacheLink: "\n    - cache",
         cacheExtLink: "\n    - " + options.projectName + "_local_cache:cache",
         dbExtLink: options.projectName + "_local_db:db",
-        machineName: options.projectName.replace('-', '_'),
+        machineName: options.machineName,
         domain: options.domain,
         environment: '',
         dockerComposeExt: '',
@@ -170,8 +171,6 @@ module.exports = yeoman.generators.Base.extend({
 
     readme: function() {
       if (!options['skip-readme']) {
-        var self = this;
-
         // Inject our new README section.
         this.fs.copyTpl(
           this.templatePath('README.md'),
@@ -207,6 +206,7 @@ module.exports = yeoman.generators.Base.extend({
       }
 
       gcfg.domain = 'www.' + options.domain + '.vm';
+      gcfg.alias = '@' + options.projectName;
 
       if (!gcfg.project) {
         gcfg.project = {};
@@ -225,6 +225,15 @@ module.exports = yeoman.generators.Base.extend({
 
       if (!gcfg.scripts['pre-install']) {
         gcfg.scripts['pre-install'] = 'bash bin/pre-install.sh';
+      }
+
+      if (!gcfg.scripts['cache-clear']) {
+        if (options.drupalDistroVersion == '8.x') {
+          gcfg.scripts['cache-clear'] = '<%= config.drush.cmd %> <%= config.alias %> cache-rebuild';
+        }
+        else {
+          gcfg.scripts['cache-clear'] = '<%= config.drush.cmd %> <%= config.alias %> cache-clear all';
+        }
       }
 
       // Lack of a useENV option means it was not invoked by a parent generator.
@@ -254,7 +263,7 @@ module.exports = yeoman.generators.Base.extend({
     drupalSettings: function() {
       var name = 'settings.common.php';
       this.fs.copyTpl(
-        this.templatePath('drupal/7.x/' + name),
+        this.templatePath('drupal/' + name),
         this.destinationPath('src/sites/' + name),
         tokens
       );
@@ -353,7 +362,9 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   end: function() {
-    this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
-    this.log(chalk.yellow('Please read TODOS.md for manual follow-up steps.'));
+    if (!options['skipGoodbye']) {
+      this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
+      this.log(chalk.yellow('Please read TODOS.md for manual follow-up steps.'));
+    }
   }
 });
