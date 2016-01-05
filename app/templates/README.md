@@ -15,7 +15,7 @@ bash bin/start.sh
 
 These operations are for local development.
 
-* **Start Servers:** `docker-compose up`
+* **Start Containers:** `docker-compose up`
 * **Build the Site:** `docker-compose -f build.yml run grunt`
 * **Open an Interactive Terminal Session:** `docker-compose -f build.yml run cli`
 * **Run Drush Command:** `docker-compose -f build.yml run drush <command>`
