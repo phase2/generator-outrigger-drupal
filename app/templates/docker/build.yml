@@ -12,7 +12,7 @@ cli:
 - /data/backups/<%= projectName %>/<%= environment %>:/opt/backups<% } %>
 <% if (environment != 'local') { %><% include build-environment.partial.yml %><% } -%>
   external_links:
-    - <%= dbExtLink %><% if (cacheInternal) { %><%= cacheExtLink %><% } %>
+    - <%= dbExtLink %><% if (cacheExternal) { %><%= cacheExtLink %><% } %>
 
 # Container for running drush in the docroot.
 # Usage: docker-compose -f build.yml run drush <command>
@@ -28,7 +28,7 @@ drush:
 - /data/backups/<%= projectName %>/<%= environment %>:/opt/backups<% } %>
 <% if (environment != 'local') { %><% include build-environment.partial.yml %><% } -%>
   external_links:
-    - <%= dbExtLink %><% if (cacheInternal) { %><%= cacheExtLink %><% } %>
+    - <%= dbExtLink %><% if (cacheExternal) { %><%= cacheExtLink %><% } %>
 
 # Container for running grunt in the docroot.
 # Usage: docker-compose -f build.yml run grunt <command>
@@ -43,4 +43,4 @@ grunt:
 - /data/backups/<%= projectName %>/<%= environment %>:/opt/backups<% } %>
 <% if (environment != 'local') { %><% include build-environment.partial.yml %><% } -%>
   external_links:
-    - <%= dbExtLink %><% if (cacheInternal) { %><%= cacheExtLink %><% } %>
+    - <%= dbExtLink %><% if (cacheExternal) { %><%= cacheExtLink %><% } %>
