@@ -2,7 +2,7 @@
 # Usage: docker-compose -f build.yml run cli
 cli:
   image: phase2/devtools-build
-  entrypoint: []
+  entrypoint: [ "/init" ]
   working_dir: /var/www
   command: /bin/bash
   volumes:
@@ -19,7 +19,7 @@ cli:
 # Where <command> is a direct drush command like cache-rebuild
 drush:
   image: phase2/devtools-build
-  entrypoint: [ "drush", "@<%= projectName %>" ]
+  entrypoint: [ "/init", "drush", "@<%= projectName %>" ]
   working_dir: /var/www/build/html
   volumes:
     - .:/var/www/
@@ -34,7 +34,7 @@ drush:
 # Usage: docker-compose -f build.yml run grunt <command>
 grunt:
   image: phase2/devtools-build
-  entrypoint: [ "grunt" ]
+  entrypoint: [ "/init", "grunt" ]
   working_dir: /var/www
   volumes:
     - .:/var/www/
