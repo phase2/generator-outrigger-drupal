@@ -105,7 +105,11 @@ module.exports = yeoman.generators.Base.extend({
       if (options['themeName']) {
         options.themePath = 'src/themes/' + options.themeName;
       }
-      this.config.set(options);
+
+      var store = options;
+      delete store['env'];
+      delete store['resolved'];
+      this.config.set(store);
 
       options['skip-readme'] = true;
       // If using Docker-based environment defer running install locally.
