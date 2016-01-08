@@ -45,6 +45,7 @@ var prompts = [
     default: 'memcache',
     choices: [
       'memcache',
+      'redis',
       'database'
     ]
   },
