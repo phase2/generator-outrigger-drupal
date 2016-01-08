@@ -22,7 +22,7 @@ $databases = array (
     ),
   ),
 );
-<% if(cacheExternal) { %>
+<% if(cacheExternal && cacheService == 'memcache') { %>
 // Add Memcache for internal caching.
 $conf['cache_backends'][] = 'sites/all/modules/contrib/memcache/memcache.inc';
 $conf['cache_default_class'] = 'MemCacheDrupal';
@@ -36,6 +36,23 @@ $conf['memcache_bins'] = array(
  'cache' => 'default',
 );
 $conf['memcache_key_prefix'] = '<%= machineName %>_';
+<% } -%>
+<% if(cacheExternal && cacheService == 'redis') { %>
+// Add Redis for internal caching.
+
+// PhpRedis is slightly higher performance.
+$conf['redis_client_interface'] = 'Predis';
+// Fatal error in lock mechanism with Predis >= 1.0.2
+// There is a patch but testing it now is out of scope.
+// https://www.drupal.org/node/2507997
+// $conf['lock_inc']               = 'sites/all/modules/contrib/redis/redis.lock.inc';
+// Unstable feature that tends to have bad errors in conjunction with other path-related modules.
+// $conf['path_inc']               = 'sites/all/modules/contrib/redis/redis.path.inc';
+$conf['cache_backends'][]       = 'sites/all/modules/contrib/redis/redis.autoload.inc';
+$conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
+$conf['cache_default_class']    = 'Redis_Cache';
+$conf['redis_client_host']      = 'cache';  // Your Redis instance hostname.
+$conf['redis_client_port']      = 6379;
 <% } -%>
 
 // Include local settings file as an override.
