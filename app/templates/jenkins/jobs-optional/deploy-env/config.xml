@@ -62,7 +62,7 @@ echo "Warm cache and review HTTP response headers..."
 curl -I -vvv <%= virtualHost %>
 
 # Run Behat Tests
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run grunt test --force --timer
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run cli sh -c "GDT_DOMAIN=<%= virtualHost %> grunt test --force --timer"
 
 # Run Features Health Check
 docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run cli bash bin/features-health.sh || true
