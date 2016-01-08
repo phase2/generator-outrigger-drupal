@@ -12,7 +12,7 @@ var webImage = function(webserver, majorVersion) {
     apache: majorVersion == '8.x' ? 'phase2/apache24php70' : 'phase2/apache24php55',
     nginx: 'phase2/nginx16-php55'
   };
-  return webImage[webserver] || 'service';
+  return webImage[webserver];
 };
 
 var cacheImage = function(service, majorVersion) {
@@ -21,7 +21,7 @@ var cacheImage = function(service, majorVersion) {
     redis: 'phase2/redis'
   };
   
-  return image[service] || 'service';
+  return image[service] || service;
 }
 
 module.exports = yeoman.generators.Base.extend({
