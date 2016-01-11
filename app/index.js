@@ -317,6 +317,11 @@ module.exports = yeoman.generators.Base.extend({
           this.destinationPath('env/jenkins/jobs/cron-dev'),
           tokens
         );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/password-reset-env'),
+          this.destinationPath('env/jenkins/jobs/password-reset-dev'),
+          tokens
+        );
       }
 
       if (options.environments.indexOf('qa') != -1) {
@@ -333,6 +338,11 @@ module.exports = yeoman.generators.Base.extend({
           this.destinationPath('env/jenkins/jobs/cron-qa'),
           tokens
         );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/password-reset-env'),
+          this.destinationPath('env/jenkins/jobs/password-reset-qa'),
+          tokens
+        );
       }
 
       if (options.environments.indexOf('ms') != -1) {
@@ -347,6 +357,11 @@ module.exports = yeoman.generators.Base.extend({
         this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/cron-env'),
           this.destinationPath('env/jenkins/jobs/cron-ms'),
+          tokens
+        );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/password-reset-env'),
+          this.destinationPath('env/jenkins/jobs/password-reset-ms'),
           tokens
         );
       }
