@@ -15,6 +15,15 @@ var webImage = function(webserver, majorVersion) {
   return webImage[webserver];
 };
 
+var cacheImage = function(service, majorVersion) {
+  var image = {
+    memcache: 'phase2/memcache',
+    redis: 'phase2/redis'
+  };
+  
+  return image[service] || service;
+}
+
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
     this.pkg = require('../package.json');
@@ -51,6 +60,8 @@ module.exports = yeoman.generators.Base.extend({
         hostDEV: 'dev.' + options.machineName + '.ci.p2devcloud.com',
         hostQA: 'qa.' + options.machineName + '.ci.p2devcloud.com',
         hostMS: options.machineName + '.ci.p2devcloud.com',
+        cacheService: options.cacheInternal,
+        cacheImage: cacheImage(options.cacheInternal, options.drupalDistroVersion),
         cacheExternal: options.cacheInternal != 'database',
         cacheLink: "\n    - cache",
         cacheExtLink: "\n    - " + options.projectName + "_local_cache:cache",
