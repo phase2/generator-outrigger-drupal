@@ -15,19 +15,17 @@ bash bin/start.sh
 
 These operations are for local development.
 
-* **Start Servers:** `docker-compose up`
+* **Start Containers:** `docker-compose up`
 * **Build the Site:** `docker-compose -f build.yml run grunt`
 * **Open an Interactive Terminal Session:** `docker-compose -f build.yml run cli`
 * **Run Drush Command:** `docker-compose -f build.yml run drush <command>`
 * **Run Grunt Command:** `docker-compose -f build.yml run grunt [<command>]`
 
-Reduce your keystrokes with an alias such as:
-
-```bash
-alias fr="docker-compose -f build.yml run"
-```
-
-### Resources
+## Services
 
 * **Website:** [http://www.<%= domain %>.vm](http://www.<%= domain %>.vm)
 * **Database:** `db.<%= domain %>.vm`
+
+## Further Reading
+
+See `CONTRIBUTING.md` and `JENKINS.md` in this repository for more details on development processes and expectations.
