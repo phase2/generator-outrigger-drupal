@@ -61,7 +61,7 @@ docker-compose -f docker-compose.int.yml -p <%= projectName %>_int rm -f || true
 bash bin/start.sh int
 
 # Run cron for maximized database freshness.
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_int run drush cron
+docker-compose -f build.int.yml -p <%= projectName %>_int run drush cron
 
 # Export database. This process preserves the latest 5 databases.
 DATE=$(date +%Y-%m-%d_%H:%M:%S)
