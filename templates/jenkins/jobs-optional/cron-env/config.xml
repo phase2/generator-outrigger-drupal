@@ -41,6 +41,43 @@
       <failureTimes>2</failureTimes>
       <optionalBrockChecked>true</optionalBrockChecked>
     </disableFailedJob.disableFailedJob.DisableFailedJob>
+    <com.flowdock.jenkins.FlowdockNotifier plugin="jenkins-flowdock-plugin@1.1.8">
+      <flowToken><%= flowdockApiKey %></flowToken>
+      <notificationTags>cron, <%= environment %></notificationTags>
+      <chatNotification>false</chatNotification>
+      <notifyMap>
+        <entry>
+          <com.flowdock.jenkins.BuildResult>FIXED</com.flowdock.jenkins.BuildResult>
+          <boolean>true</boolean>
+        </entry>
+        <entry>
+          <com.flowdock.jenkins.BuildResult>UNSTABLE</com.flowdock.jenkins.BuildResult>
+          <boolean>false</boolean>
+        </entry>
+        <entry>
+          <com.flowdock.jenkins.BuildResult>NOT_BUILT</com.flowdock.jenkins.BuildResult>
+          <boolean>false</boolean>
+        </entry>
+        <entry>
+          <com.flowdock.jenkins.BuildResult>SUCCESS</com.flowdock.jenkins.BuildResult>
+          <boolean>true</boolean>
+        </entry>
+        <entry>
+          <com.flowdock.jenkins.BuildResult>ABORTED</com.flowdock.jenkins.BuildResult>
+          <boolean>false</boolean>
+        </entry>
+        <entry>
+          <com.flowdock.jenkins.BuildResult>FAILURE</com.flowdock.jenkins.BuildResult>
+          <boolean>true</boolean>
+        </entry>
+      </notifyMap>
+      <notifySuccess>true</notifySuccess>
+      <notifyFailure>true</notifyFailure>
+      <notifyFixed>true</notifyFixed>
+      <notifyUnstable>false</notifyUnstable>
+      <notifyAborted>false</notifyAborted>
+      <notifyNotBuilt>false</notifyNotBuilt>
+    </com.flowdock.jenkins.FlowdockNotifier>
   </publishers>
   <buildWrappers>
     <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.4.2">
