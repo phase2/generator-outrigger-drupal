@@ -34,11 +34,10 @@ fi
 # Web container might take file locks on existing code, blocking the build process.
 docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(cacheExternal) { %>cache <% } %>db
 
-# Build, run static analysis, and install the site.
+# Build and run static analysis.
 docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli sh -c "\
 npm install && \
-grunt --force && \
-grunt install --no-db-load"
+grunt --dev --force"
 
 # Now safe to activate web container to support end-to-end testing.
 docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d www
@@ -47,6 +46,12 @@ docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d www
 docker exec <%= projectName %>_${DOCKER_ENV}_www sh -c "\
 chmod +x /var/www/bin/fix-perms.sh && \
 /var/www/bin/fix-perms.sh"
+
+# Install the site.
+docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli sh -c "\
+# Errors in final steps of installation require --force to ensure bin/post-install.sh is run.
+# Dev triggers a development build of Open Atrium
+grunt install --no-db-load --force"
 
 # Wipe cache after permissions fix.
 docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run grunt cache-clear
