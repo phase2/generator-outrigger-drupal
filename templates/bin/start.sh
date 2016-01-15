@@ -37,7 +37,7 @@ docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(
 # Build and run static analysis.
 docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli sh -c "\
 npm install && \
-grunt --dev --force"
+grunt --force"
 
 # Now safe to activate web container to support end-to-end testing.
 docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d www
