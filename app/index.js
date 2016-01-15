@@ -247,6 +247,10 @@ module.exports = yeoman.generators.Base.extend({
         }
       }
 
+      if (!gcfg.scripts['seed-users']) {
+         gcfg.scripts['seed-users'] = 'bash bin/seed-users.sh';
+      }
+
       // Lack of a useENV option means it was not invoked by a parent generator.
       if (!options['useENV']) {
         if (!gcfg.generated) {
