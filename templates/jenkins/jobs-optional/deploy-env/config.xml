@@ -58,18 +58,22 @@ docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p <%= projectName %
 bash bin/start.sh <%= environment %>
 
 # Warm cache and review HTTP response headers
-echo "Warm cache and review HTTP response headers..."
+echo &quot;Warm cache and review HTTP response headers...&quot;
 curl -I -vvv <%= virtualHost %>
 
 # Run Behat Tests
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run cli sh -c "GDT_DOMAIN=<%= virtualHost %> grunt test --force --timer"
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run cli sh -c &quot;GDT_DOMAIN=<%= virtualHost %> grunt test --force --timer&quot;
 
 # Run Features Health Check
 docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run cli bash bin/features-health.sh || true
 
 # Generate a one-time password reset link.
-echo "Generating a one-time password-reset link..."
+echo &quot;Generating a one-time password-reset link...&quot;
 docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run drush uli
+
+# Generating test users.
+echo &quot;Generating Drupal test accounts...&quot;
+docker-compose -f build.dev.yml -p atmos_dev run grunt seed-users
 </command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
