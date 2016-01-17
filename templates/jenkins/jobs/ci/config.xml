@@ -29,7 +29,7 @@
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
-        <url>git@bitbucket.org:phase2tech/<%= projectName %>.git</url>
+        <url><%= gitRepoUrl %></url>
       </hudson.plugins.git.UserRemoteConfig>
     </userRemoteConfigs>
     <branches>
@@ -270,7 +270,7 @@ docker-compose -f docker-compose.int.yml -p <%= projectName %>_int rm -f
       <isOpenTasksDeactivated>false</isOpenTasksDeactivated>
       <isWarningsDeactivated>false</isWarningsDeactivated>
     </hudson.plugins.analysis.collector.AnalysisPublisher>
-    <com.flowdock.jenkins.FlowdockNotifier plugin="jenkins-flowdock-plugin@1.1.8">
+    <% if (flowdockApiKey) { %><com.flowdock.jenkins.FlowdockNotifier plugin="jenkins-flowdock-plugin@1.1.8">
       <flowToken><%= flowdockApiKey %></flowToken>
       <notificationTags>ci, int</notificationTags>
       <chatNotification>false</chatNotification>
@@ -306,7 +306,7 @@ docker-compose -f docker-compose.int.yml -p <%= projectName %>_int rm -f
       <notifyUnstable>false</notifyUnstable>
       <notifyAborted>false</notifyAborted>
       <notifyNotBuilt>false</notifyNotBuilt>
-    </com.flowdock.jenkins.FlowdockNotifier>
+    </com.flowdock.jenkins.FlowdockNotifier><% } %>
   </publishers>
   <buildWrappers>
     <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.4.2">
