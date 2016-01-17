@@ -41,7 +41,7 @@
       <failureTimes>2</failureTimes>
       <optionalBrockChecked>true</optionalBrockChecked>
     </disableFailedJob.disableFailedJob.DisableFailedJob>
-    <com.flowdock.jenkins.FlowdockNotifier plugin="jenkins-flowdock-plugin@1.1.8">
+    <% if (flowdockApiKey) { %><com.flowdock.jenkins.FlowdockNotifier plugin="jenkins-flowdock-plugin@1.1.8">
       <flowToken><%= flowdockApiKey %></flowToken>
       <notificationTags>cron, <%= environment %></notificationTags>
       <chatNotification>false</chatNotification>
@@ -77,7 +77,7 @@
       <notifyUnstable>false</notifyUnstable>
       <notifyAborted>false</notifyAborted>
       <notifyNotBuilt>false</notifyNotBuilt>
-    </com.flowdock.jenkins.FlowdockNotifier>
+    </com.flowdock.jenkins.FlowdockNotifier><% } -%>
   </publishers>
   <buildWrappers>
     <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.4.2">
