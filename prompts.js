@@ -84,6 +84,19 @@ var prompts = [
     validate: function (input) {
       return input.match(/_|\s/) == undefined ? true : 'Please use a value qualified for use as a domain name. No spaces or underscores allowed.';
     }
+  },
+  {
+    type: 'input',
+    name: 'gitRepoUrl',
+    message: 'URL to the Git Repo for checkout by Jenkins and other tools:',
+    default: function(answers) {
+      return 'git@bitbucket.org:phase2tech/' + answers.projectName + '.git';
+    }
+  },
+  {
+    type: 'input',
+    name: 'flowdockApiKey',
+    message: 'API key for the project flow (found in your account under API Tokens), leave blank to skip:',
   }
 ];
 
