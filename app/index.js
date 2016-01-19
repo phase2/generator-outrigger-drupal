@@ -70,6 +70,8 @@ module.exports = yeoman.generators.Base.extend({
         domain: options.domain,
         environment: '',
         dockerComposeExt: '',
+        gitRepoUrl: options.gitRepoUrl,
+        flowdockApiKey: options.flowdockApiKey
       };
 
       done();
