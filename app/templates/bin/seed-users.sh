@@ -11,3 +11,4 @@
 ##
 
 drush @<%= projectName %> user-create "<%= projectName%>admin" --password="admin1" --mail="<%= projectName %>admin@example.com"
+drush @<%= projectName %> user-add-role "administrator" "<%= projectName %>admin"
