@@ -73,7 +73,7 @@ docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= env
 
 # Generating test users.
 echo &quot;Generating Drupal test accounts...&quot;
-docker-compose -f build.dev.yml -p <%= projectName %>_dev run grunt seed-users
+docker-compose -f build.<%= environment %>.yml -p <%= projectName %>_<%= environment %> run grunt seed-users
 </command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
