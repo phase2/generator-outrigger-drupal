@@ -76,7 +76,7 @@ Sometimes the above command fails because of quirks with Docker's access to
 external DNS. In that case, run as follows:
 
 ```
-grunt fetch-db --db-path=./build/backups/latest.sql
+grunt fetch-db --db-path=./build/backups/latest.sql.gz
 docker-compose -f build.yml run grunt install
 ```
 
