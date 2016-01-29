@@ -41,6 +41,7 @@
     <submoduleCfg class="list"/>
     <extensions>
       <hudson.plugins.git.extensions.impl.CleanCheckout/>
+      <hudson.plugins.git.extensions.impl.PruneStaleBranch/>
     </extensions>
   </scm>
   <canRoam>true</canRoam>
@@ -61,7 +62,13 @@ docker-compose -f docker-compose.int.yml -p <%= projectName %>_int stop || true
 docker-compose -f docker-compose.int.yml -p <%= projectName %>_int rm -f || true</command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
-      <command># Set up and install site
+      <command># Abort build step on errors.
+trap '
+docker-compose -f docker-compose.int.yml -p <%= projectName %>_int stop;
+docker-compose -f docker-compose.int.yml -p <%= projectName %>_int rm -f;
+exit 34' ERR
+
+# Set up and install site
 bash bin/start.sh int
 
 # Warm cache and review HTTP response headers
@@ -70,7 +77,6 @@ curl -I -vvv <%= hostINT %>
 
 # Run Behat Tests
 docker-compose -f build.int.yml -p <%= projectName %>_int run cli sh -c "GDT_DOMAIN=<%= hostINT %> grunt test --force --timer"
-
 
 # Run Features Health Check
 docker-compose -f build.int.yml -p <%= projectName %>_int run cli bash bin/features-health.sh || true</command>
