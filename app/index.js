@@ -20,7 +20,7 @@ var cacheImage = function(service, majorVersion) {
     memcache: 'phase2/memcache',
     redis: 'phase2/redis'
   };
-  
+
   return image[service] || service;
 }
 
@@ -178,6 +178,14 @@ module.exports = yeoman.generators.Base.extend({
       this.fs.copyTpl(
         this.templatePath('docker/build.yml'),
         this.destinationPath('build.yml'),
+        tokens
+      );
+    },
+
+    contributing: function() {
+      this.fs.copyTpl(
+        this.templatePath('CONTRIBUTING.md'),
+        this.destinationPath('CONTRIBUTING.md'),
         tokens
       );
     },
