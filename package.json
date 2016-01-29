@@ -1,6 +1,6 @@
 {
   "name": "generator-p2-env",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Phase2 yeoman generator to supply Drupal projects with Docker support.",
   "license": "MIT",
   "main": "app/index.js",
@@ -27,6 +27,6 @@
     "chalk": "^1.0.0",
     "lodash": "^3.10.1",
     "yeoman-generator": "^0.20.3",
-    "yosay": "^1.0.2"
+    "yosay": "^1.1.0"
   }
 }
