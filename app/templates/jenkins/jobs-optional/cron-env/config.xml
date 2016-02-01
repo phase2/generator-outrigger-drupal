@@ -32,7 +32,16 @@
   <customWorkspace>/opt/development/<%= projectName %>/jenkins/env/workspace/deploy-<%= environment %></customWorkspace>
   <builders>
     <hudson.tasks.Shell>
-      <command>docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run drush cron</command>
+      <command>#!/bin/bash
+
+cancel() {
+  exit 35
+}
+
+# Abort build step on errors.
+trap 'cancel' ERR
+
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run drush cron</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
