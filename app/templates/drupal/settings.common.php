@@ -28,7 +28,9 @@ $conf['cache_backends'][] = 'sites/all/modules/contrib/memcache/memcache.inc';
 $conf['cache_default_class'] = 'MemCacheDrupal';
 $conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
 $conf['lock_inc'] = 'sites/all/modules/contrib/memcache/memcache-lock.inc';
-$conf['memcache_stampede_protection'] = TRUE;
+// Good in theory but stampede protection causes performance regressions.
+// Explicitly setting the default behavior in caution for testing.
+$conf['memcache_stampede_protection'] = FALSE;
 $conf['memcache_servers'] = array(
   'cache:11211' => 'default',
 );
