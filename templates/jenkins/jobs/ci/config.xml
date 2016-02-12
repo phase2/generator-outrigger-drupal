@@ -16,7 +16,7 @@
         <hudson.model.StringParameterDefinition>
           <name>GIT_REF</name>
           <description>Git branch, tag, or commit revision to build.</description>
-          <defaultValue>develop</defaultValue>
+          <defaultValue>:^((?!develop).)*$</defaultValue>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
@@ -34,7 +34,7 @@
     </userRemoteConfigs>
     <branches>
       <hudson.plugins.git.BranchSpec>
-        <name>:^((?!develop).)*$</name>
+        <name>${GIT_REF}</name>
       </hudson.plugins.git.BranchSpec>
     </branches>
     <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
