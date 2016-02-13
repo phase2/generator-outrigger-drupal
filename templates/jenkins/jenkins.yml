@@ -2,7 +2,7 @@
 # Run this image via
 #   - `docker-compose -f jenkins.yml -p <%= projectName %> run jenkins`
 jenkins:
-  image: phase2/jenkins-docker
+  image: phase2/jenkins-docker:1.9.1
   volumes:
     - ./env/jenkins/config.xml:/var/jenkins_home/config.xml
     - ./env/jenkins/jobs:/var/jenkins_home/jobs
