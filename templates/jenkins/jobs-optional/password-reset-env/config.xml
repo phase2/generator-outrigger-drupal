@@ -28,15 +28,7 @@
   <customWorkspace>/opt/development/<%= projectName %>/jenkins/env/workspace/deploy-<%= environment %></customWorkspace>
   <builders>
     <hudson.tasks.Shell>
-      <command>#!/bin/bash
-
-cancel() {
-  exit 35
-}
-
-# Abort build step on errors.
-trap 'cancel' ERR
-
+      <command>
 docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run drush uli</command>
     </hudson.tasks.Shell>
   </builders>

@@ -43,9 +43,10 @@ trap '
   [ "$ret" -eq 0 ] || echo >&2 "$NAME aborted: $ret"' EXIT
 
 # Cancel docker start on errors.
-trap 'cancel' ERR
+trap 'cancel $LINENO' ERR
 
 cancel() {
+  echo "Line $1: Error encountered. Stopping..."
   # Stop all containers. This will allow follow-up runs via Jenkins to manage
   # the workspace and containers since some preparation operations are compromised
   # by the www container.
