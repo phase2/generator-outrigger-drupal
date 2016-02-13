@@ -57,15 +57,16 @@ docker-compose -f docker-compose.int.yml -p <%= projectName %>_int stop || true
 docker-compose -f docker-compose.int.yml -p <%= projectName %>_int rm -f || true</command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
-      <command>#!/bin/bash
+      <command>#!/usr/bin/env bash
 cancel() {
-  docker-compose -f docker-compose.int.yml -p kobol_int stop || true
-  docker-compose -f docker-compose.int.yml -p kobol_int rm -f || true
+  echo &quot;Line $1: Error encountered. Stopping...&quot;
+  docker-compose -f docker-compose.int.yml -p <%= projectName %>_int stop || true
+  docker-compose -f docker-compose.int.yml -p <%= projectName %>_int rm -f || true
   exit 34
 }
 
 # Abort build step on errors.
-trap 'cancel' ERR
+trap &apos;cancel $LINENO&apos; ERR SIGINT SIGTERM SIGQUIT SIGHUP
 
 # Set up and install site
 bash bin/start.sh int
