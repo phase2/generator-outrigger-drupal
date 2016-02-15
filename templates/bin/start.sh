@@ -32,7 +32,7 @@ fi
 
 # Spin up cache and db services to support build container.
 # Web container might take file locks on existing code, blocking the build process.
-docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(cacheExternal) { %>cache <% } %>db
+docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(cache.external) { %>cache <% } %>db
 
 # Build and run static analysis.
 docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli sh -c "\

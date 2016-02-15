@@ -22,7 +22,17 @@ var cacheImage = function(service, majorVersion) {
   };
 
   return image[service] || service;
-}
+};
+
+var virtualHost = function(env, namespace) {
+  var domain = options['ciHost'] || 'ci.p2devcloud.com';
+  namespace = env ? '.' + namespace : namespace;
+  if (!env) {
+    env = '';
+  }
+
+  return env + namespace + '.' + domain;
+};
 
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
@@ -52,26 +62,33 @@ module.exports = yeoman.generators.Base.extend({
       options = _.assign(options, props);
       options.machineName = options.projectName.replace('-', '_');
 
-      tokens = {
-        debugMode: 'true',
-        projectName: options.projectName,
-        webImage: webImage(options.webserver, options.drupalDistroVersion) || options.webImage,
-        hostINT: 'int.' + options.machineName + '.ci.p2devcloud.com',
-        hostDEV: 'dev.' + options.machineName + '.ci.p2devcloud.com',
-        hostQA: 'qa.' + options.machineName + '.ci.p2devcloud.com',
-        hostMS: options.machineName + '.ci.p2devcloud.com',
-        cacheService: options.cacheInternal,
-        cacheImage: cacheImage(options.cacheInternal, options.drupalDistroVersion),
-        cacheExternal: options.cacheInternal != 'database',
-        cacheLink: "\n    - cache",
-        cacheExtLink: "\n    - " + options.projectName + "_local_cache:cache",
-        dbExtLink: options.projectName + "_local_db:db",
-        machineName: options.machineName,
-        domain: options.domain,
-        environment: '',
-        dockerComposeExt: '',
-        gitRepoUrl: options.gitRepoUrl,
-        flowdockApiKey: options.flowdockApiKey
+      tokens = options;
+      tokens.debugMode = 'true';
+      tokens.environment = '';
+      tokens.dockerComposeExt = '';
+
+      tokens.app = {
+        image: webImage(options.webserver, options.drupalDistroVersion) || options.webImage,
+      };
+
+      tokens.cache = {
+        image: cacheImage(options.cacheInternal, options.drupalDistroVersion),
+        service: options.cacheInternal,
+        external: options.cacheInternal != 'database',
+        docker: {
+          link: "\n    - cache"
+        }
+      };
+
+      tokens.db = {
+        docker: {}
+      };
+
+      tokens.host = {
+        int: virtualHost('int', options.machineName),
+        dev: virtualHost('dev', options.machineName),
+        qa: virtualHost('qa', options.machineName),
+        ms: virtualHost(false, options.machineName)
       };
 
       done();
@@ -88,11 +105,11 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     dockerComposeINT: function() {
-      tokens.virtualHost = tokens.hostINT;
+      tokens.virtualHost = tokens.host.int;
       tokens.environment = 'int';
       tokens.dockerComposeExt = 'int.';
-      tokens.cacheExtLink = "\n    - " + options.projectName + "_int_cache:cache";
-      tokens.dbExtLink = options.projectName + "_int_db:db";
+      tokens.cache.docker.extLink = "\n    - " + options.projectName + "_int_cache:cache";
+      tokens.db.docker.extLink = options.projectName + "_int_db:db";
 
       this.fs.copyTpl(
         this.templatePath('docker/docker-compose.inherit.yml'),
@@ -108,11 +125,11 @@ module.exports = yeoman.generators.Base.extend({
 
     dockerComposeQA: function() {
       if (options.environments.indexOf('qa') != -1) {
-        tokens.virtualHost = tokens.hostQA;
+        tokens.virtualHost = tokens.host.qa;
         tokens.environment = 'qa';
         tokens.dockerComposeExt = 'qa.';
-        tokens.cacheExtLink = "\n    - " + options.projectName + "_qa_cache:cache";
-        tokens.dbExtLink = options.projectName + "_qa_db:db";
+        tokens.cache.docker.extLink = "\n    - " + options.projectName + "_qa_cache:cache";
+        tokens.db.docker.extLink = options.projectName + "_qa_db:db";
 
         this.fs.copyTpl(
           this.templatePath('docker/docker-compose.inherit.yml'),
@@ -129,11 +146,11 @@ module.exports = yeoman.generators.Base.extend({
 
     dockerComposeDEV: function() {
       if (options.environments.indexOf('dev') != -1) {
-        tokens.virtualHost = tokens.hostDEV;
+        tokens.virtualHost = tokens.host.dev;
         tokens.environment = 'dev';
         tokens.dockerComposeExt = 'dev.';
-        tokens.cacheExtLink = "\n    - " + options.projectName + "_dev_cache:cache";
-        tokens.dbExtLink = options.projectName + "_dev_db:db";
+        tokens.cache.docker.extLink = "\n    - " + options.projectName + "_dev_cache:cache";
+        tokens.db.docker.extLink = options.projectName + "_dev_db:db";
 
         this.fs.copyTpl(
           this.templatePath('docker/docker-compose.inherit.yml'),
@@ -150,11 +167,11 @@ module.exports = yeoman.generators.Base.extend({
 
     dockerComposeMS: function() {
       if (options.environments.indexOf('ms') != -1) {
-        tokens.virtualHost = tokens.hostMS;
+        tokens.virtualHost = tokens.host.ms;
         tokens.environment = 'ms';
         tokens.dockerComposeExt = 'ms.';
-        tokens.cacheExtLink = "\n    - " + options.projectName + "_ms_cache:cache";
-        tokens.dbExtLink = options.projectName + "_ms_db:db";
+        tokens.cache.docker.extLink = "\n    - " + options.projectName + "_ms_cache:cache";
+        tokens.db.docker.extLink = options.projectName + "_ms_db:db";
 
         this.fs.copyTpl(
           this.templatePath('docker/docker-compose.inherit.yml'),
@@ -169,11 +186,12 @@ module.exports = yeoman.generators.Base.extend({
       }
     },
 
+    // Local
     dockerComposeBuild: function() {
       tokens.dockerComposeExt = '';
       tokens.environment = 'local';
-      tokens.cacheExtLink = "\n    - " + options.projectName + "_local_cache:cache";
-      tokens.dbExtLink = options.projectName + "_local_db:db";
+      tokens.cache.docker.extLink = "\n    - " + options.projectName + "_local_cache:cache";
+      tokens.db.docker.extLink = options.projectName + "_local_db:db";
 
       this.fs.copyTpl(
         this.templatePath('docker/build.yml'),
@@ -236,7 +254,7 @@ module.exports = yeoman.generators.Base.extend({
 
       // Backups configuration is introduced by p2-env.
       gcfg.project.backups = {
-        url: 'http://backups.ci.p2devcloud.com/' + options.projectName,
+        url: 'http://' + virtualHost(false, 'backups') + '/' + options.projectName,
         env: 'int'
       };
 
@@ -329,7 +347,7 @@ module.exports = yeoman.generators.Base.extend({
       );
 
       if (options.environments.indexOf('dev') != -1) {
-        tokens.virtualHost = tokens.hostDEV;
+        tokens.virtualHost = tokens.host.dev;
         tokens.environment = 'dev';
         tokens.dockerComposeExt = 'dev.';
         this.fs.copyTpl(
@@ -350,7 +368,7 @@ module.exports = yeoman.generators.Base.extend({
       }
 
       if (options.environments.indexOf('qa') != -1) {
-        tokens.virtualHost = tokens.hostQA;
+        tokens.virtualHost = tokens.host.qa;
         tokens.environment = 'qa';
         tokens.dockerComposeExt = 'qa.';
         this.fs.copyTpl(
@@ -371,7 +389,7 @@ module.exports = yeoman.generators.Base.extend({
       }
 
       if (options.environments.indexOf('ms') != -1) {
-        tokens.virtualHost = tokens.hostMS;
+        tokens.virtualHost = tokens.host.ms;
         tokens.environment = 'ms';
         tokens.dockerComposeExt = 'ms.';
         this.fs.copyTpl(
