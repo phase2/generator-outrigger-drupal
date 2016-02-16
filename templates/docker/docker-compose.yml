@@ -9,18 +9,27 @@ db:
     - /data/<%= projectName %>_local/mysql:/var/lib/mysql
 <% if (cache.external) { %>
 <%- include cache.partial.yml -%>
-<% } %>
-www:
+<% } if (proxy.exists) { %>
+proxy:
+  container_name: <%= projectName %>_local_proxy
+  image: phase2/varnish4
+  environment:
+    DNSDOCK_NAME: www
+    DNSDOCK_IMAGE: <%= domain %>
+    VARNISH_BACKEND_HOST: app
+
+app:
+<% } else { %>www:<% } -%>
   container_name: <%= projectName %>_local_www
   image: <%= app.image %>
   environment:
-    DNSDOCK_NAME: www
+    DNSDOCK_NAME: <% if (proxy.exists) { %>app<% } else { %>www<% } %>
     DNSDOCK_IMAGE: <%= domain %>
     DOCROOT: /var/www/build/html
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
   links:
-    - db<% if (cache.external) { %><%= cache.docker.link %><% } %>
+    - db<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (proxy.exists) { %><%= proxy.docker.link %><% } %>
   volumes:
     - .:/var/www/
     - /data/<%= projectName %>_local/files:/var/www/build/html/sites/default/files
