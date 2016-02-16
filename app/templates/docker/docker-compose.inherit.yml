@@ -12,7 +12,15 @@ cache:
     file: docker-compose.yml
     service: cache
 <% } %>
-www:
+<% if (proxy.exists) { %>
+proxy:
+  container_name: <%= projectName %>_<%= environment %>_proxy
+  extends:
+    file: docker-compose.yml
+    service: proxy
+
+app:
+<% } else { %>www<% } -%>
   container_name: <%= projectName %>_<%= environment %>_www
   image: <%= app.image %>
   environment:
@@ -21,7 +29,8 @@ www:
     PHP_XHPROF: "<%= debugMode %>"
     VIRTUAL_HOST: <%= virtualHost %>
   links:
-    - db<% if (cache.external) { %><%= cache.docker.link %><% } %>
+    - db
+<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (proxy.exists) { %><%= proxy.docker.link %><% } %>
   volumes:
     - .:/var/www/
     - /data/<%= projectName %>_<%= environment %>/files:/var/www/build/html/sites/default/files

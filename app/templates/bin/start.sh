@@ -40,7 +40,7 @@ npm install && \
 grunt --force"
 
 # Now safe to activate web container to support end-to-end testing.
-docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d www
+docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(proxy.exists) { %>proxy <% } %>www
 
 # Correct any issues in the web container.
 docker exec <%= projectName %>_${DOCKER_ENV}_www sh -c "\

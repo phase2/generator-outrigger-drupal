@@ -84,6 +84,15 @@ module.exports = yeoman.generators.Base.extend({
         docker: {}
       };
 
+      tokens.proxy = {
+        image: 'phase2/varnish',
+        service: 'varnish',
+        exists: options.proxyCache != 'none',
+        docker: {
+          link: "\n    - proxy"
+        }
+      }
+
       tokens.host = {
         int: virtualHost('int', options.machineName),
         dev: virtualHost('dev', options.machineName),
@@ -109,6 +118,7 @@ module.exports = yeoman.generators.Base.extend({
       tokens.environment = 'int';
       tokens.dockerComposeExt = 'int.';
       tokens.cache.docker.extLink = "\n    - " + options.projectName + "_int_cache:cache";
+      tokens.proxy.docker.extLink = "\n    - " + options.projectName + "_int_proxy:proxy";
       tokens.db.docker.extLink = options.projectName + "_int_db:db";
 
       this.fs.copyTpl(
@@ -129,6 +139,7 @@ module.exports = yeoman.generators.Base.extend({
         tokens.environment = 'qa';
         tokens.dockerComposeExt = 'qa.';
         tokens.cache.docker.extLink = "\n    - " + options.projectName + "_qa_cache:cache";
+        tokens.proxy.docker.extLink = "\n    - " + options.projectName + "_qa_proxy:proxy";
         tokens.db.docker.extLink = options.projectName + "_qa_db:db";
 
         this.fs.copyTpl(
@@ -150,6 +161,7 @@ module.exports = yeoman.generators.Base.extend({
         tokens.environment = 'dev';
         tokens.dockerComposeExt = 'dev.';
         tokens.cache.docker.extLink = "\n    - " + options.projectName + "_dev_cache:cache";
+        tokens.proxy.docker.extLink = "\n    - " + options.projectName + "_dev_proxy:proxy";
         tokens.db.docker.extLink = options.projectName + "_dev_db:db";
 
         this.fs.copyTpl(
@@ -171,6 +183,7 @@ module.exports = yeoman.generators.Base.extend({
         tokens.environment = 'ms';
         tokens.dockerComposeExt = 'ms.';
         tokens.cache.docker.extLink = "\n    - " + options.projectName + "_ms_cache:cache";
+        tokens.proxy.docker.extLink = "\n    - " + options.projectName + "_ms_proxy:proxy";
         tokens.db.docker.extLink = options.projectName + "_ms_db:db";
 
         this.fs.copyTpl(
@@ -191,6 +204,7 @@ module.exports = yeoman.generators.Base.extend({
       tokens.dockerComposeExt = '';
       tokens.environment = 'local';
       tokens.cache.docker.extLink = "\n    - " + options.projectName + "_local_cache:cache";
+      tokens.proxy.docker.extLink = "\n    - " + options.projectName + "_local_proxy:proxy";
       tokens.db.docker.extLink = options.projectName + "_local_db:db";
 
       this.fs.copyTpl(
