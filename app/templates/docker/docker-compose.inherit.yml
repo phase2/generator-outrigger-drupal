@@ -18,6 +18,8 @@ proxy:
   extends:
     file: docker-compose.yml
     service: proxy
+  links:
+    - app
 
 app:
 <% } else { %>www<% } -%>
