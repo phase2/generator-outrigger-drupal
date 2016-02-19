@@ -22,7 +22,7 @@ $databases = array (
     ),
   ),
 );
-<% if(cacheExternal && cacheService == 'memcache') { %>
+<% if(cache.external && cache.service == 'memcache') { %>
 // Add Memcache for internal caching.
 $conf['cache_backends'][] = 'sites/all/modules/contrib/memcache/memcache.inc';
 $conf['cache_default_class'] = 'MemCacheDrupal';
@@ -39,7 +39,7 @@ $conf['memcache_bins'] = array(
 );
 $conf['memcache_key_prefix'] = '<%= machineName %>_';
 <% } -%>
-<% if(cacheExternal && cacheService == 'redis') { %>
+<% if(cache.external && cache.service == 'redis') { %>
 // Add Redis for internal caching.
 
 // PhpRedis is slightly higher performance.

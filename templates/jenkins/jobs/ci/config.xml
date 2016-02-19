@@ -66,10 +66,10 @@ bash bin/start.sh int
 
 # Warm cache and review HTTP response headers
 echo "Warm cache and review HTTP response headers..."
-curl -I -vvv <%= hostINT %>
+curl -I -vvv <%= host.int %>
 
 # Run Behat Tests
-docker-compose -f build.int.yml -p <%= projectName %>_int run cli sh -c "GDT_DOMAIN=<%= hostINT %> grunt test --force --timer"
+docker-compose -f build.int.yml -p <%= projectName %>_int run cli sh -c "GDT_DOMAIN=<%= host.int %> grunt test --force --timer"
 
 
 # Run Features Health Check
