@@ -32,7 +32,7 @@ app:
     VIRTUAL_HOST: <%= virtualHost %>
   links:
     - db
-<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (proxy.exists) { %><%= proxy.docker.link %><% } %>
+<% if (cache.external) { %><%= cache.docker.link %><% } %>
   volumes:
     - .:/var/www/
     - /data/<%= projectName %>_<%= environment %>/files:/var/www/build/html/sites/default/files
