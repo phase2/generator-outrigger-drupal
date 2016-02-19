@@ -11,28 +11,27 @@ cache:
   extends:
     file: docker-compose.yml
     service: cache
-<% } %>
-<% if (proxy.exists) { %>
+<% } %><% if (proxy.exists) { %>
 proxy:
   container_name: <%= projectName %>_<%= environment %>_proxy
   extends:
     file: docker-compose.yml
     service: proxy
+  environment:
+    VIRTUAL_HOST: <%= virtualHost %>
   links:
     - app
 
-app:
-<% } else { %>www<% } -%>
+app:<% } else { %>www<% } %>
   container_name: <%= projectName %>_<%= environment %>_www
   image: <%= app.image %>
   environment:
     DOCROOT: /var/www/build/html
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
-    VIRTUAL_HOST: <%= virtualHost %>
+    <% if (!proxy.exists) { %>VIRTUAL_HOST: <%= virtualHost %><% } %>
   links:
-    - db
-<% if (cache.external) { %><%= cache.docker.link %><% } %>
+    - db<% if (cache.external) { %><%= cache.docker.link %><% } %>
   volumes:
     - .:/var/www/
     - /data/<%= projectName %>_<%= environment %>/files:/var/www/build/html/sites/default/files

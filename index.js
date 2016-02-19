@@ -87,7 +87,7 @@ module.exports = yeoman.generators.Base.extend({
       tokens.proxy = {
         image: 'phase2/varnish',
         service: 'varnish',
-        exists: options.proxyCache != 'none',
+        exists: options['proxyCache'] && options.proxyCache != 'none',
       }
 
       tokens.host = {
