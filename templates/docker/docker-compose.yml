@@ -17,6 +17,8 @@ proxy:
     DNSDOCK_NAME: www
     DNSDOCK_IMAGE: <%= domain %>
     VARNISH_BACKEND_HOST: app
+  links:
+    - app
 
 app:
 <% } else { %>www:<% } -%>
@@ -29,7 +31,7 @@ app:
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
   links:
-    - db<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (proxy.exists) { %><%= proxy.docker.link %><% } %>
+    - db<% if (cache.external) { %><%= cache.docker.link %><% } %>
   volumes:
     - .:/var/www/
     - /data/<%= projectName %>_local/files:/var/www/build/html/sites/default/files
