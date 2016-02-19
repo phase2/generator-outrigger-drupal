@@ -20,8 +20,7 @@ proxy:
   links:
     - app
 
-app:
-<% } else { %>www:<% } -%>
+app:<% } else { %>www:<% } %>
   container_name: <%= projectName %>_local_www
   image: <%= app.image %>
   environment:
