@@ -16,11 +16,11 @@ proxy:
   environment:
     DNSDOCK_NAME: www
     DNSDOCK_IMAGE: <%= domain %>
-    VARNISH_BACKEND_HOST: app
+    VARNISH_BACKEND_HOST: www
   links:
-    - app
-
-app:<% } else { %>www:<% } %>
+    - www
+<% } %>
+www:
   container_name: <%= projectName %>_local_www
   image: <%= app.image %>
   environment:
