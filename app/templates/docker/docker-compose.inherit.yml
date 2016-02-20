@@ -14,15 +14,14 @@ cache:
 <% } %><% if (proxy.exists) { %>
 proxy:
   container_name: <%= projectName %>_<%= environment %>_proxy
-  extends:
-    file: docker-compose.yml
-    service: proxy
+  image: phase2/varnish4
   environment:
-    VIRTUAL_HOST: <%= virtualHost %>
+    VARNISH_BACKEND_HOST: www
+    VIRTUAL_HOST: ${DOCKER_ENV}.atmos.ci.p2devcloud.com
   links:
-    - app
-
-app:<% } else { %>www<% } %>
+    - www
+<% } %>
+www:
   container_name: <%= projectName %>_<%= environment %>_www
   image: <%= app.image %>
   environment:
