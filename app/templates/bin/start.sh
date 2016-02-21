@@ -38,21 +38,34 @@ fi
 # Error handling.
 ##
 
-trap '
-  ret=$?
-  [ "$ret" -eq 0 ] || echo >&2 "$NAME aborted: $ret"' EXIT
+# Stop all containers.
+# This will allow follow-up runs via Jenkins to manage the workspace.
+# Container rm is left to Jenkins or the developer.
+teardown() {
+  docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} stop || true
+}
 
-# Cancel docker start on errors.
-trap 'cancel $LINENO' ERR
-
+# Handler for errors and interruptions.
 cancel() {
-  echo "Line $1: Error encountered. Stopping..."
-  # Stop all containers. This will allow follow-up runs via Jenkins to manage
-  # the workspace and containers since some preparation operations are compromised
-  # by the www container.
-  docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} stop
+  echo &quot;$NAME: Error: Line $1: $2&quot;
+  teardown
   exit 33
 }
+
+# Final actions to take whenever the script ends.
+complete() {
+  ret=$1
+  [ "$ret" -eq 0 ] || echo >&2 "$NAME: aborted ($ret)"
+}
+
+# Cancel docker start on errors.
+trap 'cancel $LINENO $BASH_COMMAND' ERR SIGINT SIGTERM
+trap 'complete $?' EXIT
+
+##
+# Bring up the site.
+##
+echo "Preparing site for environment '$DOCKER_ENV'"
 
 # Spin up cache and db services to support build container.
 # Web container might take file locks on existing code, blocking the build process.

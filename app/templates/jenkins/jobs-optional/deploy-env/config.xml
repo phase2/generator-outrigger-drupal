@@ -49,26 +49,43 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command># Tear down the environment in case the previous run failed.
-docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> stop
-docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> rm -f</command>
-    </hudson.tasks.Shell>
-    <hudson.tasks.Shell>
       <command>#!/usr/bin/env bash
+export DOCKER_ENV=<%= environment %>
 
+# Break down the Docker environment and remove generated files.
+teardown() {
+  docker-compose -f docker-compose.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} stop || true
+  docker-compose -f docker-compose.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} rm -f || true
+  # Now that www container is stopped it's safe to clean up.
+  # For speed, deploy-dev job does not do this, and relies on build process to perform
+  # steps on an as-needed basis.
+  # git clean -fd
+}
+
+# Handler for errors or other interruptions.
 cancel() {
-  echo &quot;Line $1: Error encountered. Stopping...&quot;
+  echo &quot;$NAME: Error: Line $1: $2&quot;
   <% if (environment == 'dev') { %>
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> stop
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> rm -f</command>
+  teardown
   exit 34
   <% } else { %>
   exit 32
   <% } -%>
 }
 
+# End-of-job cleanup.
+complete() {
+  ret=$1
+  [ &quot;$ret&quot; -eq 0 ] || echo >&amp;2 &quot;$JOB_NAME: aborted ($ret)&quot;
+  teardown
+}
+
 # Abort build step on errors.
-trap &apos;cancel $LINENO&apos; ERR SIGINT SIGTERM SIGQUIT SIGHUP
+trap &apos;cancel $LINENO $BASH_COMMAND&apos; ERR SIGINT SIGTERM SIGQUIT SIGHUP
+# Clean up on program termination.
+trap &apos;complete $?&apos; EXIT
+
+teardown
 
 # Set up and install site
 bash bin/start.sh <%= environment %>
@@ -78,25 +95,23 @@ echo &quot;Warm cache and review HTTP response headers...&quot;
 curl -I -vvv <%= virtualHost %>
 
 # Run Behat Tests
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run cli sh -c &quot;GDT_DOMAIN=<%= virtualHost %> grunt test --force --timer&quot;
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_${DOCKER_ENV} run cli sh -c &quot;GDT_DOMAIN=<%= virtualHost %> grunt test --force --timer&quot;
 
 # Run Features Health Check
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run cli bash bin/features-health.sh || true
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_${DOCKER_ENV} run cli bash bin/features-health.sh || true
 
 # Generate a one-time password reset link.
 echo &quot;Generating a one-time password-reset link...&quot;
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run drush uli
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_${DOCKER_ENV} run drush uli
 
 # Generating test users.
 echo &quot;Generating Drupal test accounts...&quot;
-docker-compose -f build.<%= environment %>.yml -p <%= projectName %>_<%= environment %> run grunt seed-users
+docker-compose -f build.<%= environment %>.yml -p <%= projectName %>_${DOCKER_ENV} run grunt seed-users
+
+# Generate Static Analysis Reports
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_${DOCKER_ENV} run grunt analyze --timer
 </command>
     </hudson.tasks.Shell>
-    <hudson.tasks.Shell>
-      <command># Generate Static Analysis Reports
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run grunt analyze --timer</command>
-    </hudson.tasks.Shell>
-
   </builders>
   <publishers>
     <hudson.plugins.checkstyle.CheckStylePublisher plugin="checkstyle@3.43">
