@@ -32,7 +32,7 @@
 
 # Handler for errors or other interruptions.
 cancel() {
-  echo &quot;$NAME: Error: Line $1: $2&quot;
+  echo &quot;$JOB_NAME: Error: Line $1: $2&quot;
   exit 35
 }
 
