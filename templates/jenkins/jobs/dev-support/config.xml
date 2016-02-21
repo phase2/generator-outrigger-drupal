@@ -66,7 +66,7 @@ teardown() {
 
 # Handler for errors or other interruptions.
 cancel() {
-  echo &quot;$NAME: Error: Line $1: $2&quot;
+  echo &quot;$JOB_NAME: Error: Line $1: $2&quot;
   # Since CI runs teardown on exit it is not needed here.
   # teardown
   exit 34

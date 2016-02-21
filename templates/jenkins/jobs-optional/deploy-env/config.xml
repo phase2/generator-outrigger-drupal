@@ -50,34 +50,30 @@
   <builders>
     <hudson.tasks.Shell>
       <command>#!/usr/bin/env bash
-export DOCKER_ENV=<%= environment %>
+export DOCKER_ENV=<% if (environment) { %><%= environment %><% } else { %>&apos;&apos;<% } %>
+export DOCKER_PROJECT=<%= projectName %>_${DOCKER_ENV:--local}
 
 # Break down the Docker environment and remove generated files.
 teardown() {
-  docker-compose -f docker-compose.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} stop || true
-  docker-compose -f docker-compose.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} rm -f || true
+  docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} stop || true
+  docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} rm -f || true
   # Now that www container is stopped it's safe to clean up.
-  # For speed, deploy-dev job does not do this, and relies on build process to perform
-  # steps on an as-needed basis.
-  # git clean -fd
+  # This is not done by default to keep most environments fast.
+  <% if (environment != 'ms') { %>#<% } %> git clean -fd
 }
 
 # Handler for errors or other interruptions.
 cancel() {
-  echo &quot;$NAME: Error: Line $1: $2&quot;
+  echo &quot;$JOB_NAME: Error: Line $1: $2&quot;
   <% if (environment == 'dev') { %>
   teardown
-  exit 34
-  <% } else { %>
-  exit 32
-  <% } -%>
+  exit 34<% } else { %>exit 32<% } %>
 }
 
 # End-of-job cleanup.
 complete() {
   ret=$1
   [ &quot;$ret&quot; -eq 0 ] || echo >&amp;2 &quot;$JOB_NAME: aborted ($ret)&quot;
-  teardown
 }
 
 # Abort build step on errors.
@@ -92,24 +88,24 @@ bash bin/start.sh <%= environment %>
 
 # Warm cache and review HTTP response headers
 echo &quot;Warm cache and review HTTP response headers...&quot;
-curl -I -vvv <%= virtualHost %>
+curl -I -vvv http://<%= virtualHost %>
 
 # Run Behat Tests
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_${DOCKER_ENV} run cli sh -c &quot;GDT_DOMAIN=<%= virtualHost %> grunt test --force --timer&quot;
+docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run cli sh -c &quot;GDT_DOMAIN=<%= virtualHost %> grunt test --force --timer&quot;
 
 # Run Features Health Check
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_${DOCKER_ENV} run cli bash bin/features-health.sh || true
+docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run cli bash bin/features-health.sh || true
 
 # Generate a one-time password reset link.
 echo &quot;Generating a one-time password-reset link...&quot;
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_${DOCKER_ENV} run drush uli
+docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run drush uli
 
 # Generating test users.
 echo &quot;Generating Drupal test accounts...&quot;
-docker-compose -f build.<%= environment %>.yml -p <%= projectName %>_${DOCKER_ENV} run grunt seed-users
+docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run grunt seed-users
 
 # Generate Static Analysis Reports
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_${DOCKER_ENV} run grunt analyze --timer
+docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run grunt analyze --timer
 </command>
     </hudson.tasks.Shell>
   </builders>
@@ -297,7 +293,7 @@ docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_${DOCKE
       <isOpenTasksDeactivated>false</isOpenTasksDeactivated>
       <isWarningsDeactivated>false</isWarningsDeactivated>
     </hudson.plugins.analysis.collector.AnalysisPublisher>
-    <% if (flowdockApiKey) { %><com.flowdock.jenkins.FlowdockNotifier plugin="jenkins-flowdock-plugin@1.1.8">
+    <% if (flowdockApiKey && environment) { %><com.flowdock.jenkins.FlowdockNotifier plugin="jenkins-flowdock-plugin@1.1.8">
       <flowToken><%= flowdockApiKey %></flowToken>
       <notificationTags>deploy, <%= environment %></notificationTags>
       <chatNotification>false</chatNotification>
