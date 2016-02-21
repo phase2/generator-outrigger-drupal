@@ -1,6 +1,6 @@
 cache:
   container_name: <%= projectName %>_local_cache
-  image: <%= cacheImage %>
+  image: <%= cache.image %>
   environment:
     DNSDOCK_NAME: cache
     DNSDOCK_IMAGE: <%= domain %>

@@ -7,12 +7,12 @@ db:
     MYSQL_DATABASE: <%= machineName %>_drupal
   volumes:
     - /data/<%= projectName %>_local/mysql:/var/lib/mysql
-<% if (cacheExternal) { %>
+<% if (cache.external) { %>
 <%- include cache.partial.yml -%>
 <% } %>
 www:
   container_name: <%= projectName %>_local_www
-  image: <%= webImage %>
+  image: <%= app.image %>
   environment:
     DNSDOCK_NAME: www
     DNSDOCK_IMAGE: <%= domain %>
@@ -20,7 +20,7 @@ www:
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
   links:
-    - db<% if (cacheExternal) { %><%= cacheLink %><% } %>
+    - db<% if (cache.external) { %><%= cache.docker.link %><% } %>
   volumes:
     - .:/var/www/
     - /data/<%= projectName %>_local/files:/var/www/build/html/sites/default/files
