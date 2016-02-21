@@ -41,7 +41,6 @@
     <submoduleCfg class="list"/>
     <extensions>
       <hudson.plugins.git.extensions.impl.CleanCheckout/>
-      <hudson.plugins.git.extensions.impl.PruneStaleBranch/>
     </extensions>
   </scm>
   <canRoam>true</canRoam>
