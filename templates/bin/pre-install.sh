@@ -15,10 +15,10 @@ if [ ! -f src/sites/default/default.settings.php ]; then
   exit 1
 fi
 
-<% if (cacheService == 'memcache') { %># Ensure Memcache does not hold onto stale data in between site installation runs.
+<% if (cache.service == 'memcache') { %># Ensure Memcache does not hold onto stale data in between site installation runs.
 echo "Flush Memcache with 'flush_all'"
 echo "flush_all" | nc cache 11211
-<% } else if (cacheService == 'redis') { %># Ensure Redis does not hold onto stale data in between site installation runs.
+<% } else if (cache.service == 'redis') { %># Ensure Redis does not hold onto stale data in between site installation runs.
 echo "Flush Redis cache with 'FLUSHALL'"
 (echo -en "FLUSHALL\r\n"; sleep 1) | nc cache 6379
 <% } -%>

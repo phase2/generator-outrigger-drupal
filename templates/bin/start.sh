@@ -69,7 +69,7 @@ echo "Preparing site for environment '$DOCKER_ENV'"
 
 # Spin up cache and db services to support build container.
 # Web container might take file locks on existing code, blocking the build process.
-docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(cacheExternal) { %>cache <% } %>db
+docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(cache.external) { %>cache <% } %>db
 
 # Build and run static analysis.
 # Run grunt with --force to ignore errors.
