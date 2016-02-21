@@ -39,9 +39,7 @@
     </branches>
     <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
     <submoduleCfg class="list"/>
-    <extensions>
-      <hudson.plugins.git.extensions.impl.CleanCheckout/>
-    </extensions>
+    <extensions/>
   </scm>
   <canRoam>true</canRoam>
   <disabled>false</disabled>
@@ -56,43 +54,56 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command># Tear down the environment in case the previous run failed.
-docker-compose -f docker-compose.int.yml -p <%= projectName %>_int stop || true
-docker-compose -f docker-compose.int.yml -p <%= projectName %>_int rm -f || true</command>
-    </hudson.tasks.Shell>
-    <hudson.tasks.Shell>
       <command>#!/usr/bin/env bash
+export DOCKER_ENV=int
+
+# Break down the Docker environment and remove generated files.
+teardown() {
+  docker-compose -f docker-compose.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} stop || true
+  docker-compose -f docker-compose.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} rm -f || true
+  # Now that www container is stopped it's safe to clean up.
+  # For speed, CI job does not do this, and relies on build process to perform
+  # steps on an as-needed basis.
+  # git clean -fd
+}
+
+# Handler for errors or other interruptions.
 cancel() {
-  echo &quot;Line $1: Error encountered. Stopping...&quot;
-  docker-compose -f docker-compose.int.yml -p <%= projectName %>_int stop || true
-  docker-compose -f docker-compose.int.yml -p <%= projectName %>_int rm -f || true
+  echo &quot;$NAME: Error: Line $1: $2&quot;
+  # Since CI runs teardown on exit it is not needed here.
+  # teardown
   exit 34
 }
 
+# End-of-job cleanup.
+complete() {
+  ret=$1
+  [ &quot;$ret&quot; -eq 0 ] || echo >&amp;2 &quot;$JOB_NAME: aborted ($ret)&quot;
+  teardown
+}
+
 # Abort build step on errors.
-trap &apos;cancel $LINENO&apos; ERR SIGINT SIGTERM SIGQUIT SIGHUP
+trap &apos;cancel $LINENO $BASH_COMMAND&apos; ERR SIGINT SIGTERM SIGQUIT SIGHUP
+# Clean up on program termination.
+trap &apos;complete $?&apos; EXIT
+
+teardown
 
 # Set up and install site
-bash bin/start.sh int
+bash bin/start.sh ${DOCKER_ENV}
 
 # Warm cache and review HTTP response headers
-echo "Warm cache and review HTTP response headers..."
+echo &quot;Warm cache and review HTTP response headers...&quot;
 curl -I -vvv <%= hostINT %>
 
 # Run Behat Tests
-docker-compose -f build.int.yml -p <%= projectName %>_int run cli sh -c "GDT_DOMAIN=<%= hostINT %> grunt test --force --timer"
+docker-compose -f build.int.yml -p <%= projectName %>_${DOCKER_ENV} run cli sh -c &quot;GDT_DOMAIN=<%= hostINT %> grunt test --force --timer&quot;
 
 # Run Features Health Check
-docker-compose -f build.int.yml -p <%= projectName %>_int run cli bash bin/features-health.sh || true</command>
-    </hudson.tasks.Shell>
-    <hudson.tasks.Shell>
-      <command># Generate Static Analysis Reports
-docker-compose -f build.int.yml -p <%= projectName %>_int run grunt analyze --timer</command>
-    </hudson.tasks.Shell>
-    <hudson.tasks.Shell>
-      <command># Tear down environment.
-docker-compose -f docker-compose.int.yml -p <%= projectName %>_int stop
-docker-compose -f docker-compose.int.yml -p <%= projectName %>_int rm -f
+docker-compose -f build.int.yml -p <%= projectName %>_${DOCKER_ENV} run cli bash bin/features-health.sh || true
+
+# Generate Static Analysis Reports
+docker-compose -f build.int.yml -p <%= projectName %>_${DOCKER_ENV} run grunt analyze --timer
 </command>
     </hudson.tasks.Shell>
   </builders>
