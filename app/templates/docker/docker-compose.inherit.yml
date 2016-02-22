@@ -17,7 +17,7 @@ proxy:
   image: phase2/varnish4
   environment:
     VARNISH_BACKEND_HOST: www
-    VIRTUAL_HOST: ${DOCKER_ENV}.atmos.ci.p2devcloud.com
+    VIRTUAL_HOST: <%= virtualHost %>
   links:
     - www
 <% } %>
