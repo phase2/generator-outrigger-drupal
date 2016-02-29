@@ -35,7 +35,7 @@ fi
 docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(cache.external) { %>cache <% } %>db
 
 # Build and run static analysis.
-docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "npm install && grunt --force"
+docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "npm install --unsafe-perm && grunt --force"
 
 # Now safe to activate web container to support end-to-end testing.
 docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(proxy.exists) { %>proxy <% } %>www
