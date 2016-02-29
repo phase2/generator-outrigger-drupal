@@ -71,15 +71,13 @@ echo "Preparing site for environment '$DOCKER_ENV'"
 # Web container might take file locks on existing code, blocking the build process.
 docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(cache.external) { %>cache <% } %>db
 
-# Build and run static analysis.
+# Install dependencies and run main application build.
 # Run grunt with --force to ignore errors.
-docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli sh -c "\
 # --unsafe-perm ensures dispatch to theme-related operations can still run as root for Docker.
-npm install --unsafe-perm && \
-grunt --timer --quiet"
+docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "npm install --unsafe-perm && grunt --timer --quiet"
 
 # Now safe to activate web container to support end-to-end testing.
-docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d www
+docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(proxy.exists) { %>proxy <% } %>www
 
 # Correct any issues in the web container.
 docker exec <%= projectName %>_${DOCKER_ENV}_www sh -c "\
@@ -87,9 +85,8 @@ chmod +x /var/www/bin/fix-perms.sh && \
 /var/www/bin/fix-perms.sh"
 
 # Install the site.
-docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli sh -c "\
 # Errors in final steps of installation require --force to ensure bin/post-install.sh is run.
-grunt install --no-db-load --force"
+docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "grunt install --no-db-load --force"
 
 # Wipe cache after permissions fix.
 docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run grunt cache-clear

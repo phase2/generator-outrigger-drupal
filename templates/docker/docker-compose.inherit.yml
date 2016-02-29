@@ -11,6 +11,15 @@ cache:
   extends:
     file: docker-compose.yml
     service: cache
+<% } %><% if (proxy.exists) { %>
+proxy:
+  container_name: <%= projectName %>_<%= environment %>_proxy
+  image: phase2/varnish4
+  environment:
+    VARNISH_BACKEND_HOST: www
+    VIRTUAL_HOST: <%= virtualHost %>
+  links:
+    - www
 <% } %>
 www:
   container_name: <%= projectName %>_<%= environment %>_www
@@ -19,7 +28,7 @@ www:
     DOCROOT: /var/www/build/html
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
-    VIRTUAL_HOST: <%= virtualHost %>
+    <% if (!proxy.exists) { %>VIRTUAL_HOST: <%= virtualHost %><% } %>
   links:
     - db<% if (cache.external) { %><%= cache.docker.link %><% } %>
   volumes:
