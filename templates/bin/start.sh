@@ -35,9 +35,7 @@ fi
 docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(cache.external) { %>cache <% } %>db
 
 # Build and run static analysis.
-docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli sh -c "\
-npm install && \
-grunt --force"
+docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "npm install && grunt --force"
 
 # Now safe to activate web container to support end-to-end testing.
 docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(proxy.exists) { %>proxy <% } %>www
@@ -48,10 +46,9 @@ chmod +x /var/www/bin/fix-perms.sh && \
 /var/www/bin/fix-perms.sh"
 
 # Install the site.
-docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli sh -c "\
 # Errors in final steps of installation require --force to ensure bin/post-install.sh is run.
 # Dev triggers a development build of Open Atrium
-grunt install --no-db-load --force"
+docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "grunt install --no-db-load --force"
 
 # Wipe cache after permissions fix.
 docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run grunt cache-clear
