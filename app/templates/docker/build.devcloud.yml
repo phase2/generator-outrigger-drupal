@@ -29,7 +29,7 @@ cli:
 drush:
   extends:
     service: base
-  entrypoint: [ "/init", "drush", "@atmos" ]
+  entrypoint: [ "/init", "drush", "@<%= projectName %>" ]
   working_dir: /var/www/build/html
 
 # Container for running grunt in the docroot.
