@@ -94,10 +94,10 @@ bash bin/start.sh ${DOCKER_ENV}
 
 # Warm cache and review HTTP response headers
 echo &quot;Warm cache and review HTTP response headers...&quot;
-curl -I -vvv <%= host.int %>
+curl -I -vvv http://${DOCKER_ENV}.<%= host.devcloud %>
 
 # Run Behat Tests
-docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli &quot;GDT_DOMAIN=<%= host.int %> grunt test --force --timer&quot;
+docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli &quot;GDT_DOMAIN=${DOCKER_ENV}.<%= host.devcloud %> grunt test --force --timer&quot;
 
 # Run Features Health Check
 docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli bash bin/features-health.sh || true

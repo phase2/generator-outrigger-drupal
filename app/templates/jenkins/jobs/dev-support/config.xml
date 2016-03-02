@@ -98,7 +98,7 @@ docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} ru
 
 # Run Behat Tests
 # Highly recommended, but not always used on projects.
-# docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli sh -c &quot;GDT_DOMAIN=<%= virtualHost %> grunt test --force --timer&quot;
+# docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli sh -c &quot;GDT_DOMAIN=${DOCKER_ENV}.<%= host.devcloud %> grunt test --force --timer&quot;
 
 # Perform a scan for module updates.
 docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli bash bin/update-scanner.sh

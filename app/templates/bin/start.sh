@@ -19,7 +19,7 @@
 ##
 NAME=`basename "$0"`
 DOCKER_ENV=$1
-COMPOSE_EXT=".$1"
+COMPOSE_EXT=".devcloud"
 if [[ -z $DOCKER_ENV ]]; then
   DOCKER_ENV=local
 fi
@@ -66,6 +66,7 @@ trap 'complete $?' EXIT
 # Bring up the site.
 ##
 echo "Preparing site for environment '$DOCKER_ENV'"
+export DOCKER_ENV
 
 # Spin up cache and db services to support build container.
 # Web container might take file locks on existing code, blocking the build process.

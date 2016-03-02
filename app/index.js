@@ -94,8 +94,9 @@ module.exports = yeoman.generators.Base.extend({
         int: virtualHost('int', options.machineName),
         dev: virtualHost('dev', options.machineName),
         qa: virtualHost('qa', options.machineName),
-        ms: virtualHost(false, options.machineName),
+        review: virtualHost('review', options.machineName),
         local: 'www.' + options.domain + '.vm',
+        devcloud: virtualHost(false, options.machineName)
       };
 
       done();
@@ -103,106 +104,36 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   writing: {
-    dockerComposeDefault: function() {
+    dockerComposeLocal: function() {
+      tokens.dockerComposeExt = '';
+      tokens.cache.docker.extLink = "\n    - " + options.projectName + "_local_cache:cache";
+      tokens.db.docker.extLink = options.projectName + "_local_db:db";
+
       this.fs.copyTpl(
         this.templatePath('docker/docker-compose.yml'),
         this.destinationPath('docker-compose.yml'),
         tokens
       );
-    },
-
-    dockerComposeINT: function() {
-      tokens.virtualHost = tokens.host.int;
-      tokens.environment = 'int';
-      tokens.dockerComposeExt = 'int.';
-      tokens.cache.docker.extLink = "\n    - " + options.projectName + "_int_cache:cache";
-      tokens.db.docker.extLink = options.projectName + "_int_db:db";
-
-      this.fs.copyTpl(
-        this.templatePath('docker/docker-compose.inherit.yml'),
-        this.destinationPath('docker-compose.int.yml'),
-        tokens
-      );
-      this.fs.copyTpl(
-        this.templatePath('docker/build.yml'),
-        this.destinationPath('build.int.yml'),
-        tokens
-      );
-    },
-
-    dockerComposeQA: function() {
-      if (options.environments.indexOf('qa') != -1) {
-        tokens.virtualHost = tokens.host.qa;
-        tokens.environment = 'qa';
-        tokens.dockerComposeExt = 'qa.';
-        tokens.cache.docker.extLink = "\n    - " + options.projectName + "_qa_cache:cache";
-        tokens.db.docker.extLink = options.projectName + "_qa_db:db";
-
-        this.fs.copyTpl(
-          this.templatePath('docker/docker-compose.inherit.yml'),
-          this.destinationPath('docker-compose.qa.yml'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('docker/build.yml'),
-          this.destinationPath('build.qa.yml'),
-          tokens
-        );
-      }
-    },
-
-    dockerComposeDEV: function() {
-      if (options.environments.indexOf('dev') != -1) {
-        tokens.virtualHost = tokens.host.dev;
-        tokens.environment = 'dev';
-        tokens.dockerComposeExt = 'dev.';
-        tokens.cache.docker.extLink = "\n    - " + options.projectName + "_dev_cache:cache";
-        tokens.db.docker.extLink = options.projectName + "_dev_db:db";
-
-        this.fs.copyTpl(
-          this.templatePath('docker/docker-compose.inherit.yml'),
-          this.destinationPath('docker-compose.dev.yml'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('docker/build.yml'),
-          this.destinationPath('build.dev.yml'),
-          tokens
-        );
-      }
-    },
-
-    dockerComposeMS: function() {
-      if (options.environments.indexOf('ms') != -1) {
-        tokens.virtualHost = tokens.host.ms;
-        tokens.environment = 'ms';
-        tokens.dockerComposeExt = 'ms.';
-        tokens.cache.docker.extLink = "\n    - " + options.projectName + "_ms_cache:cache";
-        tokens.db.docker.extLink = options.projectName + "_ms_db:db";
-
-        this.fs.copyTpl(
-          this.templatePath('docker/docker-compose.inherit.yml'),
-          this.destinationPath('docker-compose.ms.yml'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('docker/build.yml'),
-          this.destinationPath('build.ms.yml'),
-          tokens
-        );
-      }
-    },
-
-    // Local
-    dockerComposeBuild: function() {
-      tokens.dockerComposeExt = '';
-      tokens.environment = 'local';
-      tokens.cache.docker.extLink = "\n    - " + options.projectName + "_local_cache:cache";
-      tokens.db.docker.extLink = options.projectName + "_local_db:db";
-
       this.fs.copyTpl(
         this.templatePath('docker/build.yml'),
         this.destinationPath('build.yml'),
+        tokens
+      );
+    },
+
+    dockerComposeDevcloud: function() {
+      tokens.dockerComposeExt = 'devcloud.';
+      tokens.cache.docker.extLink = "\n    - " + options.projectName + "_${DOCKER_ENV}_cache:cache";
+      tokens.db.docker.extLink = options.projectName + "_${DOCKER_ENV}_db:db";
+
+      this.fs.copyTpl(
+        this.templatePath('docker/docker-compose.devcloud.yml'),
+        this.destinationPath('docker-compose.devcloud.yml'),
+        tokens
+      );
+      this.fs.copyTpl(
+        this.templatePath('docker/build.devcloud.yml'),
+        this.destinationPath('build.devcloud.yml'),
         tokens
       );
     },
@@ -355,7 +286,7 @@ module.exports = yeoman.generators.Base.extend({
 
       // Add local environment to facilitate testing.
       tokens.virtualHost = tokens.host.local;
-      tokens.environment = 0;
+      tokens.environment = 'local';
       tokens.dockerComposeExt = '';
       this.fs.copyTpl(
         this.templatePath('jenkins/jobs-optional/deploy-env'),
@@ -366,7 +297,7 @@ module.exports = yeoman.generators.Base.extend({
       if (options.environments.indexOf('dev') != -1) {
         tokens.virtualHost = tokens.host.dev;
         tokens.environment = 'dev';
-        tokens.dockerComposeExt = 'dev.';
+        tokens.dockerComposeExt = 'devcloud.';
         this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/deploy-env'),
           this.destinationPath('env/jenkins/jobs/deploy-dev'),
@@ -387,7 +318,7 @@ module.exports = yeoman.generators.Base.extend({
       if (options.environments.indexOf('qa') != -1) {
         tokens.virtualHost = tokens.host.qa;
         tokens.environment = 'qa';
-        tokens.dockerComposeExt = 'qa.';
+        tokens.dockerComposeExt = 'devcloud.';
         this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/deploy-env'),
           this.destinationPath('env/jenkins/jobs/deploy-qa'),
@@ -405,23 +336,23 @@ module.exports = yeoman.generators.Base.extend({
         );
       }
 
-      if (options.environments.indexOf('ms') != -1) {
-        tokens.virtualHost = tokens.host.ms;
-        tokens.environment = 'ms';
-        tokens.dockerComposeExt = 'ms.';
+      if (options.environments.indexOf('review') != -1) {
+        tokens.virtualHost = tokens.host.review;
+        tokens.environment = 'review';
+        tokens.dockerComposeExt = 'devcloud.';
         this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/deploy-env'),
-          this.destinationPath('env/jenkins/jobs/deploy-ms'),
+          this.destinationPath('env/jenkins/jobs/deploy-review'),
           tokens
         );
         this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/cron-env'),
-          this.destinationPath('env/jenkins/jobs/cron-ms'),
+          this.destinationPath('env/jenkins/jobs/cron-review'),
           tokens
         );
         this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/password-reset-env'),
-          this.destinationPath('env/jenkins/jobs/password-reset-ms'),
+          this.destinationPath('env/jenkins/jobs/password-reset-review'),
           tokens
         );
       }

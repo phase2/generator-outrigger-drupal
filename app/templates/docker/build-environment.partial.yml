@@ -1,3 +1,0 @@
-  environment:
-    VIRTUAL_HOST: <%= virtualHost %>
-    GDT_DOMAIN: <%= virtualHost %>

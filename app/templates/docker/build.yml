@@ -1,6 +1,34 @@
+##
+# Build and command-line operations containers for your local environment.
+##
+
 # Container for starting a cli for build commands
 # Usage: docker-compose -f build.yml run cli
 cli:
+  extends:
+    service: base
+
+# Container for running drush in the docroot.
+# Usage: docker-compose -f build.yml run drush <command>
+# Where <command> is a direct drush command like cache-rebuild
+drush:
+  extends:
+    service: base
+  entrypoint: [ "/init", "drush", "@atmos" ]
+  working_dir: /var/www/build/html
+
+# Container for running grunt in the docroot.
+# Usage: docker-compose -f build.yml run grunt <command>
+grunt:
+  extends:
+    service: base
+  entrypoint: [ "/init", "grunt" ]
+
+# Base service definition for Local environment.
+#
+# Other services inherit these settings via the extends property.
+# See https://docs.docker.com/compose/extends/#extending-services
+base:
   image: phase2/devtools-build
   entrypoint: [ "/init" ]
   working_dir: /var/www
@@ -8,39 +36,10 @@ cli:
   volumes:
     - .:/var/www/
     - ./env/build/etc/drush:/etc/drush
-    <% if (environment == 'local') { %>- ./build/backups:/opt/backups<% } else { -%>
-- /data/backups/<%= projectName %>/<%= environment %>:/opt/backups<% } %>
-<% if (environment != 'local') { %><% include build-environment.partial.yml %><% } -%>
-  external_links:
-    - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
-
-# Container for running drush in the docroot.
-# Usage: docker-compose -f build.yml run drush <command>
-# Where <command> is a direct drush command like cache-rebuild
-drush:
-  image: phase2/devtools-build
-  entrypoint: [ "/init", "drush", "@<%= projectName %>" ]
-  working_dir: /var/www/build/html
-  volumes:
-    - .:/var/www/
-    - ./env/build/etc/drush:/etc/drush
-    <% if (environment == 'local') { %>- ./build/backups:/opt/backups<% } else { -%>
-- /data/backups/<%= projectName %>/<%= environment %>:/opt/backups<% } %>
-<% if (environment != 'local') { %><% include build-environment.partial.yml %><% } -%>
-  external_links:
-    - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
-
-# Container for running grunt in the docroot.
-# Usage: docker-compose -f build.yml run grunt <command>
-grunt:
-  image: phase2/devtools-build
-  entrypoint: [ "/init", "grunt" ]
-  working_dir: /var/www
-  volumes:
-    - .:/var/www/
-    - ./env/build/etc/drush:/etc/drush
-    <% if (environment == 'local') { %>- ./build/backups:/opt/backups<% } else { -%>
-- /data/backups/<%= projectName %>/<%= environment %>:/opt/backups<% } %>
-<% if (environment != 'local') { %><% include build-environment.partial.yml %><% } -%>
+    - ./build/backups:/opt/backups
+  environment:
+    VIRTUAL_HOST: <%= host.local %>
+    GDT_DOMAIN: <%= host.local %>
+    <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: <%= host.local %><% } %>
   external_links:
     - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
