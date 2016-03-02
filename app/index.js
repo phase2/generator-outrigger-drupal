@@ -60,13 +60,13 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
-      options.machineName = options.projectName.replace('-', '_');
+      options.machineName = options.projectName.replace(/\-/g, '_');
 
       tokens = options;
       tokens.debugMode = 'true';
       tokens.environment = '';
       tokens.dockerComposeExt = '';
-      
+
       if (!tokens['gitRepoUrl']) {
         tokens['gitRepoUrl'] = 'git@bitbucket.org:phase2tech/' + options.projectName + '.git';
       }
