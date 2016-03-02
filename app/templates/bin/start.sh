@@ -47,7 +47,7 @@ teardown() {
 
 # Handler for errors and interruptions.
 cancel() {
-  echo &quot;$NAME: Error: Line $1: $2&quot;
+  echo "$NAME: Error: Line $1: $2"
   teardown
   exit 33
 }
