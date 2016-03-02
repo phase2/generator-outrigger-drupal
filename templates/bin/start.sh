@@ -18,16 +18,9 @@
 # Initialize parameters.
 ##
 NAME=`basename "$0"`
-DOCKER_ENV=$1
+DOCKER_ENV=${1-local}
 COMPOSE_EXT=".devcloud"
-if [[ -z $DOCKER_ENV ]]; then
-  DOCKER_ENV=local
-fi
-
-COMPOSE_PROJECT=$2
-if [[ -z $COMPOSE_PROJECT ]]; then
-  COMPOSE_PROJECT="-p <%= projectName %>_${DOCKER_ENV}"
-fi
+COMPOSE_PROJECT=${2-'-p <%= projectName %>_'${DOCKER_ENV}}
 
 if [[ $DOCKER_ENV == 'local' ]]; then
   COMPOSE_EXT=''
