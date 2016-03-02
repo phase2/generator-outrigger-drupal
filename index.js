@@ -66,6 +66,13 @@ module.exports = yeoman.generators.Base.extend({
       tokens.debugMode = 'true';
       tokens.environment = '';
       tokens.dockerComposeExt = '';
+      
+      if (!tokens['gitRepoUrl']) {
+        tokens['gitRepoUrl'] = 'git@bitbucket.org:phase2tech/' + options.projectName + '.git';
+      }
+      if (!tokens['flowdockApiKey']) {
+        tokens['flowdockApiKey'] = '';
+      }
 
       tokens.app = {
         image: webImage(options.webserver, options.drupalDistroVersion) || options.webImage,
