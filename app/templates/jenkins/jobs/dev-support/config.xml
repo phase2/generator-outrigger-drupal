@@ -58,7 +58,7 @@ docker-compose -f docker-compose.int.yml -p <%= projectName %>_int rm -f || true
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
       <command># Set up and install site
-bash bin/start.sh int
+bin/start.sh int
 
 # Run cron for maximized database freshness.
 docker-compose -f build.int.yml -p <%= projectName %>_int run drush cron
