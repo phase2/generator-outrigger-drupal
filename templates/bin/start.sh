@@ -41,9 +41,7 @@ docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "npm ins
 docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(proxy.exists) { %>proxy <% } %>www
 
 # Correct any issues in the web container.
-docker exec <%= projectName %>_${DOCKER_ENV}_www sh -c "\
-chmod +x /var/www/bin/fix-perms.sh && \
-/var/www/bin/fix-perms.sh"
+docker exec <%= projectName %>_${DOCKER_ENV}_www "/var/www/bin/fix-perms.sh"
 
 # Install the site.
 # Errors in final steps of installation require --force to ensure bin/post-install.sh is run.

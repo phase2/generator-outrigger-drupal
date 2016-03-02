@@ -55,7 +55,7 @@ docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p <%= projectName %
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
       <command># Set up and install site
-bash bin/start.sh <%= environment %>
+bin/start.sh <%= environment %>
 
 # Warm cache and review HTTP response headers
 echo &quot;Warm cache and review HTTP response headers...&quot;
@@ -65,7 +65,7 @@ curl -I -vvv <%= virtualHost %>
 docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run cli &quot;GDT_DOMAIN=<%= virtualHost %> grunt test --force --timer&quot;
 
 # Run Features Health Check
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run cli bash bin/features-health.sh || true
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run cli bin/features-health.sh || true
 
 # Generate a one-time password reset link.
 echo &quot;Generating a one-time password-reset link...&quot;
