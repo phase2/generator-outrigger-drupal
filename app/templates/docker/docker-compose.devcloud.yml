@@ -24,7 +24,7 @@
 
 # Database service
 db:
-  container_name: <%= projectName %>_${DOCKER_ENV}_db
+  container_name: <%= machineName %>_${DOCKER_ENV}_db
   extends:
     file: docker-compose.yml
     service: db
@@ -33,14 +33,14 @@ db:
 <% if (cache.external) { %>
 # Application Cache service
 cache:
-  container_name: <%= projectName %>_${DOCKER_ENV}_cache
+  container_name: <%= machineName %>_${DOCKER_ENV}_cache
   extends:
     file: docker-compose.yml
     service: cache
 <% } %><% if (proxy.exists) { %>
 # Reverse-proxy Cache service
 proxy:
-  container_name: <%= projectName %>_${DOCKER_ENV}_proxy
+  container_name: <%= machineName %>_${DOCKER_ENV}_proxy
   image: phase2/varnish4
   environment:
     VARNISH_BACKEND_HOST: www
@@ -50,7 +50,7 @@ proxy:
 <% } %>
 # Main Application service.
 www:
-  container_name: <%= projectName %>_${DOCKER_ENV}_www
+  container_name: <%= machineName %>_${DOCKER_ENV}_www
   image: <%= app.image %>
   environment:
     DOCROOT: /var/www/build/html

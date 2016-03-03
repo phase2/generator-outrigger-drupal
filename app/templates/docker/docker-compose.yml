@@ -4,7 +4,7 @@
 
 # Database service
 db:
-  container_name: <%= projectName %>_local_db
+  container_name: <%= machineName %>_local_db
   image: phase2/mariadb
   environment:
     DNSDOCK_NAME: db
@@ -23,7 +23,7 @@ cache:
 <% } if (proxy.exists) { %>
 # Reverse-proxy Cache service
 proxy:
-  container_name: <%= projectName %>_local_proxy
+  container_name: <%= machineName %>_local_proxy
   image: phase2/varnish4
   environment:
     DNSDOCK_NAME: www
@@ -34,7 +34,7 @@ proxy:
 <% } %>
 # Main Application service.
 www:
-  container_name: <%= projectName %>_local_www
+  container_name: <%= machineName %>_local_www
   image: <%= app.image %>
   environment:
     DNSDOCK_NAME: <% if (proxy.exists) { %>app<% } else { %>www<% } %>
