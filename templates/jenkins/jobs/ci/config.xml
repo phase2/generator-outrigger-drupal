@@ -90,7 +90,7 @@ trap &apos;complete $?&apos; EXIT
 teardown
 
 # Set up and install site
-bash bin/start.sh ${DOCKER_ENV}
+bin/start.sh ${DOCKER_ENV}
 
 # Warm cache and review HTTP response headers
 echo &quot;Warm cache and review HTTP response headers...&quot;
@@ -100,7 +100,7 @@ curl -I -vvv http://${DOCKER_ENV}.<%= host.devcloud %>
 docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli &quot;GDT_DOMAIN=${DOCKER_ENV}.<%= host.devcloud %> grunt test --force --timer&quot;
 
 # Run Features Health Check
-docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli bash bin/features-health.sh || true
+docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli bin/features-health.sh || true
 
 # Generate Static Analysis Reports
 docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run grunt analyze --timer
