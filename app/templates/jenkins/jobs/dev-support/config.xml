@@ -87,14 +87,14 @@ trap &apos;complete $?&apos; EXIT
 teardown
 
 # Set up and install site
-bash bin/start.sh ${DOCKER_ENV}
+bin/start.sh ${DOCKER_ENV}
 
 # Run cron for maximized database freshness.
 docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run drush cron
 
 # Export database. This process preserves the latest 5 databases.
 DATE=$(date +%Y-%m-%d_%H:%M:%S)
-docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli bash bin/db-export.sh nightlies/$DATE.sql
+docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli bin/db-export.sh nightlies/$DATE.sql
 
 # Run Behat Tests
 # Highly recommended, but not always used on projects.

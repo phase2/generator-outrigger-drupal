@@ -444,6 +444,15 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   end: function() {
+    var done = this.async();
+    var fs = require('fs');
+    fs.access(this.destinationPath('bin/fix-perms.sh'), fs.X_OK, function(err) {
+      if (err) {
+        this.log(chalk.red('Please make your shell scripts executable: `chmod +x bin/*.sh`.'));
+      }
+      done();
+    }.bind(this));
+
     if (!options['skipGoodbye']) {
       this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
       this.log(chalk.yellow('Please read TODOS.md for manual follow-up steps.'));
