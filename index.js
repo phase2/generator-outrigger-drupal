@@ -60,7 +60,7 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
-      options.machineName = options.projectName.replace('-', '_');
+      options.machineName = options.projectName.replace(/\-/g, '_');
 
       tokens = options;
       tokens.debugMode = 'true';
@@ -101,7 +101,8 @@ module.exports = yeoman.generators.Base.extend({
         int: virtualHost('int', options.machineName),
         dev: virtualHost('dev', options.machineName),
         qa: virtualHost('qa', options.machineName),
-        ms: virtualHost(false, options.machineName)
+        ms: virtualHost(false, options.machineName),
+        local: 'www.' + options.domain + '.vm',
       };
 
       done();
@@ -356,6 +357,16 @@ module.exports = yeoman.generators.Base.extend({
       this.fs.copyTpl(
         this.templatePath('jenkins/JENKINS.md'),
         this.destinationPath('JENKINS.md'),
+        tokens
+      );
+
+      // Add local environment to facilitate testing.
+      tokens.virtualHost = tokens.host.local;
+      tokens.environment = 0;
+      tokens.dockerComposeExt = '';
+      this.fs.copyTpl(
+        this.templatePath('jenkins/jobs-optional/deploy-env'),
+        this.destinationPath('env/jenkins/jobs/deploy-local'),
         tokens
       );
 
