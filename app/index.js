@@ -113,8 +113,8 @@ module.exports = yeoman.generators.Base.extend({
   writing: {
     dockerComposeLocal: function() {
       tokens.dockerComposeExt = '';
-      tokens.cache.docker.extLink = "\n    - " + options.projectName + "_local_cache:cache";
-      tokens.db.docker.extLink = options.projectName + "_local_db:db";
+      tokens.cache.docker.extLink = "\n    - " + options.machineName + "_local_cache:cache";
+      tokens.db.docker.extLink = options.machineName + "_local_db:db";
 
       this.fs.copyTpl(
         this.templatePath('docker/docker-compose.yml'),
@@ -130,8 +130,8 @@ module.exports = yeoman.generators.Base.extend({
 
     dockerComposeDevcloud: function() {
       tokens.dockerComposeExt = 'devcloud.';
-      tokens.cache.docker.extLink = "\n    - " + options.projectName + "_${DOCKER_ENV}_cache:cache";
-      tokens.db.docker.extLink = options.projectName + "_${DOCKER_ENV}_db:db";
+      tokens.cache.docker.extLink = "\n    - " + options.machineName + "_${DOCKER_ENV}_cache:cache";
+      tokens.db.docker.extLink = options.machineName + "_${DOCKER_ENV}_db:db";
 
       this.fs.copyTpl(
         this.templatePath('docker/docker-compose.devcloud.yml'),

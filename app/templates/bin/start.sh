@@ -20,7 +20,7 @@
 NAME=`basename "$0"`
 DOCKER_ENV=${1-local}
 COMPOSE_EXT=".devcloud"
-COMPOSE_PROJECT=${2-'-p <%= projectName %>_'${DOCKER_ENV}}
+COMPOSE_PROJECT=${2-'-p <%= machineName %>_'${DOCKER_ENV}}
 
 if [[ $DOCKER_ENV == 'local' ]]; then
   COMPOSE_EXT=''
@@ -74,7 +74,7 @@ docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "npm ins
 docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(proxy.exists) { %>proxy <% } %>www
 
 # Correct any issues in the web container.
-docker exec <%= projectName %>_${DOCKER_ENV}_www "/var/www/bin/fix-perms.sh"
+docker exec <%= machineName %>_${DOCKER_ENV}_www "/var/www/bin/fix-perms.sh"
 
 # Install the site.
 # Errors in final steps of installation require --force to ensure bin/post-install.sh is run.

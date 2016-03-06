@@ -18,13 +18,13 @@
 ##
 
 # Container for starting a cli for build commands
-# Usage: DOCKER_ENV=int docker-compose -f build.yml -p <%= projectName %>_int run cli
+# Usage: DOCKER_ENV=int docker-compose -f build.yml -p <%= machineName %>_int run cli
 cli:
   extends:
     service: base
 
 # Container for running drush in the docroot.
-# Usage: DOCKER_ENV=int docker-compose -f build.yml -p <%= projectName %>_int run drush <command>
+# Usage: DOCKER_ENV=int docker-compose -f build.yml -p <%= machineName %>_int run drush <command>
 # Where <command> is a direct drush command like cache-rebuild
 drush:
   extends:
@@ -33,7 +33,7 @@ drush:
   working_dir: /var/www/build/html
 
 # Container for running grunt in the docroot.
-# Usage: DOCKER_ENV=int docker-compose -f build.yml -p <%= projectName %>_int run grunt <command>
+# Usage: DOCKER_ENV=int docker-compose -f build.yml -p <%= machineName %>_int run grunt <command>
 grunt:
   extends:
     service: base

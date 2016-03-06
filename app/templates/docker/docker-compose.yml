@@ -15,7 +15,7 @@ db:
 <% if (cache.external) { %>
 # Application Cache service
 cache:
-  container_name: <%= projectName %>_local_cache
+  container_name: <%= machineName %>_local_cache
   image: <%= cache.image %>
   environment:
     DNSDOCK_NAME: cache

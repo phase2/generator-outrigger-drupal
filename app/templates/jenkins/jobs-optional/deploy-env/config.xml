@@ -50,7 +50,7 @@
     <hudson.tasks.Shell>
       <command>#!/usr/bin/env bash
 export DOCKER_ENV=<% if (environment) { %><%= environment %><% } else { %>&apos;&apos;<% } %>
-export DOCKER_PROJECT=<%= projectName %>_${DOCKER_ENV:--local}
+export DOCKER_PROJECT=<%= machineName %>_${DOCKER_ENV:--local}
 export SITE_DOMAIN=<% if (environment == 'local') { %><%= host.local %><% } else { %>${DOCKER_ENV}.<%= host.devcloud %><% } %>
 
 # Break down the Docker environment and remove generated files.
