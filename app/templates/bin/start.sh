@@ -14,6 +14,10 @@
 #    project specific name for docker-compose.
 ##
 
+##
+# Initialize parameters.
+##
+NAME=`basename "$0"`
 DOCKER_ENV=$1
 COMPOSE_EXT=".$1"
 if [[ -z $DOCKER_ENV ]]; then
@@ -30,12 +34,47 @@ if [[ $DOCKER_ENV == 'local' ]]; then
   COMPOSE_PROJECT=''
 fi
 
+##
+# Error handling.
+##
+
+# Stop all containers.
+# This will allow follow-up runs via Jenkins to manage the workspace.
+# Container rm is left to Jenkins or the developer.
+teardown() {
+  docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} stop || true
+}
+
+# Handler for errors and interruptions.
+cancel() {
+  echo "$NAME: Error: Line $1: $2"
+  teardown
+  exit 33
+}
+
+# Final actions to take whenever the script ends.
+complete() {
+  ret=$1
+  [ "$ret" -eq 0 ] || echo >&2 "$NAME: aborted ($ret)"
+}
+
+# Cancel docker start on errors.
+trap 'cancel $LINENO $BASH_COMMAND' ERR SIGINT SIGTERM
+trap 'complete $?' EXIT
+
+##
+# Bring up the site.
+##
+echo "Preparing site for environment '$DOCKER_ENV'"
+
 # Spin up cache and db services to support build container.
 # Web container might take file locks on existing code, blocking the build process.
 docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(cache.external) { %>cache <% } %>db
 
-# Build and run static analysis.
-docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "npm install --unsafe-perm && grunt --force"
+# Install dependencies and run main application build.
+# Run grunt with --force to ignore errors.
+# --unsafe-perm ensures dispatch to theme-related operations can still run as root for Docker.
+docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "npm install --unsafe-perm && grunt --timer --quiet"
 
 # Now safe to activate web container to support end-to-end testing.
 docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(proxy.exists) { %>proxy <% } %>www
@@ -45,7 +84,6 @@ docker exec <%= projectName %>_${DOCKER_ENV}_www "/var/www/bin/fix-perms.sh"
 
 # Install the site.
 # Errors in final steps of installation require --force to ensure bin/post-install.sh is run.
-# Dev triggers a development build of Open Atrium
 docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "grunt install --no-db-load --force"
 
 # Wipe cache after permissions fix.
