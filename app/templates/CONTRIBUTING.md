@@ -4,7 +4,8 @@ This extension to the README is necessary for all developers working on the
 ## Build Process
 
 As described in the README, the many steps of assembling, installing, and managing
-the site have been combined into a few simple commands using [Grunt Drupal Tasks](https://github.com/phase2/grunt-drupal-tasks).
+the site have been combined into a few simple commands using
+[Grunt Drupal Tasks](https://github.com/phase2/grunt-drupal-tasks).
 
 You can see a list of all available actions by running
 ```js
@@ -13,7 +14,8 @@ docker-compose -f build.yml run grunt help
 
 ### Build the Codebase
 
-Our build process downloads all upstream dependencies of the site to assemble a functional docroot.
+Our build process downloads all upstream dependencies of the site to assemble
+a functional docroot.
 
   * Create build/html directory
   * Validate custom code with static analysis checks
@@ -22,14 +24,16 @@ Our build process downloads all upstream dependencies of the site to assemble a 
 
 ### Role of Each Dependency Manager
 
-This action cuts across several different *dependency managers*, which are each used to control the use of different types of external, Open Source libraries. The table below illustrates how the downloaded libraries and modules are used by the system.
+This action cuts across several different *dependency managers*, which are each
+used to control the use of different types of external, Open Source libraries.
+The table below illustrates how the downloaded libraries and modules are used
+by the system.
 
 | Tool | Config Files | QA & Development | Build & Deployment | Production |
 | ---- | ------------ | :--------------: | :----------------: | :--------: |
 | Composer | composer.json | ✔ | ✔ | ✗ |
 | Drush Make | project.make | ✔ | ✔ | ✗ |
 | npm | package.json | ✔ | ✔ | ✗ |
-| Bundler | Gemfile | ✔ | ✔ | ✗ |
 
 ### When To Run
 
