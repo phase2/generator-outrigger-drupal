@@ -66,6 +66,7 @@ module.exports = yeoman.generators.Base.extend({
       tokens.debugMode = 'true';
       tokens.environment = '';
       tokens.dockerComposeExt = '';
+      tokens.pkg = require('../package.json');
 
       if (!tokens['gitRepoUrl']) {
         tokens['gitRepoUrl'] = 'git@bitbucket.org:phase2tech/' + options.projectName + '.git';
