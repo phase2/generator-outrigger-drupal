@@ -3,13 +3,13 @@
   <actions/>
   <description>Deploy changes to &apos;<%= virtualHost %>&apos;.  This job is managed in the project code repository, changes made via UI will be lost.</description>
   <keepDependencies>false</keepDependencies>
-  <% if (environment != 'dev') { %><properties>
+  <properties>
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
         <hudson.model.StringParameterDefinition>
           <name>GIT_REF</name>
           <description>Git branch, tag, or commit revision to build.</description>
-          <defaultValue>develop</defaultValue>
+          <defaultValue>refs/heads/develop</defaultValue>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
@@ -17,8 +17,7 @@
       <autoRebuild>false</autoRebuild>
       <rebuildDisabled>false</rebuildDisabled>
     </com.sonyericsson.rebuild.RebuildSettings>
-  </properties><% } else { %>
-  <properties/><% } -%>
+  </properties>
   <scm class="hudson.plugins.git.GitSCM" plugin="git@2.4.0">
     <configVersion>2</configVersion>
     <userRemoteConfigs>
@@ -28,7 +27,7 @@
     </userRemoteConfigs>
     <branches>
       <hudson.plugins.git.BranchSpec>
-        <name><% if (environment == 'dev') { %>develop<% } else { %>${GIT_REF}<% }%></name>
+        <name>${GIT_REF}</name>
       </hudson.plugins.git.BranchSpec>
     </branches>
     <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
@@ -51,7 +50,8 @@
     <hudson.tasks.Shell>
       <command>#!/usr/bin/env bash
 export DOCKER_ENV=<% if (environment) { %><%= environment %><% } else { %>&apos;&apos;<% } %>
-export DOCKER_PROJECT=<%= projectName %>_${DOCKER_ENV:--local}
+export DOCKER_PROJECT=<%= machineName %>_${DOCKER_ENV:--local}
+export SITE_DOMAIN=<% if (environment == 'local') { %><%= host.local %><% } else { %>${DOCKER_ENV}.<%= host.devcloud %><% } %>
 
 # Break down the Docker environment and remove generated files.
 teardown() {
@@ -59,7 +59,7 @@ teardown() {
   docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} rm -f || true
   # Now that www container is stopped it's safe to clean up.
   # This is not done by default to keep most environments fast.
-  <% if (environment != 'ms') { %>#<% } %> git clean -fd
+  <% if (environment != 'review') { %>#<% } %> git clean -fd
 }
 
 # Handler for errors or other interruptions.
@@ -88,10 +88,10 @@ bin/start.sh <%= environment %>
 
 # Warm cache and review HTTP response headers
 echo &quot;Warm cache and review HTTP response headers...&quot;
-curl -I -vvv http://<%= virtualHost %>
+curl -I -vvv http://${SITE_DOMAIN}
 
 # Run Behat Tests
-docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run cli &quot;GDT_DOMAIN=<%= virtualHost %> grunt test --force --timer&quot;
+docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run cli &quot;GDT_DOMAIN=${SITE_DOMAIN} grunt test --force --timer&quot;
 
 # Run Features Health Check
 docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run cli bin/features-health.sh || true

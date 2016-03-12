@@ -33,6 +33,7 @@
   <builders>
     <hudson.tasks.Shell>
       <command>#!/usr/bin/env bash
+export DOCKER_ENV=<%= environment %>
 
 # Handler for errors or other interruptions.
 cancel() {
@@ -43,7 +44,7 @@ cancel() {
 # Abort build step on errors.
 trap &apos;cancel $LINENO $BASH_COMMAND&apos; ERR SIGINT SIGTERM SIGQUIT SIGHUP
 
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_<%= environment %> run drush cron</command>
+docker-compose -f build.<%= dockerComposeExt %>yml -p <%= machineName %>_${DOCKER_ENV} run drush cron</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>

@@ -1,0 +1,60 @@
+##
+# Build and command-line operations containers for DevCloud-hosted Docker environments.
+#
+# In-line documentation assumes the "Integration" or 'int' environment, in practice
+# any environment name can be used. Standard names also include: Development (dev),
+# Testing (qa), and Review/Milestone (ms).
+#
+# "Dev Cloud" is the name of the internal Phase2 development infrastructure.
+#
+# To ensure this works as expected for multiple environments, both environment
+# settings must be carefully respected in *every* command invocation:
+#
+# * The `DOCKER_ENV` environment variable which is used as a template parameter for
+#   how this configuration is used.
+# * The -p|--project-name option for Docker Compose, which used the provided name
+#   in lieu of deriving key Docker namespacing from whatever the current directory
+#   happens to be named.
+##
+
+# Container for starting a cli for build commands
+# Usage: DOCKER_ENV=int docker-compose -f build.yml -p <%= machineName %>_int run cli
+cli:
+  extends:
+    service: base
+
+# Container for running drush in the docroot.
+# Usage: DOCKER_ENV=int docker-compose -f build.yml -p <%= machineName %>_int run drush <command>
+# Where <command> is a direct drush command like cache-rebuild
+drush:
+  extends:
+    service: base
+  entrypoint: [ "/init", "drush", "@<%= projectName %>" ]
+  working_dir: /var/www/build/html
+
+# Container for running grunt in the docroot.
+# Usage: DOCKER_ENV=int docker-compose -f build.yml -p <%= machineName %>_int run grunt <command>
+grunt:
+  extends:
+    service: base
+  entrypoint: [ "/init", "grunt" ]
+
+# Base service definition for Local environment.
+#
+# Other services inherit these settings via the extends property.
+# See https://docs.docker.com/compose/extends/#extending-services
+base:
+  image: phase2/devtools-build
+  entrypoint: [ "/init" ]
+  working_dir: /var/www
+  command: /bin/bash
+  volumes:
+    - .:/var/www/
+    - ./env/build/etc/drush:/etc/drush
+    - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+  environment:
+    VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %>
+    GDT_DOMAIN: ${DOCKER_ENV}.<%= host.devcloud %>
+    <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %><% } %>
+  external_links:
+    - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>

@@ -59,8 +59,8 @@ export DOCKER_ENV=int
 
 # Break down the Docker environment and remove generated files.
 teardown() {
-  docker-compose -f docker-compose.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} stop || true
-  docker-compose -f docker-compose.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} rm -f || true
+  docker-compose -f docker-compose.${DOCKER_ENV}.yml -p <%= machineName %>_${DOCKER_ENV} stop || true
+  docker-compose -f docker-compose.${DOCKER_ENV}.yml -p <%= machineName %>_${DOCKER_ENV} rm -f || true
   # Now that www container is stopped it's safe to clean up.
   # For speed, CI job does not do this, and relies on build process to perform
   # steps on an as-needed basis.
@@ -94,16 +94,16 @@ bin/start.sh ${DOCKER_ENV}
 
 # Warm cache and review HTTP response headers
 echo &quot;Warm cache and review HTTP response headers...&quot;
-curl -I -vvv <%= host.int %>
+curl -I -vvv http://${DOCKER_ENV}.<%= host.devcloud %>
 
 # Run Behat Tests
-docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli &quot;GDT_DOMAIN=<%= host.int %> grunt test --force --timer&quot;
+docker-compose -f build.${DOCKER_ENV}.yml -p <%= machineName %>_${DOCKER_ENV} run cli &quot;GDT_DOMAIN=${DOCKER_ENV}.<%= host.devcloud %> grunt test --force --timer&quot;
 
 # Run Features Health Check
-docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run cli bin/features-health.sh || true
+docker-compose -f build.${DOCKER_ENV}.yml -p <%= machineName %>_${DOCKER_ENV} run cli bin/features-health.sh || true
 
 # Generate Static Analysis Reports
-docker-compose -f build.${DOCKER_ENV}.yml -p <%= projectName %>_${DOCKER_ENV} run grunt analyze --timer
+docker-compose -f build.${DOCKER_ENV}.yml -p <%= machineName %>_${DOCKER_ENV} run grunt analyze --timer
 </command>
     </hudson.tasks.Shell>
   </builders>

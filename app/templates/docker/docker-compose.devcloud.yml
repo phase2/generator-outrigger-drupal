@@ -1,0 +1,64 @@
+##
+# Operational services to run the application in DevCloud-hosted Docker environments.
+#
+# In-line documentation assumes the "Integration" or 'int' environment, in practice
+# any environment name can be used. Standard names also include: Development (dev),
+# Testing (qa), and Review/Milestone (review).
+#
+# "Dev Cloud" is the name of the internal Phase2 development infrastructure.
+#
+# To ensure this works as expected for multiple environments, both environment
+# settings must be carefully respected in *every* command invocation:
+#
+# * The `DOCKER_ENV` environment variable which is used as a template parameter for
+#   how this configuration is used.
+# * The -p|--project-name option for Docker Compose, which used the provided name
+#   in lieu of deriving key Docker namespacing from whatever the current directory
+#   happens to be named.
+#
+# Common Operations
+#
+# * Start all services in the background: `DOCKER_ENV=int docker-compose up -d`
+# * Connect to a container to run limited commands: `docker exec -it <container_name> bash`
+##
+
+# Database service
+db:
+  container_name: <%= machineName %>_${DOCKER_ENV}_db
+  extends:
+    file: docker-compose.yml
+    service: db
+  volumes:
+    - /data/<%= projectName %>_${DOCKER_ENV}/mysql:/var/lib/mysql
+<% if (cache.external) { %>
+# Application Cache service
+cache:
+  container_name: <%= machineName %>_${DOCKER_ENV}_cache
+  extends:
+    file: docker-compose.yml
+    service: cache
+<% } %><% if (proxy.exists) { %>
+# Reverse-proxy Cache service
+proxy:
+  container_name: <%= machineName %>_${DOCKER_ENV}_proxy
+  image: phase2/varnish4
+  environment:
+    VARNISH_BACKEND_HOST: www
+    VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %>
+  links:
+    - www
+<% } %>
+# Main Application service.
+www:
+  container_name: <%= machineName %>_${DOCKER_ENV}_www
+  image: <%= app.image %>
+  environment:
+    DOCROOT: /var/www/build/html
+    PHP_XDEBUG: "<%= debugMode %>"
+    PHP_XHPROF: "<%= debugMode %>"
+    <% if (!proxy.exists) { %>VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %><% } %>
+  links:
+    - db<% if (cache.external) { %><%= cache.docker.link %><% } %>
+  volumes:
+    - .:/var/www/
+    - /data/<%= projectName %>_${DOCKER_ENV}/files:/var/www/build/html/sites/default/files
