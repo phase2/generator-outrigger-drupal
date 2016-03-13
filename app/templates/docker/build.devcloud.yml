@@ -53,8 +53,8 @@ base:
     - ./env/build/etc/drush:/etc/drush
     - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
   environment:
-    VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %>
-    GDT_DOMAIN: ${DOCKER_ENV}.<%= host.devcloud %>
-    <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %><% } %>
+    VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %>
+    GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+    <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
   external_links:
     - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
