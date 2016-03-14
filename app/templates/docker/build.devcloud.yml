@@ -50,10 +50,10 @@ base:
   command: /bin/bash
   volumes:
     - .:/var/www/
-    - ./env/build/etc/drush:/etc/drush
+    - ./env/build/etc/drush:/root/.drush
     - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
   environment:
-    VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %>
+    APP_DOMAIN: ${DOCKER_ENV}.<%= host.devcloud %>
     GDT_DOMAIN: ${DOCKER_ENV}.<%= host.devcloud %>
     <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %><% } %>
   external_links:

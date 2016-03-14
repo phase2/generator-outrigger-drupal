@@ -2,24 +2,15 @@
 /**
  * Drush System configuration
  *
- * This file configures all usage of Drush on this server.
+ * This file configures usage of Drush on the build container, in conjunction
+ * with configuration and commands placed in /etc/drush.
  */
 
-// Look for alias files.
-$options['alias-path'] = '/etc/drush';
-
-// Look for command files for auto-include.
-$options['include'] = '/etc/drush/commands';
-
-// Let Drush use unlimited memory.
-ini_set('memory_limit', -1);
-
-// Allow Drush to run forever.
-ini_set('max_execution_time', -1);
-
-// Ignore the data in these tables, but keep the table structures. Make sure to
-// update the list when new cache tables are added. For Atrium sites see the
-// example.drushrc.php shipped with the distribution for its complete list.
+// On drush sql-dump and other database extraction operations, ignore the data
+// in these tables, but keep the table structures.
+// Make sure to update the list when new cache tables are added.
+// For Atrium sites see the `example.drushrc.php` shipped with the distribution
+// for a complete list.
 $options['structure-tables']['common'] = array(
   'cache',
   'cache_block',

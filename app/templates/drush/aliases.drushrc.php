@@ -8,7 +8,7 @@
  * Site alias for tuned Drush usage with the '<%= projectName %>' site.
  */
 
-$host = getenv('VIRTUAL_HOST');
+$host = getenv('APP_DOMAIN');
 
 $aliases['<%= projectName %>'] = array(
   'uri' => $host ? $host : 'http://www.<%= domain %>.vm/',
