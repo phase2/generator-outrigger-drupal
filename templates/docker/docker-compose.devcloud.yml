@@ -44,7 +44,7 @@ proxy:
   image: phase2/varnish4
   environment:
     VARNISH_BACKEND_HOST: www
-    APP_VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %>
+    VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %>
   links:
     - www
 <% } %>
@@ -56,7 +56,7 @@ www:
     DOCROOT: /var/www/build/html
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
-    <% if (!proxy.exists) { %>APP_VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %><% } %>
+    <% if (!proxy.exists) { %>VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %><% } %>
   links:
     - db<% if (cache.external) { %><%= cache.docker.link %><% } %>
   volumes:
