@@ -37,6 +37,11 @@ base:
     - .:/var/www/
     - ./env/build/etc/drush:/etc/drush
     - ./build/backups:/opt/backups
+    - /data/<%= projectName %>_local/cache/drush:/root/.drush/cache
+    - /data/<%= projectName %>_local/cache/composer:/root/.composer/cache
+    - /data/<%= projectName %>_local/cache/npm:/root/.npm
+    - /data/<%= projectName %>_local/cache/bower:/root/.cache/bower
+    - /data/<%= projectName %>_local/cache/fontconfig:/root/.cache/fontconfig
   environment:
     VIRTUAL_HOST: <%= host.local %>
     GDT_DOMAIN: <%= host.local %>

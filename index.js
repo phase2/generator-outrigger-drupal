@@ -33,6 +33,16 @@ var virtualHost = function(env, namespace) {
   return env + namespace + '.' + options['ciHost'];
 };
 
+
+/**
+ * Determine if a given environment has been enabled by name.
+ *
+ * This function should only be used after options parameter is initialized from prompts.
+ */
+var envActive = function(environment) {
+  return options.environments.indexOf(environment) != -1;
+}
+
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
     this.pkg = require('../package.json');
@@ -67,6 +77,7 @@ module.exports = yeoman.generators.Base.extend({
       tokens.debugMode = 'true';
       tokens.environment = '';
       tokens.dockerComposeExt = '';
+      tokens.pkg = require('../package.json');
 
       if (!tokens['gitRepoUrl']) {
         tokens['gitRepoUrl'] = 'git@bitbucket.org:phase2tech/' + options.projectName + '.git';
@@ -100,13 +111,20 @@ module.exports = yeoman.generators.Base.extend({
 
       tokens.host = {
         int: virtualHost('int', options.machineName),
-        dev: virtualHost('dev', options.machineName),
-        qa: virtualHost('qa', options.machineName),
-        review: virtualHost('review', options.machineName),
         local: 'www.' + options.domain + '.vm',
         devcloud: virtualHost(false, options.machineName),
         master: options.ciHost
       };
+
+      if (envActive('dev')) {
+        tokens.host.dev = virtualHost('dev', options.machineName);
+      }
+      if (envActive('qa')) {
+        tokens.host.qa = virtualHost('qa', options.machineName);
+      }
+      if (envActive('review')) {
+        tokens.host.dev = virtualHost('review', options.machineName);
+      }
 
       done();
     }.bind(this));
@@ -303,7 +321,7 @@ module.exports = yeoman.generators.Base.extend({
         tokens
       );
 
-      if (options.environments.indexOf('dev') != -1) {
+      if (tokens.host['dev']) {
         tokens.virtualHost = tokens.host.dev;
         tokens.environment = 'dev';
         tokens.dockerComposeExt = 'devcloud.';
@@ -324,7 +342,7 @@ module.exports = yeoman.generators.Base.extend({
         );
       }
 
-      if (options.environments.indexOf('qa') != -1) {
+      if (tokens.host['qa']) {
         tokens.virtualHost = tokens.host.qa;
         tokens.environment = 'qa';
         tokens.dockerComposeExt = 'devcloud.';
@@ -345,7 +363,7 @@ module.exports = yeoman.generators.Base.extend({
         );
       }
 
-      if (options.environments.indexOf('review') != -1) {
+      if (tokens.host['review']) {
         tokens.virtualHost = tokens.host.review;
         tokens.environment = 'review';
         tokens.dockerComposeExt = 'devcloud.';
