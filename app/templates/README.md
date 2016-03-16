@@ -32,7 +32,7 @@ These operations are for local development.
 
 ### Services
 
-* **Website:** [http://<%= host.local %>](http://<%= host.local %>)
+* **Website:** [http://www.<%= domain %>.vm](http://www.<%= domain %>.vm)
 * **Database:** `db.<%= domain %>.vm`
 
 ## Further Reading
