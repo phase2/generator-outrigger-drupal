@@ -25,13 +25,12 @@ var cacheImage = function(service, majorVersion) {
 };
 
 var virtualHost = function(env, namespace) {
-  var domain = options['ciHost'] || 'ci.p2devcloud.com';
-  namespace = env ? '.' + namespace : namespace;
+  namespace = env ? '-' + namespace : namespace;
   if (!env) {
     env = '';
   }
 
-  return env + namespace + '.' + domain;
+  return env + namespace + '.' + options['ciHost'];
 };
 
 
@@ -57,6 +56,8 @@ module.exports = yeoman.generators.Base.extend({
     options = _.assign({
       skipWelcome: true
     }, this.options);
+
+    options['ciHost'] = options['ciHost'] || 'ci2.p2devcloud.com';
   },
 
   prompting: function() {
@@ -111,8 +112,9 @@ module.exports = yeoman.generators.Base.extend({
       tokens.host = {
         int: virtualHost('int', options.machineName),
         local: 'www.' + options.domain + '.vm',
-        devcloud: virtualHost(false, options.machineName)
-      }
+        devcloud: virtualHost(false, options.machineName),
+        master: options.ciHost
+      };
 
       if (envActive('dev')) {
         tokens.host.dev = virtualHost('dev', options.machineName);

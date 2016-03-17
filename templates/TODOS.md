@@ -12,7 +12,7 @@
     * `npm install` and other tools should only be run inside containers.
 * [ ] Set up Jenkins to manage your CI and build processes.
     * Ensure the Jenkins jobs have the correct Git URL.
-    * Visit the CI Server and [spin up your Jenkins instance](http://build.ci.p2devcloud.com/job/ci-start/parambuild/?delay=0sec&NAME=<%= projectName %>&GIT_URL=git%40bitbucket.org%3Aphase2tech%2F<%= projectName %>.git&GIT_REF=develop).
+    * Visit the CI Server and [spin up your Jenkins instance](http://build.<%= host.master %>/job/ci-start/parambuild/?delay=0sec&NAME=<%= projectName %>&GIT_URL=git%40bitbucket.org%3Aphase2tech%2F<%= projectName %>.git&GIT_REF=develop).
     * Confirm that you **do not need** a dedicated Dev Cloud instance.
 * [ ] Adjust the project to match your project's needs.
     * Do not forget to specify your profile in `Gruntconfig.json`!
