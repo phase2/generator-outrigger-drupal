@@ -31,6 +31,14 @@ proxy:
     VARNISH_BACKEND_HOST: www
   links:
     - www
+<% } if (mail.exists) { %>
+# MailHog SMTP and UI service.
+mail:
+  container_name: <%= machineName %>_local_mail
+  image: mailhog/mailhog
+  environment:
+    DNSDOCK_NAME: mail
+    DNSDOCK_IMAGE: <%= domain %>
 <% } %>
 # Main Application service.
 www:
