@@ -109,6 +109,12 @@ module.exports = yeoman.generators.Base.extend({
         exists: options['proxyCache'] && options.proxyCache != 'none',
       }
 
+      tokens.mail = {
+        image: 'mailhog/mailhog',
+        service: 'mail',
+        exists: options['mailhog']
+      }
+
       tokens.host = {
         int: virtualHost('int', options.machineName),
         local: 'www.' + options.domain + '.vm',
