@@ -58,8 +58,8 @@ base:
     - /data/<%= projectName %>_${DOCKER_ENV}/cache/bower:/root/.cache/bower
     - /data/<%= projectName %>_${DOCKER_ENV}/cache/fontconfig:/root/.cache/fontconfig
   environment:
-    VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %>
-    GDT_DOMAIN: ${DOCKER_ENV}.<%= host.devcloud %>
-    <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}.<%= host.devcloud %><% } %>
+    VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %>
+    GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+    <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
   external_links:
     - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
