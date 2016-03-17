@@ -47,6 +47,14 @@ proxy:
     VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %>
   links:
     - www
+<% } if (mail.exists) { %>
+# MailHog SMTP and UI service.
+mail:
+  container_name: <%= machineName %>_${DOCKER_ENV}_mail
+  image: mailhog/mailhog
+  environment:
+    VIRTUAL_HOST: mail.${DOCKER_ENV}-<%= host.devcloud %>
+    VIRTUAL_PORT: '8025'
 <% } %>
 # Main Application service.
 www:
