@@ -121,7 +121,7 @@ describe('p2:app --replay', function () {
   it ('uses projectName based on previously stored option', function() {
     var pkg = require(path.resolve(appDir, 'package.json'));
     var yoRC = require(path.resolve(appDir, '.yo-rc.json'));
-    //assert.equal(pkg.name, yoRC['generator-p2']['project-name']);
+    assert.equal(pkg.name, yoRC['generator-p2']['project-name']);
   });
 });
 
@@ -161,6 +161,5 @@ describe.skip('p2:app w/ Gadget + p2-env', function () {
       'docker-compose.yml',
     ]);
   });
-
 
 });
