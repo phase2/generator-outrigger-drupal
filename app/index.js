@@ -153,19 +153,18 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     readme: function() {
-      if (options['useENV']) {
-        var tokens = require('generator-gadget/lib/util').tokens(options);
-        // Yeoman's dependencies cannot handle dynamic partial includes.
-        // This is not currently used.
-        tokens.gadgetPath = path.resolve(require.resolve('generator-gadget'), 'app/templates/README.md');
-        tokens = _.merge(options, tokens);
+      var tokens = require('generator-gadget/lib/util').tokens(options);
+      tokens = _.merge(options, tokens);
+      tokens.useENV = options['useENV'];
+      // Yeoman's dependencies cannot handle dynamic partial includes.
+      // This is not currently used.
+      tokens.gadgetPath = path.resolve(require.resolve('generator-gadget'), 'app/templates/README.md');
 
-        this.fs.copyTpl(
-          this.templatePath('README.md'),
-          this.destinationPath('README.md'),
-          tokens
-        );
-      }
+      this.fs.copyTpl(
+        this.templatePath('README.md'),
+        this.destinationPath('README.md'),
+        tokens
+      );
     }
   },
 
