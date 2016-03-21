@@ -11,6 +11,11 @@
           <description>Git branch, tag, or commit revision to build.</description>
           <defaultValue>refs/heads/develop</defaultValue>
         </hudson.model.StringParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>UPDATE</name>
+          <description>Skip the install step of the deployment process. Useful to preserve prepared test or demo content through deployments.</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
     <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.25">
@@ -84,7 +89,11 @@ trap &apos;complete $?&apos; EXIT
 teardown
 
 # Set up and install site
-bin/start.sh <%= environment %>
+FLAGS=&apos;&apos;
+if [ $UPDATE = &quot;true&quot; ]; then
+  FLAGS=&quot;$FLAGS --update&quot;
+fi
+bin/start.sh --environment $DOCKER_ENV $FLAGS
 
 # Warm cache and review HTTP response headers
 echo &quot;Warm cache and review HTTP response headers...&quot;
