@@ -50,7 +50,7 @@ base:
   command: /bin/bash
   volumes:
     - .:/var/www/
-    - ./env/build/etc/drush:/etc/drush
+    - ./env/build/etc/drush:/root/.drush
     - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
     - /data/<%= projectName %>_${DOCKER_ENV}/cache/drush:/root/.drush/cache
     - /data/<%= projectName %>_${DOCKER_ENV}/cache/composer:/root/.composer/cache
@@ -58,7 +58,7 @@ base:
     - /data/<%= projectName %>_${DOCKER_ENV}/cache/bower:/root/.cache/bower
     - /data/<%= projectName %>_${DOCKER_ENV}/cache/fontconfig:/root/.cache/fontconfig
   environment:
-    VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %>
+    APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
     GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
     <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
   external_links:
