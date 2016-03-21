@@ -4,22 +4,55 @@
 #
 # This script takes your freshly cloned repository and takes it to a working
 # Drupal site hosted in a Docker container stack.
-#
-# Arguments:
-#  - environment: The first argument is an environment designator. This is not
-#    validated, if the name is not a supported environment this script will
-#    have multiple failures. Default value: `local`.
-#  - project name: Optional. This argument defines the project name, which in
-#    combination with the environment designator, is used to define a unique,
-#    project specific name for docker-compose.
 ##
+
+CALLPATH=`dirname $0`
+source "$CALLPATH/framework.sh"
 
 ##
 # Initialize parameters.
 ##
+
 NAME=`basename "$0"`
-DOCKER_ENV=${1-local}
+NO_VALIDATE=''
+NOOP=0
+START_VERSION=<%= pkg.version %>
+UPDATE=0
 COMPOSE_EXT=".devcloud"
+
+# Wrangle CLI options
+TEMP=`getopt -o e::,h,i,n,u,v --long environment::,help,update,noop,no-validate,version -n '$NAME' -- "$@"`
+
+usage() {
+  cat <<EOF
+Usage: $name [options]
+
+-e|--environment     Specify which environment to target.
+-h| --help           This help text.
+-i|--no-validate     Skip the static analysis validate step.
+                     Useful for speedy build process, or when the report-generating
+                     analyze task will also be used.
+-n|--noop            Take no action, just output the commands to be run.
+-u|--update          Instead of site install, run site update procedures.
+EOF
+  echo
+  echo "Version ${START_VERSION} of ${NAME}."
+}
+
+while true ; do
+  case "$1" in
+    -h|-v|--version|--help) usage ; exit 0 ;;
+    # Supported for backwards compatibility with existing Jenkins jobs.
+    dev|int|local|ms|qa|review) DOCKER_ENV=$1 ; shift ;;
+    -e|--environment) DOCKER_ENV=$2 ; shift 2 ;;
+    -i|--no-validate) NO_VALIDATE=" --no-validate"; shift ;;
+    -u|--update) UPDATE=1; shift ;;
+    -n|--noop) export NOOP=1; shift ;;
+    *) shift ; break ;;
+  esac
+done
+
+DOCKER_ENV=${DOCKER_ENV-local}
 COMPOSE_PROJECT=${2-'-p <%= machineName %>_'${DOCKER_ENV}}
 
 if [[ $DOCKER_ENV == 'local' ]]; then
@@ -40,7 +73,7 @@ teardown() {
 
 # Handler for errors and interruptions.
 cancel() {
-  echo "$NAME: Error: Line $1: $2"
+  echoError "$NAME: Error: Line $1: $2"
   teardown
   exit 33
 }
@@ -48,37 +81,43 @@ cancel() {
 # Final actions to take whenever the script ends.
 complete() {
   ret=$1
-  [ "$ret" -eq 0 ] || echo >&2 "$NAME: aborted ($ret)"
+  [ "$ret" -eq 0 ] || echoFail >&2 "$NAME: aborted ($ret)"
 }
 
 # Cancel docker start on errors.
-trap 'cancel $LINENO $BASH_COMMAND' ERR SIGINT SIGTERM
+trap 'cancel $LINENO $BASH_COMMAND' ERR SIGINT SIGTERM SIGQUIT
 trap 'complete $?' EXIT
 
 ##
 # Bring up the site.
 ##
-echo "Preparing site for environment '$DOCKER_ENV'"
+echo "Preparing site for environment '$DOCKER_ENV' using start.sh (v${START_VERSION})"
 export DOCKER_ENV
 
 # Spin up cache and db services to support build container.
 # Web container might take file locks on existing code, blocking the build process.
-docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(cache.external) { %>cache <% } %>db
+cmd "docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(cache.external) { %>cache <% } %>db"
 
 # Install dependencies and run main application build.
 # Run grunt with --force to ignore errors.
 # --unsafe-perm ensures dispatch to theme-related operations can still run as root for Docker.
-docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "npm install --unsafe-perm && grunt --timer --quiet"
+cmd "docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli \"npm install --unsafe-perm && grunt --timer --quiet\""
 
 # Now safe to activate web container to support end-to-end testing.
-docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(proxy.exists) { %>proxy <% } %>www
+cmd "docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(proxy.exists) { %>proxy <% } %>www"
 
 # Correct any issues in the web container.
-docker exec <%= machineName %>_${DOCKER_ENV}_www "/var/www/bin/fix-perms.sh"
+cmd "docker exec <%= machineName %>_${DOCKER_ENV}_www \"/var/www/bin/fix-perms.sh\""
 
 # Install the site.
-# Errors in final steps of installation require --force to ensure bin/post-install.sh is run.
-docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli "grunt install --no-db-load --force"
+if [ "$UPDATE" == 0 ]; then
+  # Errors in final steps of installation require --force to ensure bin/post-install.sh is run.
+  # Dev triggers a development build of Open Atrium
+  cmd "docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli \"grunt install --no-db-load --force\""
+else
+  echoInfo "`grunt update` is defined in Gruntconfig.json"
+  cmd "docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli grunt update"
+fi
 
 # Wipe cache after permissions fix.
-docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run grunt cache-clear
+cmd "docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run grunt cache-clear"
