@@ -53,7 +53,7 @@ mail:
   container_name: <%= machineName %>_${DOCKER_ENV}_mail
   image: mailhog/mailhog
   environment:
-    VIRTUAL_HOST: mail.${DOCKER_ENV}-<%= host.devcloud %>
+    VIRTUAL_HOST: mail-${DOCKER_ENV}-<%= host.devcloud %>
     VIRTUAL_PORT: '8025'
 <% } %>
 # Main Application service.
@@ -66,7 +66,7 @@ www:
     PHP_XHPROF: "<%= debugMode %>"
     <% if (!proxy.exists) { %>VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
   links:
-    - db<% if (cache.external) { %><%= cache.docker.link %><% } %>
+    - db<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (mail.exists) { %><%= mail.docker.link %><% } %>
   volumes:
     - .:/var/www/
     - /data/<%= projectName %>_${DOCKER_ENV}/files:/var/www/build/html/sites/default/files
