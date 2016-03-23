@@ -112,7 +112,10 @@ module.exports = yeoman.generators.Base.extend({
       tokens.mail = {
         image: 'mailhog/mailhog',
         service: 'mail',
-        exists: options['mailhog']
+        exists: options['mailhog'],
+        docker: {
+          link: "\n    - mail"
+        }
       }
 
       tokens.host = {
