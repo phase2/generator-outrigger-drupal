@@ -15,6 +15,16 @@ var prompts = [
   },
   {
     type: 'list',
+    name: 'drupalDistroVersion',
+    message: 'Choose your Drupal version:',
+    choices: [
+      '7.x',
+      '8.x'
+    ],
+    default: '7.x'
+  },
+  {
+    type: 'list',
     name: 'webserver',
     message: 'Choose your webserver:',
     choices: [
