@@ -13,7 +13,7 @@
     "node": ">=0.12.0"
   },
   "scripts": {
-    "test": "echo 'No tests set.'"
+    "test": "mocha --timeout=2500 test/*.test.js"
   },
   "files": [
     "app",
@@ -25,8 +25,15 @@
   ],
   "dependencies": {
     "chalk": "^1.0.0",
-    "lodash": "^3.10.1",
-    "yeoman-generator": "^0.20.3",
+    "lodash": "^4.6.1",
+    "yeoman-generator": "^0.22.5",
     "yosay": "^1.1.0"
+  },
+  "devDependencies": {
+    "js-yaml": "^3.5.5",
+    "mocha": "^2.4.5",
+    "xml2js": "^0.4.16",
+    "yeoman-assert": "^2.1.1",
+    "yeoman-test": "^1.1.0"
   }
 }
