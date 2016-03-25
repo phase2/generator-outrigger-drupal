@@ -72,7 +72,8 @@ var prompts = [
   {
     type: 'confirm',
     name: 'mailhog',
-    message: 'Use MailHog for email testing?'
+    message: 'Use MailHog for email testing?',
+    default: false
   },
   {
     type: 'checkbox',
