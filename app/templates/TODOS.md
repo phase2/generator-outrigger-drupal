@@ -21,7 +21,7 @@
 <% if (mail.exists) { %>* [ ] Add the SMTP module to the project to use MailHog for testing
     * Add the module to your makefile.
     * Enable the module and turn on STMP mail transport at `admin/config/system/smtp`.
-    * Send a test email using the admin form and confirm mail is routed to the MailHog UI at `mail.<host>`.<% } %>
+    * Send a test email using the admin form and confirm mail is routed to the MailHog UI at `mail-<environment-hostname>` for devcloud, or `mail.<%= projectName %>.vm:8025` locally.<% } %>
 * [ ] Commit and push the code to your project repository.
 * [ ] Join the **#devtools-support** flow to get help. Ask for one-on-one time for troubleshooting or additional coaching.
 * [ ] Report on any changes made to get the environment working.
