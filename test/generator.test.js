@@ -144,11 +144,20 @@ describe('p2-env:app', function() {
         it('should use apache24php70 with Drupal 8', function() {
           assert.ok(manifest['www']['image'] == 'phase2/apache24php70');
         });
+        it('should not have a cache service', function() {
+          assert.ok(!manifest['cache']);
+        });
+        it('should not have a proxy service', function() {
+          assert.ok(!manifest['proxy']);
+        });
+        it('should not have a mail service', function() {
+          assert.ok(!manifest['mail']);
+        });
       });
     });
   });
 
-  describe('maxmimum configuration', function() {
+  describe('extended configuration', function() {
     before(function(done) {
       test.run(path.join(__dirname, '../app'))
         .inDir(appDir)
@@ -158,6 +167,7 @@ describe('p2-env:app', function() {
           // This could be excluded, but would get the temp base directory.
           domain: 'drupal8',
           environments: [ 'dev', 'qa', 'review' ],
+          mailhog: true,
           projectName: 'drupal8',
           proxyCache: 'varnish',
           webserver: 'apache'
@@ -200,6 +210,9 @@ describe('p2-env:app', function() {
         });
         it('should include a reverse-proxy cache', function() {
           assert.ok(manifest['proxy'] && manifest['proxy']['image']);
+        });
+        it('should include a mail-handling services', function() {
+          assert.ok(manifest['mail'] && manifest['mail']['image']);
         });
         it('should use apache24php70 with Drupal 8', function() {
           assert.ok(manifest['www']['image'] == 'phase2/apache24php70');
