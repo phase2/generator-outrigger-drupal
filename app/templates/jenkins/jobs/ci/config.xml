@@ -97,7 +97,7 @@ echo &quot;Warm cache and review HTTP response headers...&quot;
 curl -I -vvv http://${DOCKER_ENV}.<%= host.devcloud %>
 
 # Run Behat Tests
-docker-compose -f build.${DOCKER_ENV}.yml -p <%= machineName %>_${DOCKER_ENV} run cli &quot;GDT_DOMAIN=${DOCKER_ENV}.<%= host.devcloud %> grunt test --force --timer&quot;
+docker-compose -f build.${DOCKER_ENV}.yml -p <%= machineName %>_${DOCKER_ENV} run cli &quot;GDT_DOMAIN=${DOCKER_ENV}-<%= host.devcloud %> grunt test --force --timer&quot;
 
 # Run Features Health Check
 docker-compose -f build.${DOCKER_ENV}.yml -p <%= machineName %>_${DOCKER_ENV} run cli bin/features-health.sh || true

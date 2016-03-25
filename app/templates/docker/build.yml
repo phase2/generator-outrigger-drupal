@@ -35,7 +35,7 @@ base:
   command: /bin/bash
   volumes:
     - .:/var/www/
-    - ./env/build/etc/drush:/etc/drush
+    - ./env/build/etc/drush:/root/.drush
     - ./build/backups:/opt/backups
     - /data/<%= projectName %>_local/cache/drush:/root/.drush/cache
     - /data/<%= projectName %>_local/cache/composer:/root/.composer/cache
@@ -43,7 +43,7 @@ base:
     - /data/<%= projectName %>_local/cache/bower:/root/.cache/bower
     - /data/<%= projectName %>_local/cache/fontconfig:/root/.cache/fontconfig
   environment:
-    VIRTUAL_HOST: <%= host.local %>
+    APP_DOMAIN: <%= host.local %>
     GDT_DOMAIN: <%= host.local %>
     <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: <%= host.local %><% } %>
   external_links:

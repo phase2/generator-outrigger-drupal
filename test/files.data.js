@@ -1,0 +1,65 @@
+module.exports = {
+  minimum: [
+    'bin/db-export.sh',
+    'bin/features-health.sh',
+    'bin/fix-perms.sh',
+    'bin/framework.sh',
+    'bin/pre-install.sh',
+    'bin/seed-users.sh',
+    'bin/start.sh',
+    'bin/update-scanner.sh',
+    'build.yml',
+    'build.devcloud.yml',
+    'CONTRIBUTING.md',
+    'DOCKER.md',
+    'docker-compose.yml',
+    'docker-compose.devcloud.yml',
+    'env/build/etc/drush/drushrc.php',
+    'env/build/etc/drush/aliases.drushrc.php',
+    'env/jenkins/config.xml',
+    'env/jenkins/jobs/ci/config.xml',
+    'env/jenkins/jobs/deploy-local/config.xml',
+    'env/jenkins/jobs/dev-support/config.xml',
+    'env/jenkins/jobs/jenkins-test-default/config.xml',
+    'env/jenkins/jobs/jenkins-test-docker/config.xml',
+    'env/jenkins/jobs/jenkins-test-fail/config.xml',
+    'Gruntconfig.json',
+    'JENKINS.md',
+    'jenkins.yml',
+    'src/sites/settings.common.php',
+    'TODOS.md'
+  ],
+  extended: [
+    'env/jenkins/jobs/cron-dev/config.xml',
+    'env/jenkins/jobs/cron-qa/config.xml',
+    'env/jenkins/jobs/cron-review/config.xml',
+    'env/jenkins/jobs/deploy-dev/config.xml',
+    'env/jenkins/jobs/deploy-qa/config.xml',
+    'env/jenkins/jobs/deploy-review/config.xml',
+    'env/jenkins/jobs/password-reset-dev/config.xml',
+    'env/jenkins/jobs/password-reset-qa/config.xml',
+    'env/jenkins/jobs/password-reset-review/config.xml',
+  ],
+  json: {
+    'Gruntconfig.json': 'Gruntconfig.json'
+  },
+  minimumXml: {
+    'env/jenkins/config.xml': 'main configuration',
+    'env/jenkins/jobs/ci/config.xml': '"ci" job configuration',
+    'env/jenkins/jobs/deploy-local/config.xml': '"deploy-local" job configuration',
+    'env/jenkins/jobs/dev-support/config.xml': '"dev-support" job configuration',
+    'env/jenkins/jobs/jenkins-test-default/config.xml': '"jenkins-test-default" job configuration',
+    'env/jenkins/jobs/jenkins-test-docker/config.xml': '"jenkins-test-docker" job configuration',
+    'env/jenkins/jobs/jenkins-test-fail/config.xml': '"jenkins-test-fail" job configuration'
+  },
+  extendedXml: {
+    'env/jenkins/jobs/deploy-qa/config.xml': '"deploy-qa" job configuration',
+  },
+  yaml: {
+    'docker-compose.yml': 'docker-compose.yml',
+    'docker-compose.devcloud.yml': 'docker-compose.devcloud.yml',
+    'build.yml': 'build.yml',
+    'build.devcloud.yml': 'build.devcloud.yml',
+    'jenkins.yml': 'jenkins.yml',
+  }
+};

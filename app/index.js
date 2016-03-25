@@ -33,7 +33,6 @@ var virtualHost = function(env, namespace) {
   return env + namespace + '.' + options['ciHost'];
 };
 
-
 /**
  * Determine if a given environment has been enabled by name.
  *
@@ -43,7 +42,7 @@ var envActive = function(environment) {
   return options.environments.indexOf(environment) != -1;
 }
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = yeoman.Base.extend({
   initializing: function () {
     this.pkg = require('../package.json');
     // Have Yeoman greet the user.
@@ -129,7 +128,7 @@ module.exports = yeoman.generators.Base.extend({
         tokens.host.qa = virtualHost('qa', options.machineName);
       }
       if (envActive('review')) {
-        tokens.host.dev = virtualHost('review', options.machineName);
+        tokens.host.review = virtualHost('review', options.machineName);
       }
 
       done();
@@ -212,8 +211,11 @@ module.exports = yeoman.generators.Base.extend({
       if (!gcfg) {
         this.log(chalk.red('You must have a valid Grunt-Drupal-Tasks compatible codebase before running p2-env.'));
         this.log(chalk.yellow('Try running `yo p2` or `yo gadget` first!'));
-        this.env.error('Project not ready for p2-env processing.');
+        if (!options['force']) {
+          this.env.error('Project not ready for p2-env processing.');
+        }
       }
+      gcfg = gcfg || {}
 
       gcfg.domain = 'www.' + options.domain + '.vm';
       gcfg.alias = '@' + options.projectName;
