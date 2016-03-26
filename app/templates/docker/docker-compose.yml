@@ -31,6 +31,14 @@ proxy:
     VARNISH_BACKEND_HOST: www
   links:
     - www
+<% } if (mail.exists) { %>
+# MailHog SMTP and UI service.
+mail:
+  container_name: <%= machineName %>_local_mail
+  image: mailhog/mailhog
+  environment:
+    DNSDOCK_NAME: mail
+    DNSDOCK_IMAGE: <%= domain %>
 <% } %>
 # Main Application service.
 www:
@@ -43,7 +51,7 @@ www:
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
   links:
-    - db<% if (cache.external) { %><%= cache.docker.link %><% } %>
+    - db<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (mail.exists) { %><%= mail.docker.link %><% } %>
   volumes:
     - .:/var/www/
     - /data/<%= projectName %>_local/files:/var/www/build/html/sites/default/files
