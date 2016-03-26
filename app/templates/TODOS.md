@@ -18,6 +18,10 @@
     * Do not forget to specify your profile in `Gruntconfig.json`!
     * Remove `--no-db-load` from start.sh if you switch to DB-driven development.
     * Rewrite the READMEs to match your project's details. Pay specific attention to the CONTRIBUTING.md.
+<% if (mail.exists) { %>* [ ] Add the SMTP module to the project to use MailHog for testing
+    * Add the module to your makefile.
+    * Enable the module and turn on STMP mail transport at `admin/config/system/smtp`.
+    * Send a test email using the admin form and confirm mail is routed to the MailHog UI at `mail-<environment-hostname>` for devcloud, or `mail.<%= projectName %>.vm:8025` locally.<% } %>
 * [ ] Commit and push the code to your project repository.
 * [ ] Join the **#devtools-support** flow to get help. Ask for one-on-one time for troubleshooting or additional coaching.
 * [ ] Report on any changes made to get the environment working.

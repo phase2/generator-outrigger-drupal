@@ -108,6 +108,15 @@ module.exports = yeoman.Base.extend({
         exists: options['proxyCache'] && options.proxyCache != 'none',
       }
 
+      tokens.mail = {
+        image: 'mailhog/mailhog',
+        service: 'mail',
+        exists: options['mailhog'],
+        docker: {
+          link: "\n    - mail"
+        }
+      }
+
       tokens.host = {
         int: virtualHost('int', options.machineName),
         local: 'www.' + options.domain + '.vm',

@@ -56,6 +56,11 @@ $conf['cache_default_class']    = 'Redis_Cache';
 $conf['redis_client_host']      = 'cache';  // Your Redis instance hostname.
 $conf['redis_client_port']      = 6379;
 <% } -%>
+<% if(mail.exists) { %>
+// SMTP module settings for connection to the MailHog container.
+$conf['smtp_host'] = 'mail';
+$conf['smtp_port'] = '1025';
+<% } %>
 
 // Include local settings file as an override.
 // settings.local.php should not be committed to the Git repository.
