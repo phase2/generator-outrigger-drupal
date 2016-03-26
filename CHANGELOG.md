@@ -83,12 +83,13 @@ The `bin/start.sh` script has got command-line options now, including:
 * start.sh now takes real options and has usage output.
 * Make better use of error handling to halt and clean up after errors in jobs.
 * Add volume mounts to persist tool caches across build runs.
-* Streamline docker-compose manifests, *.devcloud.yml instead of one per environment.
+* Added optional MailHog service to capture Drupal email and facilitate testing. **See generated `TODOS.md`, this feature requires manual action per project.**
+* Streamline docker-compose manifests, `*.devcloud.yml` instead of one per environment.
 * Break Jenkins home into views by environment with primary for key shortcuts.
 * Add jenkins-test-fail job to check on Jenkins error handling.
 * Added deploy-local job for local testing of Jenkins
 * Added the colorization library from _devtools_vm past, began light use.
-* Automated test coverage.
+* Automated test coverage, 45 assertions and counting.
 * Generated documentation improvements
 
 #### Bugs
