@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.3.0 (March 2016)
+## 0.3.0 (April 2016)
 
 This release represents a significant amount of R&D pursued as part of field-use
 of the Yo P2 generator suite. After some shakedown and some light structuring
@@ -74,6 +74,11 @@ The `bin/start.sh` script has got command-line options now, including:
 * Default new projects to use the ci2.p2devcloud.com host. Use `--ciHost=ci.p2devcloud.com`
   to keep using the original.
 * Project-specific Drush volume mount is now placed inside the container at `/root/.drush`
+* Drop support for environment variable `DEVTOOLS_PRIVATE_KEY`. SSH keys are now
+  only injected into the Jenkins container with volume mounts. If your local
+  `id_rsa` key does not private the necessary access for local Jenkins use, temporarily
+  edit the `jenkins.yml` file. In the future this might be parameterized
+  (see [Docker Compose #2441](https://github.com/docker/compose/issues/2441))
 
 ### Release Notes
 
@@ -96,7 +101,7 @@ The `bin/start.sh` script has got command-line options now, including:
 
 * Stop clobbering registry-rebuild command which is provided by the devtools-build container
 * Stop risky use of nginx-proxy reserved `VIRTUAL_HOST` environment variable in build containers.
-* Fixed generator --replay run if flowdockApiKey and gitRepoUrl are not set.
+* Fixed generator `--replay` run if `flowdockApiKey` and `gitRepoUrl` are not set.
 * Replace each instance of hyphen with underscore to generate machine name.
 * Make shell scripts executable by default and remove explicit bash shelling to execute.
 * Use underscores in lieu of hyphens in all docker-centric identifiers.
@@ -110,7 +115,7 @@ Changes since version v0.2.0.
 * Add `--unsafe-perm` to start.sh so project package.json can postinstall theme.
 * Add optional support for Varnish via [phase2/varnish4](https://hub.docker.com/r/phase2/varnish4/) Docker image.
 (Direct application still available via `app.project.vm`)
-* Wipe Redis/Memcache caches on pre-install (via pre-install.sh, triggered by `grunt install`). This does not have any Drupal or Drush dependency.
+* Wipe Redis/Memcache caches on pre-install (via `pre-install.sh`, triggered by `grunt install`). This does not have any Drupal or Drush dependency.
 * Allow CI job to run arbitrary Git revisions.
 
 ### Bugs
@@ -120,5 +125,5 @@ Changes since version v0.2.0.
 this has been fixed in [phase2/jenkins-docker](https://hub.docker.com/r/phase2/jenkins-docker) and has
 been enforced by the generator by specifying the required 1.9.1 release.
 * Disable memcache stampede protection by default.
-* Fixed deploy-* and dev-support Jenkins jobs pulling random git revisions.
-* Fixed lack of CONTRIBUTING.md generation.
+* Fixed `deploy-*` and `dev-support` Jenkins jobs pulling random git revisions.
+* Fixed lack of `CONTRIBUTING.md` generation.
