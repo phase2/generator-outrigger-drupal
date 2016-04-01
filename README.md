@@ -4,12 +4,13 @@
 with Yeoman.
 
 This project generates usable default Docker and environment configurations for
-your [Grunt-Drupal-Tasks](https://github.com/phase2/grunt-drupal-tasks)-based
+your [Grunt Drupal Tasks](https://github.com/phase2/grunt-drupal-tasks)-based
 Drupal project.
 
 For best results, please use the [Yo P2! generator](https://bitbucket.org/phase2tech/generator-p2).
 
 ## Installation
+For standalone installation, install directly from bitbucket. An installation of `Yo P2` will not use this.
 
 ```
 npm install -g git+ssh://bitbucket.org/phase2tech/generator-p2-env.git#master
@@ -23,36 +24,53 @@ yo p2-env
 
 ## Features
 
-* **Docker Defaults**
-    * `docker-compose.yml` file for local development.
-    * `build.yml` for running development operations on your Drupal site.
-    * `docker-compose.int.yml` and `build.int.yml` for integration environment.
-    * Optional Development, QA, and Review environment configuration.
-    * Support for MariaDB, optional Memcache, and choice of web images (Apache 2.4/PHP 5.5 or Custom)
-     * Generates a DOCKER.md describing how to use these, from `yo p2` it is appended to the main README.
-* **Drupal Settings Generation (Currently D7-only)**
-    * `src/sites/settings.common.php` ships configuration for a single Drupal site.
-    * Includes Database credentials, Memcache config, poormans cron suppression, and support for `src/sites/settings.local.php` overrides.
-* **Drush Configuration**
-    * Default Site Alias (named for project)
-    * Global Drush commands in /etc/drush/commands
-    * Global Drush aliases in /etc/drush.
-    * Lean database dumps
-    * (Revise or add configuration files by editing `env/build/etc/drush`)
-* **Grunt-Drupal-Tasks integration**
-    * All `bin/grunt/*.js` files will be loaded as grunt plugins.
-    * `grunt install` can install a new site without further configuration, and will load a DB if made availabe at `/opt/backups/latest`.
-* **Project-specific Jenkins**
-    * Fire up the project Jenkins locally or via a Docker hosting server.
-    * Ready-to-go with key Jenkins plugins out of the box.
-    * Default jobs to get started out of the box.
-        * CI for all branches
-        * Nightly `dev-support` job to check for module updates and produce a clean database for Developer use.
-        * `deploy-dev` job keeping the Development environment up-to-date with all merged code.
-        * `deploy-qa` and `deploy-ms` jobs to manage the QA and Review environments.
-        * Development, Review, and QA "cron" jobs.
-        * Behat testing, Static Analysis, and Features health checks on all deployment jobs.
-* Additional tools and tricks to smooth out Docker-based Development.
+### Docker Defaults
+
+* `docker-compose.yml` file for local development.
+* `build.yml` for running development operations on your Drupal site.
+* `docker-compose.devcloud.yml` and `build.devcloud.yml` for Phase2 Dev Cloud hosted environments.
+    * Optional Development, QA, and Review environment configuration in addition to Integration.
+* Infrastructure provisioning with built-in support for:
+    * MariaDB, Memcache, Redis, Varnish4, Mailhog, Apache, & PHP.
+* Generates a DOCKER.md describing how to use these, from `yo p2` it is appended to the main README.
+
+### Drupal Settings & Installation
+
+* Generated `src/sites/settings.common.php` provides
+out-of-box installable Drupal configuration.
+* `grunt install` tailored to run generated `bin/pre-install.sh`, which enforces cache clearing and site settings.php generation.
+
+### Drush Configuration
+
+* Default site alias based on project name.
+* Project-specific drushrc.php set up for lean database dumps.
+* Modify or add Drush commands at `env/build/etc/drush`.
+
+### Grunt Drupal Tasks Integration
+
+* All `bin/grunt/*.js` files will be loaded as grunt plugins.
+* `grunt install` can install a new site without further configuration, and will load a DB if made availabe at `/opt/backups/latest`.
+* Docker environments look for the docroot in build/html, the default configuration for grunt builds.
+
+### Utility Scripts
+
+* Check for module updates
+* Review health of Features-based modules
+* Generate default user accounts
+* Manage database exports
+
+### Project-specific Jenkins
+
+* Fire up the project Jenkins locally or via a Docker hosting server.
+* Ready-to-go with key Jenkins plugins out of the box.
+* Default jobs to get started out of the box.
+    * CI for all feature branches
+    * Nightly `dev-support` job to check for module updates and produce a clean database for Developer use.
+    * `deploy-dev` job keeping the Development environment up-to-date with all merged code.
+    * `deploy-qa` and `deploy-review` jobs to manage the QA and Review environments.
+    * Development, Review, and QA "cron" jobs.
+    * Behat testing, Static Analysis, and Features health checks on all deployment jobs.
+    * Create a new environment by duplicating any `deploy-*` job.
 
 ## F.A.Q.
 
