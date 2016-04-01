@@ -62,6 +62,7 @@ www:
   image: <%= app.image %>
   environment:
     DOCROOT: /var/www/build/html
+    PHP_MAX_EXECUTION_TIME: 60
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
     <% if (!proxy.exists) { %>VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
