@@ -199,29 +199,74 @@ describe('p2-env:app', function() {
           manifest = yaml.safeLoad(fs.readFileSync('docker-compose.yml', 'utf8'));
         });
 
-        it('should include a database', function() {
-          assert.ok(manifest['db'] && manifest['db']['image']);
+        describe('Core Services', function() {
+          it('should include a database', function() {
+            assert.ok(manifest['db'] && manifest['db']['image']);
+          });
+          it('should include an application server', function() {
+            assert.ok(manifest['www'] && manifest['www']['image']);
+          });
+          it('should include an intenral caching service', function() {
+            assert.ok(manifest['cache'] && manifest['cache']['image']);
+          });
+          it('should include a reverse-proxy cache', function() {
+            assert.ok(manifest['proxy'] && manifest['proxy']['image']);
+          });
+          it('should include a mail-handling services', function() {
+            assert.ok(manifest['mail'] && manifest['mail']['image']);
+          });
         });
-        it('should include an application server', function() {
-          assert.ok(manifest['www'] && manifest['www']['image']);
+        describe('Docker Images', function() {
+          it('should use apache24php70 with Drupal 8', function() {
+            assert.ok(manifest['www']['image'] == 'phase2/apache24php70');
+          });
+          it('should use memcache for internal caching', function() {
+            assert.ok(manifest['cache'] && manifest['cache']['image'] == 'phase2/memcache');
+          });
+          it('should use Varnish for reverse-proxy caching', function() {
+            assert.ok(manifest['proxy'] && manifest['proxy']['image'] == 'phase2/varnish4');
+          });
         });
-        it('should include an intenral caching service', function() {
-          assert.ok(manifest['cache'] && manifest['cache']['image']);
+      });
+
+      describe('Operational Services - Dev Cloud', function() {
+        var manifest;
+
+        before(function() {
+          manifest = yaml.safeLoad(fs.readFileSync('docker-compose.devcloud.yml', 'utf8'));
         });
-        it('should include a reverse-proxy cache', function() {
-          assert.ok(manifest['proxy'] && manifest['proxy']['image']);
+
+        describe('Core Services', function() {
+          it('should include a database', function() {
+            assert.ok(manifest['db']);
+          });
+          it('should include an application server', function() {
+            assert.ok(manifest['www']);
+          });
+          it('should include an intenral caching service', function() {
+            assert.ok(manifest['cache']);
+          });
+          it('should include a reverse-proxy cache', function() {
+            assert.ok(manifest['proxy']);
+          });
+          it('should include a mail-handling services', function() {
+            assert.ok(manifest['mail']);
+          });
         });
-        it('should include a mail-handling services', function() {
-          assert.ok(manifest['mail'] && manifest['mail']['image']);
-        });
-        it('should use apache24php70 with Drupal 8', function() {
-          assert.ok(manifest['www']['image'] == 'phase2/apache24php70');
-        });
-        it('should use memcache for internal caching', function() {
-          assert.ok(manifest['cache'] && manifest['cache']['image'] == 'phase2/memcache');
-        });
-        it('should use Varnish for reverse-proxy caching', function() {
-          assert.ok(manifest['proxy'] && manifest['proxy']['image'] == 'phase2/varnish4');
+
+        describe('Docker Images', function() {
+          it('should extend from docker-compose.yml for cache container', function() {
+            assert.ok(manifest['cache']['extends']['file'] === 'docker-compose.yml');
+          });
+          it('should extend from docker-compose.yml for db container', function() {
+            assert.ok(manifest['db']['extends']['file'] === 'docker-compose.yml');
+          });
+          it('should use apache24php70 with Drupal 8', function() {
+            assert.ok(manifest['www']['image'] == 'phase2/apache24php70');
+          });
+          it('should use Varnish for reverse-proxy caching', function() {
+            assert.ok(manifest['proxy']['image'] == 'phase2/varnish4');
+          });
         });
       });
     });
