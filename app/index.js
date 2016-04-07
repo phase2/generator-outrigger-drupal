@@ -118,20 +118,20 @@ module.exports = yeoman.Base.extend({
       }
 
       tokens.host = {
-        int: virtualHost('int', options.machineName),
+        int: virtualHost('int', options.projectName),
         local: 'www.' + options.domain + '.vm',
-        devcloud: virtualHost(false, options.machineName),
+        devcloud: virtualHost(false, options.projectName),
         master: options.ciHost
       };
 
       if (envActive('dev')) {
-        tokens.host.dev = virtualHost('dev', options.machineName);
+        tokens.host.dev = virtualHost('dev', options.projectName);
       }
       if (envActive('qa')) {
-        tokens.host.qa = virtualHost('qa', options.machineName);
+        tokens.host.qa = virtualHost('qa', options.projectName);
       }
       if (envActive('review')) {
-        tokens.host.review = virtualHost('review', options.machineName);
+        tokens.host.review = virtualHost('review', options.projectName);
       }
 
       done();
