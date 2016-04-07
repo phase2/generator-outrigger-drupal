@@ -17,5 +17,5 @@ jenkins:
   environment:
     DNSDOCK_NAME: jenkins
     DNSDOCK_IMAGE: <%= domain %>
-    VIRTUAL_HOST: build.<%= projectName %>.ci.p2devcloud.com
+    VIRTUAL_HOST: build.<%= host.devcloud %>
     VIRTUAL_PORT: 8080
