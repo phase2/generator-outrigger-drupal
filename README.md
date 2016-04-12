@@ -71,7 +71,9 @@ support for Docker-based development with Phase2's DevTools, including Drush
 configuration enabled by controlling the server environment and Grunt-Drupal-Tasks
 changes needed for Docker compatibility.
 
-## Testing Changes
+## Contributing
+
+### Testing Branches
 
 If you would like to test out changes to generator-p2 or one of the above
 projects, please take the following steps:
