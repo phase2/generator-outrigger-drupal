@@ -1,6 +1,6 @@
 {
   "name": "generator-p2",
-  "version": "0.9.0",
+  "version": "2.0.0",
   "description": "Phase2 Yeoman generator",
   "license": "MIT",
   "main": "app/index.js",
@@ -13,7 +13,7 @@
     "node": ">=0.12.0"
   },
   "scripts": {
-    "test": "mocha --timeout=5000"
+    "test": "mocha --timeout=6000"
   },
   "files": [
     "app"
@@ -24,7 +24,7 @@
   "dependencies": {
     "chalk": "^1.0.0",
     "generator-gadget": "git+https://github.com/phase2/generator-gadget.git#master",
-    "generator-p2-env": "git+ssh://git@bitbucket.org/phase2tech/generator-p2-env.git#v0.2.1",
+    "generator-p2-env": "git+ssh://git@bitbucket.org/phase2tech/generator-p2-env.git#v0.3.0",
     "generator-pattern-lab-starter": "git+https://github.com/phase2/generator-pattern-lab-starter.git#master",
     "lodash": "^3.10.1",
     "yeoman-generator": "^0.20.3",
