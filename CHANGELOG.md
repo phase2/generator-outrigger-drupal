@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## N.N.N (Next Release)
+
+### Release Notes
+
+#### Features
+
+* Added `npm run d` as a convenient shorthand to run `docker-compose -f build.yml run`
+  in your local environment (not inside container). Use commands like `npm run d cli`
+  to start a "bash" session in the build container.
+* Added `npm run logs` to watch a live stream of PHP logs, containing Drupal syslog
+  if that module is active. This log is not included in the `docker logs` output.
+
+
 ## 0.3.0 (April 2016)
 
 This release represents a significant amount of R&D pursued as part of field-use

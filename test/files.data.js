@@ -26,6 +26,7 @@ module.exports = {
     'Gruntconfig.json',
     'JENKINS.md',
     'jenkins.yml',
+    'package.json',
     'src/sites/settings.common.php',
     'TODOS.md'
   ],
