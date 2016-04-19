@@ -73,7 +73,7 @@ teardown() {
 
 # Handler for errors and interruptions.
 cancel() {
-  echoError "$NAME: Error: Line $1: $2"
+  echoError "$NAME: Error: Line $1: $2\n"
   teardown
   exit 33
 }
@@ -81,7 +81,7 @@ cancel() {
 # Final actions to take whenever the script ends.
 complete() {
   ret=$1
-  [ "$ret" -eq 0 ] || echoFail >&2 "$NAME: aborted ($ret)"
+  [ "$ret" -eq 0 ] || echoFail >&2 "$NAME: aborted ($ret)\n"
 }
 
 # Cancel docker start on errors.
@@ -91,7 +91,7 @@ trap 'complete $?' EXIT
 ##
 # Bring up the site.
 ##
-echo "Preparing site for environment '$DOCKER_ENV' using start.sh (v${START_VERSION})"
+echoInfo "Preparing site for environment '$DOCKER_ENV' using start.sh (v${START_VERSION})"
 export DOCKER_ENV
 
 # Spin up cache and db services to support build container.
@@ -121,3 +121,11 @@ fi
 
 # Wipe cache after permissions fix.
 cmd "docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run grunt cache-clear"
+
+if [ "$DOCKER_ENV" == 'local' ]; then
+  echo
+  echoSuccess "Application Setup Complete: "
+  // @todo derive URL from DNSDOCK query.
+  echo "http://www."<%= domain %>".vm"
+fi
+echo
