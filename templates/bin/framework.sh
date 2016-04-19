@@ -72,6 +72,10 @@ Blue='\e[1;34m';
 Purple='\e[0;35m';
 Cyan='\e[0;36m';
 
+Bold='\033[1m';
+Normal='\033[0m';
+Underline='\033[4m';
+
 # @info:    Prints error messages
 # @args:    error-message
 echoError () {
@@ -116,4 +120,28 @@ function outputColor {
 # @info:    Reset terminal color
 function resetColor  {
   printf "${Reset}"
+}
+
+# @info:    Bold text
+function outputBold {
+  printf "${Bold}"
+}
+
+# @info:    Normal text weight
+function resetText {
+  printf "${Normal}"
+}
+
+# @info:    Output text with underline
+function outputUnderline {
+  printf "${Underline}"
+}
+
+# @info:    Set a heading
+function heading {
+  outputColor
+  outputBold
+  outputUnderline
+  echo -e "${Bold}$1${Normal}"
+  resetText
 }
