@@ -122,10 +122,8 @@ fi
 # Wipe cache after permissions fix.
 cmd "docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run grunt cache-clear"
 
-if [ "$DOCKER_ENV" == 'local' ]; then
-  echo
-  echoSuccess "Application Setup Complete: "
-  // @todo derive URL from DNSDOCK query.
-  echo "http://www."<%= domain %>".vm"
-fi
+echo
+echoSuccess "Application Setup Complete: "
+URL=$(docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run drush sa @<%= projectName %> --component=uri)
+echo "$URL"
 echo
