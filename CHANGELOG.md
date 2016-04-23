@@ -2,6 +2,18 @@
 
 ## N.N.N (Next Release)
 
+### Major Features
+
+#### Operational vs. Base Build Container
+
+All build containers previously extended from `base`, a parent container that sets up common environment variables, volume mounts, and other behaviors. A new `operational` service definition is now the direct parent of the functional containers.
+
+This allows projects to define new build services that extend from `operational` when they need the use of backing services like the database, or extend from `base` when they do not. This allows pure filesystem or build operations to be run without the additional overhead.
+
+### Compatibility Breaks
+
+* `base` build container no longer has dependency on backing services like database or memcache. This means it also cannot run commands accessing those services.
+
 ### Release Notes
 
 #### Features
@@ -11,7 +23,8 @@
   to start a "bash" session in the build container.
 * Added `npm run logs` to watch a live stream of PHP logs, containing Drupal syslog
   if that module is active. This log is not included in the `docker logs` output.
-
+* Boosted default PHP max_execution_time to 60 seconds.
+* Added output of Drupal site URL to `bin/start.sh` output.
 
 ## 0.3.0 (April 2016)
 
