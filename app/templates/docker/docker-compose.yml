@@ -48,6 +48,7 @@ www:
     DNSDOCK_NAME: <% if (proxy.exists) { %>app<% } else { %>www<% } %>
     DNSDOCK_IMAGE: <%= domain %>
     DOCROOT: /var/www/build/html
+    PHP_MAX_EXECUTION_TIME: 60
     PHP_XDEBUG: "<%= debugMode %>"
     PHP_XHPROF: "<%= debugMode %>"
   links:
