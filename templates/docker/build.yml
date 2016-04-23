@@ -6,14 +6,14 @@
 # Usage: docker-compose -f build.yml run cli
 cli:
   extends:
-    service: base
+    service: operational
 
 # Container for running drush in the docroot.
 # Usage: docker-compose -f build.yml run drush <command>
 # Where <command> is a direct drush command like cache-rebuild
 drush:
   extends:
-    service: base
+    service: operational
   entrypoint: [ "/init", "drush", "@<%= projectName %>" ]
   working_dir: /var/www/build/html
 
@@ -21,10 +21,30 @@ drush:
 # Usage: docker-compose -f build.yml run grunt <command>
 grunt:
   extends:
-    service: base
+    service: operational
   entrypoint: [ "/init", "grunt" ]
 
+# Operational base service definition for Local environment.
+#
+# Unlike `base`, this layer is functional for application interactions.
+#
+# Other services inherit these settings via the extends property.
+# See https://docs.docker.com/compose/extends/#extending-services
+operational:
+  extends:
+    service: base
+  external_links:
+    - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
+
 # Base service definition for Local environment.
+#
+# This is not a fully operational build container, lacking access to other
+# services such as the database or cache needed to properly interact with the
+# application.
+#
+# Uses for this container include filesystem operations. For example:
+#
+# docker-compose -f build.yml run base 'rm -Rf node_modules'
 #
 # Other services inherit these settings via the extends property.
 # See https://docs.docker.com/compose/extends/#extending-services
@@ -46,5 +66,3 @@ base:
     APP_DOMAIN: <%= host.local %>
     GDT_DOMAIN: <%= host.local %>
     <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: <%= host.local %><% } %>
-  external_links:
-    - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
