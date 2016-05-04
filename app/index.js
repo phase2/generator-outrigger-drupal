@@ -9,7 +9,7 @@ var options = {},
 
 var webImage = function(webserver, majorVersion) {
   var webImage = {
-    apache: majorVersion == '8.x' ? 'phase2/apache24php70' : 'phase2/apache24php55',
+    apache: majorVersion == '8.x' ? 'phase2/apache-php:php70' : 'phase2/apache-php:php56',
     nginx: 'phase2/nginx16-php55'
   };
   return webImage[webserver];

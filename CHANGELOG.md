@@ -13,11 +13,13 @@ This allows projects to define new build services that extend from `operational`
 ### Compatibility Breaks
 
 * `base` build container no longer has dependency on backing services like database or memcache. This means it also cannot run commands accessing those services.
+* New Drupal 7 projects or updates via the `--replay` will now use PHP 5.6. This can be manually changed.
 
 ### Release Notes
 
 #### Features
 
+* Easily create new build services that do or do not use the Drupal backing services.
 * Added `npm run d` as a convenient shorthand to run `docker-compose -f build.yml run`
   in your local environment (not inside container). Use commands like `npm run d cli`
   to start a "bash" session in the build container.
@@ -25,6 +27,8 @@ This allows projects to define new build services that extend from `operational`
   if that module is active. This log is not included in the `docker logs` output.
 * Boosted default PHP max_execution_time to 60 seconds.
 * Added output of Drupal site URL to `bin/start.sh` output.
+* Switched to new [Docker image naming for Apache/PHP and Varnish containers](https://hub.docker.com/r/phase2/apache-php/).
+* Updated Drupal 7 projects to use PHP 5.6.
 
 ## 0.3.0 (April 2016)
 
