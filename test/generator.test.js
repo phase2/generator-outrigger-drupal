@@ -141,8 +141,8 @@ describe('p2-env:app', function() {
         it('should include an application server', function() {
           assert.ok(manifest['www'] && manifest['www']['image']);
         });
-        it('should use apache24php70 with Drupal 8', function() {
-          assert.ok(manifest['www']['image'] == 'phase2/apache24php70');
+        it('should use apache-php:php70 with Drupal 8', function() {
+          assert.ok(manifest['www']['image'] == 'phase2/apache-php:php70');
         });
         it('should not have a cache service', function() {
           assert.ok(!manifest['cache']);
@@ -217,14 +217,14 @@ describe('p2-env:app', function() {
           });
         });
         describe('Docker Images', function() {
-          it('should use apache24php70 with Drupal 8', function() {
-            assert.ok(manifest['www']['image'] == 'phase2/apache24php70');
+          it('should use apache-php with Drupal 8', function() {
+            assert.ok(manifest['www']['image'] == 'phase2/apache-php:php70');
           });
           it('should use memcache for internal caching', function() {
             assert.ok(manifest['cache'] && manifest['cache']['image'] == 'phase2/memcache');
           });
           it('should use Varnish for reverse-proxy caching', function() {
-            assert.ok(manifest['proxy'] && manifest['proxy']['image'] == 'phase2/varnish4');
+            assert.ok(manifest['proxy'] && manifest['proxy']['image'] == 'phase2/varnish:4.0');
           });
         });
       });
@@ -261,11 +261,11 @@ describe('p2-env:app', function() {
           it('should extend from docker-compose.yml for db container', function() {
             assert.ok(manifest['db']['extends']['file'] === 'docker-compose.yml');
           });
-          it('should use apache24php70 with Drupal 8', function() {
-            assert.ok(manifest['www']['image'] == 'phase2/apache24php70');
+          it('should use apache-php:php70 with Drupal 8', function() {
+            assert.ok(manifest['www']['image'] == 'phase2/apache-php:php70');
           });
           it('should use Varnish for reverse-proxy caching', function() {
-            assert.ok(manifest['proxy']['image'] == 'phase2/varnish4');
+            assert.ok(manifest['proxy']['image'] == 'phase2/varnish:4.0');
           });
         });
       });
