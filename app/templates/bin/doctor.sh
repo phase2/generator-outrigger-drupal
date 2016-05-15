@@ -14,6 +14,10 @@ SUCCESS='echoInfo'
 WARNING='echoWarn'
 ERROR='echoError'
 
+# Flag the status of a particular check.
+# $1 - Status/Output Function
+# $2 - Category
+# $3 - Message
 flag() {
   if [ "$1" == "$ERROR" ]; then
     STATUS=1
@@ -22,6 +26,9 @@ flag() {
   $1 "$2 $3\n"
 }
 
+# Assert a command is available.
+# $1 - The command
+# $2 - Severity on failure.
 assertCmd() {
   if [ -z $(which $1) ]; then
     flag $2 $1 'command not found.'
@@ -30,6 +37,9 @@ assertCmd() {
   fi
 }
 
+# Assert presence of a file.
+# $1 - Path to File
+# $2 - Severity on failure
 assertFile() {
   if [ -f "$1" ]; then
     flag $SUCCESS $1 'found'
@@ -38,6 +48,9 @@ assertFile() {
   fi
 }
 
+# Assert presence of a directory.
+# $1 - Path to directory
+# $2 - Severity on failure
 assertDir() {
   if [ -d "$1" ]; then
     flag $SUCCESS $1 'found'
@@ -46,11 +59,38 @@ assertDir() {
   fi
 }
 
-assert() {
+# Assert a value is truthy.
+# $1 - Value, typically the output of a command.
+# $2 - Severity on failure
+assertOk() {
   if [ -z "$1" ]; then
     flag $3 $2 "not running"
   else
     flag $SUCCESS $2 "running"
+  fi
+}
+
+# Assert two values are equivalent.
+# $1 - Value 1
+# $2 - Value 2
+# $3 - Severity on failure
+assertEqual() {
+  if [ "$1" == "$2" ]; then
+    flag $3 "$1 and $2" "not equal"
+  else
+    flag $SUCCESS "$1" "confirmed"
+  fi
+}
+
+# Assert two values are not equivalent.
+# $1 - Value 1
+# $2 - Value 2
+# $3 - Severity on failure
+assertNotEqual() {
+  if [ "$1" != "$2" ]; then
+    flag $SUCCESS $1 "confirmed"
+  else
+    flag $3 "$1 and $2" "equal and should not be"
   fi
 }
 
@@ -60,7 +100,7 @@ if [ -z "$1" ] || [ "$1" == 'devtools' ]; then
   assertCmd 'docker' $ERROR
   assertCmd 'docker-compose' $ERROR
   assertCmd 'docker-machine' $ERROR
-  assert $(docker-machine active) 'devtools' $WARNING
+  assertNotEqual $(docker-machine active) 'No active host found' $WARNING
 fi
 
 if [ -z "$1" ] || [ "$1" == 'generator' ]; then
@@ -87,7 +127,7 @@ fi
 if [ -z "$1" ] || [ "$1" == 'docker-machine' ]; then
   heading 'Docker-Machine Functionality'
   docker-compose -f build.yml run base ls /var/www/src > /dev/null
-  assert $? 'code volume-mount' $ERROR
+  assertOk $? 'code volume-mount' $ERROR
 fi
 
 if [ "$STATUS" -gt 0 ]; then
