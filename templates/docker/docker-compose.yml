@@ -24,7 +24,7 @@ cache:
 # Reverse-proxy Cache service
 proxy:
   container_name: <%= machineName %>_local_proxy
-  image: phase2/varnish4
+  image: phase2/varnish:4.0
   environment:
     DNSDOCK_NAME: www
     DNSDOCK_IMAGE: <%= domain %>
