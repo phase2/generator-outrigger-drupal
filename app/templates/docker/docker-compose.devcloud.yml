@@ -41,7 +41,7 @@ cache:
 # Reverse-proxy Cache service
 proxy:
   container_name: <%= machineName %>_${DOCKER_ENV}_proxy
-  image: phase2/varnish4
+  image: phase2/varnish:4.0
   environment:
     VARNISH_BACKEND_HOST: www
     VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %>
