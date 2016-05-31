@@ -4,6 +4,10 @@
 
 ### Major Features
 
+#### Doctor.sh in the House
+
+There is now `bin/doctor.sh` to check on project setup. If your project is not working, please run it to confirm easily checked problems are not the issue. Parts of this might later move into Grunt Drupal Tasks.
+
 #### Operational vs. Base Build Container
 
 All build containers previously extended from `base`, a parent container that sets up common environment variables, volume mounts, and other behaviors. A new `operational` service definition is now the direct parent of the functional containers.
@@ -27,6 +31,7 @@ This allows projects to define new build services that extend from `operational`
   if that module is active. This log is not included in the `docker logs` output.
 * Boosted default PHP max_execution_time to 60 seconds.
 * Added output of Drupal site URL to `bin/start.sh` output.
+* Added `bin/doctor.sh` to automate checks on project setup.
 * Switched to new [Docker image naming for Apache/PHP and Varnish containers](https://hub.docker.com/r/phase2/apache-php/).
 * Updated Drupal 7 projects to use PHP 5.6.
 
