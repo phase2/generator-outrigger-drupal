@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## N.N.N (Next Release)
+## 1.0.0 (May 2016)
 
 ### Major Features
 
