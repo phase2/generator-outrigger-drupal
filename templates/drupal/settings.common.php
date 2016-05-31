@@ -7,20 +7,15 @@
 $conf['cron_safe_threshold'] = 0;
 
 // Database connection settings.
-$databases = array (
-  'default' =>
-  array (
-    'default' =>
-    array (
-      'database' => '<%= machineName %>_drupal',
-      'username' => 'admin',
-      'password' => 'admin',
-      'host' => 'db',
-      'port' => '',
-      'driver' => 'mysql',
-      'prefix' => '',
-    ),
-  ),
+$databases['default']['default'] = array (
+  'database' => '<%= machineName %>_drupal',
+  'username' => 'admin',
+  'password' => 'admin',
+  'prefix' => '',
+  'host' => 'db',
+  'port' => '',
+  <% if (drupalDistroVersion == '8.x') { %>'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',<% } %>
+  'driver' => 'mysql',
 );
 <% if(cache.external && cache.service == 'memcache' && drupalDistroVersion == '7.x') { %>
 // Add Memcache for internal caching.
