@@ -274,6 +274,10 @@ module.exports = yeoman.Base.extend({
         gcfg.scripts['pre-install'] = 'bash bin/pre-install.sh';
       }
 
+      if (!gcfg.scripts['post-install']) {
+        gcfg.scripts['post-install'] = 'bash bin/post-install.sh';
+      }
+
       if (!gcfg.scripts['cache-clear']) {
         if (options.drupalDistroVersion == '8.x') {
           gcfg.scripts['cache-clear'] = '<%= config.drush.cmd %> <%= config.alias %> cache-rebuild';
