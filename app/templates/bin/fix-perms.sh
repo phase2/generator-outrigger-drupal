@@ -8,6 +8,5 @@
 
 set -x
 mkdir -p /var/www/build/html/sites/default/files/private
-chown -R apache:apache /var/www/build/html/sites/default
 chown -R apache:apache /var/www/build/html/sites/default/files
 chmod -R 755 /var/www/build/html/sites/default/files
