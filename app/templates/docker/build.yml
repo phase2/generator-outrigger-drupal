@@ -55,6 +55,7 @@ base:
   command: /bin/bash
   volumes:
     - .:/var/www/
+    - /data/<%= projectName %>_local/files:/var/www/src/sites/default/files
     - ./env/build/etc/drush:/root/.drush
     - ./build/backups:/opt/backups
     - /data/<%= projectName %>_local/cache/drush:/root/.drush/cache

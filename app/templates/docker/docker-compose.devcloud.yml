@@ -70,4 +70,4 @@ www:
     - db<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (mail.exists) { %><%= mail.docker.link %><% } %>
   volumes:
     - .:/var/www/
-    - /data/<%= projectName %>_${DOCKER_ENV}/files:/var/www/build/html/sites/default/files
+    - /data/<%= projectName %>_${DOCKER_ENV}/files:/var/www/src/sites/default/files
