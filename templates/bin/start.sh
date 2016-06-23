@@ -120,10 +120,10 @@ else
 fi
 
 # Wipe cache after permissions fix.
-cmd "docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run grunt cache-clear"
+cmd "docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm grunt cache-clear"
 
 echo
 echoSuccess "Application Setup Complete: "
-URL=$(docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run drush sa @<%= projectName %> --component=uri)
-echo "$URL"
+URL=$(docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm drush sa @<%= projectName %> --format=yaml | grep uri | cut -f2 -d: )
+echo $URL
 echo
