@@ -374,6 +374,16 @@ module.exports = yeoman.Base.extend({
           tokens
         );
         this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/start-env'),
+          this.destinationPath('env/jenkins/jobs/start-dev'),
+          tokens
+        );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/stop-env'),
+          this.destinationPath('env/jenkins/jobs/stop-dev'),
+          tokens
+        );
+        this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/cron-env'),
           this.destinationPath('env/jenkins/jobs/cron-dev'),
           tokens
@@ -395,6 +405,16 @@ module.exports = yeoman.Base.extend({
           tokens
         );
         this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/start-env'),
+          this.destinationPath('env/jenkins/jobs/start-qa'),
+          tokens
+        );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/stop-env'),
+          this.destinationPath('env/jenkins/jobs/stop-qa'),
+          tokens
+        );
+        this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/cron-env'),
           this.destinationPath('env/jenkins/jobs/cron-qa'),
           tokens
@@ -413,6 +433,16 @@ module.exports = yeoman.Base.extend({
         this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/deploy-env'),
           this.destinationPath('env/jenkins/jobs/deploy-review'),
+          tokens
+        );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/start-env'),
+          this.destinationPath('env/jenkins/jobs/start-review'),
+          tokens
+        );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/stop-env'),
+          this.destinationPath('env/jenkins/jobs/stop-review'),
           tokens
         );
         this.fs.copyTpl(
