@@ -55,4 +55,5 @@ www:
     - db<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (mail.exists) { %><%= mail.docker.link %><% } %>
   volumes:
     - .:/var/www/
+    # /var/www/src is used for consistency with the build container.
     - /data/<%= projectName %>_local/files:/var/www/src/sites/default/files
