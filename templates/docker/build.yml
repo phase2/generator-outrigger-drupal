@@ -55,6 +55,13 @@ base:
   command: /bin/bash
   volumes:
     - .:/var/www/
+    # /var/www/src is used here rather than /var/www/build/html to
+    # prevent the grunt clean:default task from encountering an error
+    # because docker won't let the files directory be removed as the
+    # container is using it in it's filesystem magic. Since the
+    # /var/www/build/html/sites/default item is a symlink it can be
+    # successfully cleaned without then needing to touch the files
+    # directory.
     - /data/<%= projectName %>_local/files:/var/www/src/sites/default/files
     - ./env/build/etc/drush:/root/.drush
     - ./build/backups:/opt/backups
