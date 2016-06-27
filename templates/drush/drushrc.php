@@ -47,5 +47,5 @@ $options['structure-tables']['common-and-logging'] = array_merge($options['struc
   'watchdog',
 ));
 
-// Use the list of cache tables above.
+// Use the list of cache tables above. Use key common-and-logging for more aggressive pruning.
 $options['structure-tables-key'] = 'common';
