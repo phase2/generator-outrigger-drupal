@@ -15,13 +15,23 @@ $options['structure-tables']['common'] = array(
   'cache',
   'cache_block',
   'cache_bootstrap',
+  'cache_config',
+  'cache_container',
+  'cache_data',
+  'cache_default',
+  'cache_discovery',
+  'cache_entity',
   'cache_field',
   'cache_filter',
   'cache_form',
   'cache_menu',
+  'cache_migrate',
   'cache_page',
   'cache_path',
+  'cache_render',
+  'cache_rest',
   'cache_token',
+  'cache_toolbar',
   'cache_update',
   'cache_variable',
   'cache_views',
@@ -33,5 +43,9 @@ $options['structure-tables']['common'] = array(
   'sessions',
 );
 
-// Use the list of cache tables above.
+$options['structure-tables']['common-and-logging'] = array_merge($options['structure-tables']['common'], array(
+  'watchdog',
+));
+
+// Use the list of cache tables above. Use key common-and-logging for more aggressive pruning.
 $options['structure-tables-key'] = 'common';
