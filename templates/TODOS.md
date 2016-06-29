@@ -5,6 +5,7 @@
     * `src/sites/settings.common.php` for Docker-savvy Drupal settings
     * Scripts in `bin/`
     * Gruntconfig.json
+    * `env/build/etc/drush/drushrc.php` for drush config and default options you may want to change for the sql-dump command.
 * [ ] Set up the Docker-based site.
     * Read the [Phase2 DevTools](http://phase2.github.io/devtools/).
     * Run  `docker-compose pull && docker-compose -f build.yml pull` to ensure you have the latest Docker images for local development.
