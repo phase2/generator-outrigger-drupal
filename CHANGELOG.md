@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.1.0 (July 2016)
+
+* Added Docker container start and stop jobs for all environments.
+* Added rebuild script to run `bin/start.sh with --update` for greater clarity on already setup development environments.
+* Added more Drupal 8 cache tables to default Drush excludes.
+
 ## 1.0.0 (May 2016)
 
 ### Major Features
