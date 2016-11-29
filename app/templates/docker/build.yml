@@ -49,7 +49,7 @@ operational:
 # Other services inherit these settings via the extends property.
 # See https://docs.docker.com/compose/extends/#extending-services
 base:
-  image: phase2/devtools-build
+  image: phase2/devtools-build:php56
   entrypoint: [ "/init" ]
   working_dir: /var/www
   command: /bin/bash
