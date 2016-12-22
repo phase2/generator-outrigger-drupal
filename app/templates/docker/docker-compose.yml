@@ -7,44 +7,61 @@ db:
   container_name: <%= machineName %>_local_db
   image: phase2/mariadb
   environment:
+    # Envionment variables are the deprecated means of configuring DNS. Please use dnsdock labels instead.
     DNSDOCK_NAME: db
     DNSDOCK_IMAGE: <%= domain %>
     MYSQL_DATABASE: <%= machineName %>_drupal
   volumes:
     - /data/<%= projectName %>_local/mysql:/var/lib/mysql
+  labels:
+    - com.dnsdock.name: db
+    - com.dnsdock.image: <%= domain %>
 <% if (cache.external) { %>
 # Application Cache service
 cache:
   container_name: <%= machineName %>_local_cache
   image: <%= cache.image %>
   environment:
+    # Envionment variables are the deprecated means of configuring DNS. Please use dnsdock labels instead.
     DNSDOCK_NAME: cache
     DNSDOCK_IMAGE: <%= domain %>
+  labels:
+    - com.dnsdock.name: cache
+    - com.dnsdock.image: <%= domain %>
 <% } if (proxy.exists) { %>
 # Reverse-proxy Cache service
 proxy:
   container_name: <%= machineName %>_local_proxy
   image: phase2/varnish:4.0
   environment:
+    # Envionment variables are the deprecated means of configuring DNS. Please use dnsdock labels instead.
     DNSDOCK_NAME: www
     DNSDOCK_IMAGE: <%= domain %>
     VARNISH_BACKEND_HOST: www
   links:
     - www
+  labels:
+    - com.dnsdock.name: www
+    - com.dnsdock.image: <%= domain %>
 <% } if (mail.exists) { %>
 # MailHog SMTP and UI service.
 mail:
   container_name: <%= machineName %>_local_mail
   image: mailhog/mailhog
   environment:
+    # Envionment variables are the deprecated means of configuring DNS. Please use dnsdock labels instead.
     DNSDOCK_NAME: mail
     DNSDOCK_IMAGE: <%= domain %>
+  labels:
+    - com.dnsdock.name: mail
+    - com.dnsdock.image: <%= domain %>
 <% } %>
 # Main Application service.
 www:
   container_name: <%= machineName %>_local_www
   image: <%= app.image %>
   environment:
+    # Envionment variables are the deprecated means of configuring DNS. Please use dnsdock labels instead.
     DNSDOCK_NAME: <% if (proxy.exists) { %>app<% } else { %>www<% } %>
     DNSDOCK_IMAGE: <%= domain %>
     DOCROOT: /var/www/build/html
@@ -56,3 +73,6 @@ www:
   volumes:
     - .:/var/www/
     - /data/<%= projectName %>_local/files:/var/www/build/html/sites/default/files
+  labels:
+    - com.dnsdock.name: <% if (proxy.exists) { %>app<% } else { %>www<% } %>
+    - com.dnsdock.image: <%= domain %>
