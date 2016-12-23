@@ -192,6 +192,18 @@ describe('p2-env:app', function() {
 
     describe('Docker', function() {
       describe('has YAML configuration', describeYaml());
+      describe('CLI Services - Local', function() {
+        var manifest;
+
+        before(function() {
+          manifest = yaml.safeLoad(fs.readFileSync('build.yml', 'utf8'));
+        });
+
+        it('should use the PHP7 build container with Drupal 8', function() {
+          assert.ok(manifest['base']['image'] == 'phase2/devtools-build:php70');
+        });
+
+      });
       describe('Operational Services - Local', function() {
         var manifest;
 
@@ -206,7 +218,7 @@ describe('p2-env:app', function() {
           it('should include an application server', function() {
             assert.ok(manifest['www'] && manifest['www']['image']);
           });
-          it('should include an intenral caching service', function() {
+          it('should include an internal caching service', function() {
             assert.ok(manifest['cache'] && manifest['cache']['image']);
           });
           it('should include a reverse-proxy cache', function() {

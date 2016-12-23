@@ -8,11 +8,15 @@ var options = {},
   tokens = {};
 
 var webImage = function(webserver, majorVersion) {
-  var webImage = {
+  var image = {
     apache: majorVersion == '8.x' ? 'phase2/apache-php:php70' : 'phase2/apache-php:php56',
     nginx: 'phase2/nginx16-php55'
   };
-  return webImage[webserver];
+  return image[webserver];
+};
+
+var buildImage = function(majorVersion) {
+  return majorVersion == '8.x' ? 'phase2/devtools-build:php70' : 'phase2/devtools-build:php56';
 };
 
 var cacheImage = function(service, majorVersion) {
@@ -133,6 +137,8 @@ module.exports = yeoman.Base.extend({
       if (envActive('review')) {
         tokens.host.review = virtualHost('review', options.projectName);
       }
+
+      tokens.buildImage = buildImage(options.drupalDistroVersion);
 
       done();
     }.bind(this));
