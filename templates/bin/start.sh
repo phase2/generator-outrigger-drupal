@@ -145,6 +145,6 @@ cmd "docker-compose run --rm grunt cache-clear"
 
 echo
 echoSuccess "Application Setup Complete: "
-URL=$(docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm drush sa @<%= projectName %> --format=list --fields=uri)
+URL=$(docker-compose -f build$COMPOSE_EXT.yml run --rm drush sa @<%= projectName %> --format=list --fields=uri)
 echo "$URL"
 echo
