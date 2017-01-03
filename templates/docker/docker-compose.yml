@@ -14,8 +14,8 @@ db:
   volumes:
     - /data/<%= projectName %>_local/mysql:/var/lib/mysql
   labels:
-    - com.dnsdock.name: db
-    - com.dnsdock.image: <%= domain %>
+    com.dnsdock.name: db
+    com.dnsdock.image: <%= domain %>
 <% if (cache.external) { %>
 # Application Cache service
 cache:
@@ -26,8 +26,8 @@ cache:
     DNSDOCK_NAME: cache
     DNSDOCK_IMAGE: <%= domain %>
   labels:
-    - com.dnsdock.name: cache
-    - com.dnsdock.image: <%= domain %>
+    com.dnsdock.name: cache
+    com.dnsdock.image: <%= domain %>
 <% } if (proxy.exists) { %>
 # Reverse-proxy Cache service
 proxy:
@@ -41,8 +41,8 @@ proxy:
   links:
     - www
   labels:
-    - com.dnsdock.name: www
-    - com.dnsdock.image: <%= domain %>
+    com.dnsdock.name: www
+    com.dnsdock.image: <%= domain %>
 <% } if (mail.exists) { %>
 # MailHog SMTP and UI service.
 mail:
@@ -53,8 +53,8 @@ mail:
     DNSDOCK_NAME: mail
     DNSDOCK_IMAGE: <%= domain %>
   labels:
-    - com.dnsdock.name: mail
-    - com.dnsdock.image: <%= domain %>
+    com.dnsdock.name: mail
+    com.dnsdock.image: <%= domain %>
 <% } %>
 # Main Application service.
 www:
@@ -74,5 +74,5 @@ www:
     - .:/var/www/
     - /data/<%= projectName %>_local/files:/var/www/build/html/sites/default/files
   labels:
-    - com.dnsdock.name: <% if (proxy.exists) { %>app<% } else { %>www<% } %>
-    - com.dnsdock.image: <%= domain %>
+    com.dnsdock.name: <% if (proxy.exists) { %>app<% } else { %>www<% } %>
+    com.dnsdock.image: <%= domain %>
