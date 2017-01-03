@@ -21,5 +21,5 @@ jenkins:
     VIRTUAL_HOST: build.<%= host.devcloud %>
     VIRTUAL_PORT: 8080
   labels:
-    - com.dnsdock.name: jenkins
-    - com.dnsdock.image: <%= domain %>
+    com.dnsdock.name: jenkins
+    com.dnsdock.image: <%= domain %>
