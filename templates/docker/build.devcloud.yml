@@ -18,13 +18,13 @@
 ##
 
 # Container for starting a cli for build commands
-# Usage: DOCKER_ENV=int docker-compose -f build.yml -p <%= machineName %>_int run cli
+# Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm cli
 cli:
   extends:
     service: operational
 
 # Container for running drush in the docroot.
-# Usage: DOCKER_ENV=int docker-compose -f build.yml -p <%= machineName %>_int run drush <command>
+# Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm drush <command>
 # Where <command> is a direct drush command like cache-rebuild
 drush:
   extends:
@@ -32,13 +32,22 @@ drush:
   entrypoint: [ "/init", "drush", "@<%= projectName %>" ]
   working_dir: /var/www/build/html
 
+# Container for running Drupal Console in the docroot.
+# Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm drupal <command>
+# Where <command> is a direct drupal command like generate
+# Note: Only works if the project includes Drupal Console as a composer dependency.
+drupal:
+  extends:
+    service: operational
+  entrypoint: [ "/init", "/var/www/vendor/bin/drupal --ansi" ]
+  working_dir: /var/www/build/html
+
 # Container for running grunt in the docroot.
-# Usage: DOCKER_ENV=int docker-compose -f build.yml -p <%= machineName %>_int run grunt <command>
+# Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm grunt <command>
 grunt:
   extends:
     service: operational
   entrypoint: [ "/init", "grunt" ]
-
 
 # Operational base service definition for Phase2 Dev Cloud environment.
 #
@@ -60,7 +69,7 @@ operational:
 #
 # Uses for this container include filesystem operations. For example:
 #
-# docker-compose -f build.yml run base 'rm -Rf node_modules'
+# DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm base 'rm -Rf node_modules'
 #
 # Other services inherit these settings via the extends property.
 # See https://docs.docker.com/compose/extends/#extending-services
