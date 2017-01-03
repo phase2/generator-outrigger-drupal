@@ -7,9 +7,6 @@ db:
   container_name: <%= machineName %>_local_db
   image: phase2/mariadb
   environment:
-    # Envionment variables are the deprecated means of configuring DNS. Please use dnsdock labels instead.
-    DNSDOCK_NAME: db
-    DNSDOCK_IMAGE: <%= domain %>
     MYSQL_DATABASE: <%= machineName %>_drupal
   volumes:
     - /data/<%= projectName %>_local/mysql:/var/lib/mysql
@@ -21,10 +18,6 @@ db:
 cache:
   container_name: <%= machineName %>_local_cache
   image: <%= cache.image %>
-  environment:
-    # Envionment variables are the deprecated means of configuring DNS. Please use dnsdock labels instead.
-    DNSDOCK_NAME: cache
-    DNSDOCK_IMAGE: <%= domain %>
   labels:
     com.dnsdock.name: cache
     com.dnsdock.image: <%= domain %>
@@ -34,9 +27,6 @@ proxy:
   container_name: <%= machineName %>_local_proxy
   image: phase2/varnish:4.0
   environment:
-    # Envionment variables are the deprecated means of configuring DNS. Please use dnsdock labels instead.
-    DNSDOCK_NAME: www
-    DNSDOCK_IMAGE: <%= domain %>
     VARNISH_BACKEND_HOST: www
   links:
     - www
@@ -48,10 +38,6 @@ proxy:
 mail:
   container_name: <%= machineName %>_local_mail
   image: mailhog/mailhog
-  environment:
-    # Envionment variables are the deprecated means of configuring DNS. Please use dnsdock labels instead.
-    DNSDOCK_NAME: mail
-    DNSDOCK_IMAGE: <%= domain %>
   labels:
     com.dnsdock.name: mail
     com.dnsdock.image: <%= domain %>
@@ -61,9 +47,6 @@ www:
   container_name: <%= machineName %>_local_www
   image: <%= app.image %>
   environment:
-    # Envionment variables are the deprecated means of configuring DNS. Please use dnsdock labels instead.
-    DNSDOCK_NAME: <% if (proxy.exists) { %>app<% } else { %>www<% } %>
-    DNSDOCK_IMAGE: <%= domain %>
     DOCROOT: /var/www/build/html
     PHP_MAX_EXECUTION_TIME: 60
     PHP_XDEBUG: "<%= debugMode %>"
