@@ -1,78 +1,90 @@
 ##
 # Build and command-line operations containers for your local environment.
 ##
+version: '2.1'
 
-# Container for starting a cli for build commands
-# Usage: docker-compose -f build.yml run --rm cli
-cli:
-  extends:
-    service: operational
+services:
+  # Container for starting a cli for build commands
+  # Usage: docker-compose -f build.yml run --rm cli
+  cli:
+    extends:
+      service: operational
 
-# Container for running drush in the docroot.
-# Usage: docker-compose -f build.yml run --rm drush <command>
-# Where <command> is a direct drush command like cache-rebuild
-drush:
-  extends:
-    service: operational
-  entrypoint: [ "/init", "drush", "@<%= projectName %>" ]
-  working_dir: /var/www/build/html
+  # Container for running drush in the docroot.
+  # Usage: docker-compose -f build.yml run --rm drush <command>
+  # Where <command> is a direct drush command like cache-rebuild
+  drush:
+    extends:
+      service: operational
+    entrypoint: [ "/init", "drush", "@<%= projectName %>" ]
+    working_dir: /var/www/build/html
 
-# Container for running Drupal Console in the docroot.
-# Usage: docker-compose -f build.yml run --rm drupal <command>
-# Where <command> is a direct drupal command like generate
-# Note: Only works if the project includes Drupal Console as a composer dependency.
-drupal:
-  extends:
-    service: operational
-  entrypoint: [ "/init", "/var/www/vendor/bin/drupal --ansi" ]
-  working_dir: /var/www/build/html
+  # Container for running Drupal Console in the docroot.
+  # Usage: docker-compose -f build.yml run --rm drupal <command>
+  # Where <command> is a direct drupal command like generate
+  # Note: Only works if the project includes Drupal Console as a composer dependency.
+  drupal:
+    extends:
+      service: operational
+    entrypoint: [ "/init", "/var/www/vendor/bin/drupal --ansi" ]
+    working_dir: /var/www/build/html
 
-# Container for running grunt in the docroot.
-# Usage: docker-compose -f build.yml run --rm grunt <command>
-grunt:
-  extends:
-    service: operational
-  entrypoint: [ "/init", "grunt" ]
+  # Container for running grunt in the docroot.
+  # Usage: docker-compose -f build.yml run --rm grunt <command>
+  grunt:
+    extends:
+      service: operational
+    entrypoint: [ "/init", "grunt" ]
 
-# Operational base service definition for Local environment.
-#
-# Unlike `base`, this layer is functional for application interactions.
-#
-# Other services inherit these settings via the extends property.
-# See https://docs.docker.com/compose/extends/#extending-services
-operational:
-  extends:
-    service: base
-  external_links:
-    - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
+  # Operational base service definition for Local environment.
+  #
+  # Unlike `base`, this layer is functional for application interactions.
+  #
+  # Other services inherit these settings via the extends property.
+  # See https://docs.docker.com/compose/extends/#extending-services
+  operational:
+    extends:
+      service: base
+    external_links:
+      - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
 
-# Base service definition for Local environment.
-#
-# This is not a fully operational build container, lacking access to other
-# services such as the database or cache needed to properly interact with the
-# application.
-#
-# Uses for this container include filesystem operations. For example:
-#
-# docker-compose -f build.yml run --rm base 'rm -Rf node_modules'
-#
-# Other services inherit these settings via the extends property.
-# See https://docs.docker.com/compose/extends/#extending-services
-base:
-  image: <%= buildImage %>
-  entrypoint: [ "/init" ]
-  working_dir: /var/www
-  command: /bin/bash
-  volumes:
-    - .:/var/www/
-    - ./env/build/etc/drush:/root/.drush
-    - ./build/backups:/opt/backups
-    - /data/<%= projectName %>_local/cache/drush:/root/.drush/cache
-    - /data/<%= projectName %>_local/cache/composer:/root/.composer/cache
-    - /data/<%= projectName %>_local/cache/npm:/root/.npm
-    - /data/<%= projectName %>_local/cache/bower:/root/.cache/bower
-    - /data/<%= projectName %>_local/cache/fontconfig:/root/.cache/fontconfig
-  environment:
-    APP_DOMAIN: <%= host.local %>
-    GDT_DOMAIN: <%= host.local %>
-    <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: <%= host.local %><% } %>
+  # Base service definition for Local environment.
+  #
+  # This is not a fully operational build container, lacking access to other
+  # services such as the database or cache needed to properly interact with the
+  # application.
+  #
+  # Uses for this container include filesystem operations. For example:
+  #
+  # docker-compose -f build.yml run --rm base 'rm -Rf node_modules'
+  #
+  # Other services inherit these settings via the extends property.
+  # See https://docs.docker.com/compose/extends/#extending-services
+  base:
+    image: <%= buildImage %>
+    entrypoint: [ "/init" ]
+    working_dir: /var/www
+    command: /bin/bash
+    volumes:
+      # Primary code mount.
+      - .:/var/www/
+      # By volume mounting project Drush configuration to the user profile the
+      # Docker image can carry Drush configuration and commands itself.
+      # Would be more clean if this volume mount placed the Drush configuration
+      # within the Drupal directory structure.
+      - ./env/build/etc/drush:/root/.drush
+      # Local backups are managed within the project directory. This varies by
+      # platform.
+      - ./build/backups:/opt/backups
+      # Persist the cache directories associated with various build tools.
+      - /data/<%= projectName %>_local/cache/drush:/root/.drush/cache
+      - /data/<%= projectName %>_local/cache/composer:/root/.composer/cache
+      - /data/<%= projectName %>_local/cache/npm:/root/.npm
+      - /data/<%= projectName %>_local/cache/bower:/root/.cache/bower
+      - /data/<%= projectName %>_local/cache/fontconfig:/root/.cache/fontconfig
+      # SSH key grants read access to private Git repositories.
+      - ~/.ssh/${DEVTOOLS_SSH_KEY:-id_rsa}:/root/.ssh/id_rsa
+    environment:
+      APP_DOMAIN: <%= host.local %>
+      GDT_DOMAIN: <%= host.local %>
+      <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: <%= host.local %><% } %>
