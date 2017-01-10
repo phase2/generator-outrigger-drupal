@@ -98,7 +98,7 @@ module.exports = yeoman.Base.extend({
         service: options.cacheInternal,
         external: options.cacheInternal != 'database',
         docker: {
-          link: "\n    - cache"
+          link: "\n      - cache"
         }
       };
 
@@ -117,7 +117,7 @@ module.exports = yeoman.Base.extend({
         service: 'mail',
         exists: options['mailhog'],
         docker: {
-          link: "\n    - mail"
+          link: "\n      - mail"
         }
       }
 
@@ -147,7 +147,7 @@ module.exports = yeoman.Base.extend({
   writing: {
     dockerComposeLocal: function() {
       tokens.dockerComposeExt = '';
-      tokens.cache.docker.extLink = "\n    - " + options.machineName + "_local_cache:cache";
+      tokens.cache.docker.extLink = "\n      - " + options.machineName + "_local_cache:cache";
       tokens.db.docker.extLink = options.machineName + "_local_db:db";
 
       this.fs.copyTpl(
@@ -164,7 +164,7 @@ module.exports = yeoman.Base.extend({
 
     dockerComposeDevcloud: function() {
       tokens.dockerComposeExt = 'devcloud.';
-      tokens.cache.docker.extLink = "\n    - " + options.machineName + "_${DOCKER_ENV}_cache:cache";
+      tokens.cache.docker.extLink = "\n      - " + options.machineName + "_${DOCKER_ENV}_cache:cache";
       tokens.db.docker.extLink = options.machineName + "_${DOCKER_ENV}_db:db";
 
       this.fs.copyTpl(
