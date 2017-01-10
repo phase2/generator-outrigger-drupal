@@ -179,15 +179,13 @@ module.exports = yeoman.Base.extend({
       );
     },
 
-    contributing: function() {
+    docs: function() {
       this.fs.copyTpl(
         this.templatePath('docs/CONTRIBUTING.md'),
         this.destinationPath('CONTRIBUTING.md'),
         tokens
       );
-    },
 
-    readme: function() {
       if (!options['skip-readme']) {
         // Inject our new README section.
         this.fs.copyTpl(
@@ -196,12 +194,22 @@ module.exports = yeoman.Base.extend({
           tokens
         );
       }
-    },
 
-    todos: function() {
       this.fs.copyTpl(
         this.templatePath('docs/TODOS.md'),
         this.destinationPath('TODOS.md'),
+        tokens
+      );
+
+      this.fs.copyTpl(
+        this.templatePath('docs/TODOS.md'),
+        this.destinationPath('TODOS.md'),
+        tokens
+      );
+
+      this.fs.copyTpl(
+        this.templatePath('docs/DEVTOOLS.md'),
+        this.destinationPath('docs/DEVTOOLS.md'),
         tokens
       );
     },
