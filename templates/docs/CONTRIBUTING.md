@@ -8,7 +8,7 @@ the site have been combined into a few simple commands using
 [Grunt Drupal Tasks](https://github.com/phase2/grunt-drupal-tasks).
 
 You can see a list of all available actions by running
-```js
+```bash
 docker-compose -f build.yml run grunt help
 ```
 
@@ -37,7 +37,7 @@ by the system.
 
 ### When To Run
 
-* **First Run**: `bash bin/start.sh`
+* **First Run/Kitchen Sink**: `bash bin/start.sh`
 * **After Merging Changes from Upstream**: `docker-compose -f build.yml run grunt`
 * **Before Final Feature Branch Push**: `docker-compose -f build.yml run grunt validate`
 * **Starting a New Feature:**
@@ -121,16 +121,14 @@ Development will follow these best practices.
         * the condition in which the code is removed
     * All developers are responsible for reviewing this each time they come across the code in a new development task.
 * Correct spelling when naming things. CamelCase and snake_case are okay, but inconsistent abbreviations, acronyms, and word concatenation without separators is not.
-* [Kit standard](http://www.drupal.org/project/kit) naming conventions. Where this does not make sense we will use the project namespace "<%= machineName %>" as a substitute for the module's unique name (***event*** from **<%= machineName %>_event**).
-    * For example the subtitle field is used across types, but the address field used by events is not, this gives us `field_<%= machineName %>_subtitle` and `field_event_address`.
 
 Some of these guidelines are verified by the `grunt phpcs` task, which is run as part of `grunt validate`, in turn a step of the overall build process.
 
 ### Code Layout and Scope
 
-* All markup should be defined in templates kept in the theme.
-* API functions should be maintained at the bottom of the `.module` file or kept in a separate include file.
-* Form callbacks should contain the minimum code to interact with the Form system,otherwise they should call API functions for options lists, validation logic, and submit handling.
+* All markup should be defined in templates.
+* API functions should be maintained at the bottom of the `.module` file or kept in a separate include file. In Drupal 8, helper functions should be wrapped in classes.
+* Form callbacks should contain the minimum code to interact with the Form system, otherwise they should call API functions for options lists, validation logic, and submit handling.
 * Menu callbacks should always be in a separate file from `.module`.
 * hooks in the .module file should be implemented in the following thematic order:
     * bootstrapping the site
@@ -138,3 +136,14 @@ Some of these guidelines are verified by the `grunt phpcs` task, which is run as
     * defining permissions, access control, and authentication
     * manipulating data structures
     * content display
+
+## How to Add...
+
+### A New Content Type
+
+* Who should sign off on requirements?
+* Are update hooks needed?
+* Are there any constraints on what can be done?
+* Any specific field types or form elements preferred?
+* Any existing fields to be reused when possible?
+* What kinds of automated testing should be created?
