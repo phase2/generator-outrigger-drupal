@@ -136,22 +136,22 @@ describe('p2-env:app', function() {
         });
 
         it('should include a database', function() {
-          assert.ok(manifest['db'] && manifest['db']['image']);
+          assert.ok(manifest['services']['db'] && manifest['services']['db']['image']);
         });
         it('should include an application server', function() {
-          assert.ok(manifest['www'] && manifest['www']['image']);
+          assert.ok(manifest['services']['www'] && manifest['services']['www']['image']);
         });
         it('should use apache-php:php70 with Drupal 8', function() {
-          assert.ok(manifest['www']['image'] == 'phase2/apache-php:php70');
+          assert.ok(manifest['services']['www']['image'] == 'phase2/apache-php:php70');
         });
         it('should not have a cache service', function() {
-          assert.ok(!manifest['cache']);
+          assert.ok(!manifest['services']['cache']);
         });
         it('should not have a proxy service', function() {
-          assert.ok(!manifest['proxy']);
+          assert.ok(!manifest['services']['proxy']);
         });
         it('should not have a mail service', function() {
-          assert.ok(!manifest['mail']);
+          assert.ok(!manifest['services']['mail']);
         });
       });
     });
@@ -200,7 +200,7 @@ describe('p2-env:app', function() {
         });
 
         it('should use the PHP7 build container with Drupal 8', function() {
-          assert.ok(manifest['base']['image'] == 'phase2/devtools-build:php70');
+          assert.ok(manifest['services']['base']['image'] == 'phase2/devtools-build:php70');
         });
 
       });
@@ -213,30 +213,30 @@ describe('p2-env:app', function() {
 
         describe('Core Services', function() {
           it('should include a database', function() {
-            assert.ok(manifest['db'] && manifest['db']['image']);
+            assert.ok(manifest['services']['db'] && manifest['services']['db']['image']);
           });
           it('should include an application server', function() {
-            assert.ok(manifest['www'] && manifest['www']['image']);
+            assert.ok(manifest['services']['www'] && manifest['services']['www']['image']);
           });
           it('should include an internal caching service', function() {
-            assert.ok(manifest['cache'] && manifest['cache']['image']);
+            assert.ok(manifest['services']['cache'] && manifest['services']['cache']['image']);
           });
           it('should include a reverse-proxy cache', function() {
-            assert.ok(manifest['proxy'] && manifest['proxy']['image']);
+            assert.ok(manifest['services']['proxy'] && manifest['services']['proxy']['image']);
           });
           it('should include a mail-handling services', function() {
-            assert.ok(manifest['mail'] && manifest['mail']['image']);
+            assert.ok(manifest['services']['mail'] && manifest['services']['mail']['image']);
           });
         });
         describe('Docker Images', function() {
           it('should use apache-php with Drupal 8', function() {
-            assert.ok(manifest['www']['image'] == 'phase2/apache-php:php70');
+            assert.ok(manifest['services']['www']['image'] == 'phase2/apache-php:php70');
           });
           it('should use memcache for internal caching', function() {
-            assert.ok(manifest['cache'] && manifest['cache']['image'] == 'phase2/memcache');
+            assert.ok(manifest['services']['cache'] && manifest['services']['cache']['image'] == 'phase2/memcache');
           });
           it('should use Varnish for reverse-proxy caching', function() {
-            assert.ok(manifest['proxy'] && manifest['proxy']['image'] == 'phase2/varnish:4.0');
+            assert.ok(manifest['services']['proxy'] && manifest['services']['proxy']['image'] == 'phase2/varnish:4.0');
           });
         });
       });
@@ -250,34 +250,34 @@ describe('p2-env:app', function() {
 
         describe('Core Services', function() {
           it('should include a database', function() {
-            assert.ok(manifest['db']);
+            assert.ok(manifest['services']['db']);
           });
           it('should include an application server', function() {
-            assert.ok(manifest['www']);
+            assert.ok(manifest['services']['www']);
           });
           it('should include an intenral caching service', function() {
-            assert.ok(manifest['cache']);
+            assert.ok(manifest['services']['cache']);
           });
           it('should include a reverse-proxy cache', function() {
-            assert.ok(manifest['proxy']);
+            assert.ok(manifest['services']['proxy']);
           });
           it('should include a mail-handling services', function() {
-            assert.ok(manifest['mail']);
+            assert.ok(manifest['services']['mail']);
           });
         });
 
         describe('Docker Images', function() {
           it('should extend from docker-compose.yml for cache container', function() {
-            assert.ok(manifest['cache']['extends']['file'] === 'docker-compose.yml');
+            assert.ok(manifest['services']['cache']['extends']['file'] === 'docker-compose.yml');
           });
           it('should extend from docker-compose.yml for db container', function() {
-            assert.ok(manifest['db']['extends']['file'] === 'docker-compose.yml');
+            assert.ok(manifest['services']['db']['extends']['file'] === 'docker-compose.yml');
           });
           it('should use apache-php:php70 with Drupal 8', function() {
-            assert.ok(manifest['www']['image'] == 'phase2/apache-php:php70');
+            assert.ok(manifest['services']['www']['image'] == 'phase2/apache-php:php70');
           });
           it('should use Varnish for reverse-proxy caching', function() {
-            assert.ok(manifest['proxy']['image'] == 'phase2/varnish:4.0');
+            assert.ok(manifest['services']['proxy']['image'] == 'phase2/varnish:4.0');
           });
         });
       });
