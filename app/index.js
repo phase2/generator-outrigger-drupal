@@ -181,7 +181,7 @@ module.exports = yeoman.Base.extend({
 
     contributing: function() {
       this.fs.copyTpl(
-        this.templatePath('CONTRIBUTING.md'),
+        this.templatePath('docs/CONTRIBUTING.md'),
         this.destinationPath('CONTRIBUTING.md'),
         tokens
       );
@@ -191,7 +191,7 @@ module.exports = yeoman.Base.extend({
       if (!options['skip-readme']) {
         // Inject our new README section.
         this.fs.copyTpl(
-          this.templatePath('README.md'),
+          this.templatePath('docs/README.md'),
           this.destinationPath('DOCKER.md'),
           tokens
         );
@@ -200,7 +200,7 @@ module.exports = yeoman.Base.extend({
 
     todos: function() {
       this.fs.copyTpl(
-        this.templatePath('TODOS.md'),
+        this.templatePath('docs/TODOS.md'),
         this.destinationPath('TODOS.md'),
         tokens
       );
