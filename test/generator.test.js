@@ -42,7 +42,6 @@ var gdtFiles = [
   'composer.json',
   'package.json',
   'phpmd.xml',
-  'src/project.make.yml',
   'src/modules/.gitkeep',
   'test/behat.yml',
   'test/features/example.feature'
@@ -125,7 +124,7 @@ describe('p2:app --replay', function () {
   });
 });
 
-describe.skip('p2:app w/ Gadget + p2-env', function () {
+describe('p2:app w/ Gadget + p2-env', function () {
   before(function (done) {
     test.run(path.join(__dirname, '../app'))
       .inDir(appDir)
@@ -141,7 +140,8 @@ describe.skip('p2:app w/ Gadget + p2-env', function () {
         cacheInternal: 'database',
         proxyCache: 'none',
         environments: [],
-        offline: true
+        offline: true,
+	domain: 'drupal8-p2env',
       })
       .on('end', done);
   });
