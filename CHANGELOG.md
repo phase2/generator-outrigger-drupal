@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 1.2.0 (January 2017)
+
+* Add build container support for Drupal Console (must include as a project composer dependency.) Use with `docker-compose -f build.yml run --rm drupal`.
+* Now using docker-compose manifest schema v2.1
+* Switched to use new DNSdock label configuration instead of environment variable configuration in docker-compose manifests.
+* Fixed `latest` not found for build container. (Drupal 7 now standardized on PHP 5.6 and Drupal 8 on PHP 7.0)
+* Streamlined `bin/start.sh` script
+    * Added `--rm` to more docker-compose commands in bin/start.sh to avoid dangling containers.
+    * Using more of docker-compose tool's environment variables to minimize the number of option flags needed. (e.g., COMPOSE_FILE, COMPOSE_PROJECT_NAME)
+    * Fixed site URI output at the end of execution.
+
 ## 1.1.0 (July 2016)
 
 * Added Docker container start and stop jobs for all environments.
