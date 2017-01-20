@@ -110,9 +110,11 @@ docker-compose run --rm cli bin/features-health.sh || true
 echo &quot;Generating a one-time password-reset link...&quot;
 docker-compose run --rm drush uli
 
-# Generating test users.
-echo &quot;Generating Drupal test accounts...&quot;
-docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run grunt seed-users
+if [ $UPDATE != &quot;true&quot; ]; then
+  # Generating test users.
+  echo &quot;Generating Drupal test accounts...&quot;
+  docker-compose run --rm grunt seed-users
+fi
 
 # Generate Static Analysis Reports
 docker-compose run --rm grunt analyze --timer
