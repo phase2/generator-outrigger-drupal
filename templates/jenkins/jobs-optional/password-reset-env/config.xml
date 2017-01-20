@@ -30,6 +30,8 @@
     <hudson.tasks.Shell>
       <command>#!/usr/bin/env bash
 export DOCKER_ENV=<%= environment %>
+export COMPOSE_PROJECT_NAME=<%= machineName %>_${DOCKER_ENV:--local}
+export COMPOSE_FILE=build.<%= dockerComposeExt %>yml
 
 # Handler for errors or other interruptions.
 cancel() {
@@ -40,7 +42,7 @@ cancel() {
 # Abort build step on errors.
 trap &apos;cancel $LINENO $BASH_COMMAND&apos; ERR SIGINT SIGTERM SIGQUIT SIGHUP
 
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= projectName %>_${DOCKER_ENV} run drush uli</command>
+docker-compose run --rm drush uli</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
