@@ -44,6 +44,7 @@ services:
   proxy:
     container_name: <%= machineName %>_${DOCKER_ENV}_proxy
     image: phase2/varnish:4.0
+    network_mode: "bridge"
     environment:
       VARNISH_BACKEND_HOST: www
       VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %>
@@ -54,6 +55,7 @@ services:
   mail:
     container_name: <%= machineName %>_${DOCKER_ENV}_mail
     image: mailhog/mailhog
+    network_mode: "bridge"
     environment:
       VIRTUAL_HOST: mail-${DOCKER_ENV}-<%= host.devcloud %>
       VIRTUAL_PORT: '8025'
@@ -62,6 +64,7 @@ services:
   www:
     container_name: <%= machineName %>_${DOCKER_ENV}_www
     image: <%= app.image %>
+    network_mode: "bridge"
     environment:
       DOCROOT: /var/www/build/html
       PHP_MAX_EXECUTION_TIME: 60
