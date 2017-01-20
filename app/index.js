@@ -8,11 +8,15 @@ var options = {},
   tokens = {};
 
 var webImage = function(webserver, majorVersion) {
-  var webImage = {
+  var image = {
     apache: majorVersion == '8.x' ? 'phase2/apache-php:php70' : 'phase2/apache-php:php56',
     nginx: 'phase2/nginx16-php55'
   };
-  return webImage[webserver];
+  return image[webserver];
+};
+
+var buildImage = function(majorVersion) {
+  return majorVersion == '8.x' ? 'phase2/devtools-build:php70' : 'phase2/devtools-build:php56';
 };
 
 var cacheImage = function(service, majorVersion) {
@@ -94,7 +98,7 @@ module.exports = yeoman.Base.extend({
         service: options.cacheInternal,
         external: options.cacheInternal != 'database',
         docker: {
-          link: "\n    - cache"
+          link: "\n      - cache"
         }
       };
 
@@ -113,7 +117,7 @@ module.exports = yeoman.Base.extend({
         service: 'mail',
         exists: options['mailhog'],
         docker: {
-          link: "\n    - mail"
+          link: "\n      - mail"
         }
       }
 
@@ -134,6 +138,8 @@ module.exports = yeoman.Base.extend({
         tokens.host.review = virtualHost('review', options.projectName);
       }
 
+      tokens.buildImage = buildImage(options.drupalDistroVersion);
+
       done();
     }.bind(this));
   },
@@ -141,7 +147,7 @@ module.exports = yeoman.Base.extend({
   writing: {
     dockerComposeLocal: function() {
       tokens.dockerComposeExt = '';
-      tokens.cache.docker.extLink = "\n    - " + options.machineName + "_local_cache:cache";
+      tokens.cache.docker.extLink = "\n      - " + options.machineName + "_local_cache:cache";
       tokens.db.docker.extLink = options.machineName + "_local_db:db";
 
       this.fs.copyTpl(
@@ -158,7 +164,7 @@ module.exports = yeoman.Base.extend({
 
     dockerComposeDevcloud: function() {
       tokens.dockerComposeExt = 'devcloud.';
-      tokens.cache.docker.extLink = "\n    - " + options.machineName + "_${DOCKER_ENV}_cache:cache";
+      tokens.cache.docker.extLink = "\n      - " + options.machineName + "_${DOCKER_ENV}_cache:cache";
       tokens.db.docker.extLink = options.machineName + "_${DOCKER_ENV}_db:db";
 
       this.fs.copyTpl(
@@ -378,6 +384,16 @@ module.exports = yeoman.Base.extend({
           tokens
         );
         this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/start-env'),
+          this.destinationPath('env/jenkins/jobs/start-dev'),
+          tokens
+        );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/stop-env'),
+          this.destinationPath('env/jenkins/jobs/stop-dev'),
+          tokens
+        );
+        this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/cron-env'),
           this.destinationPath('env/jenkins/jobs/cron-dev'),
           tokens
@@ -399,6 +415,16 @@ module.exports = yeoman.Base.extend({
           tokens
         );
         this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/start-env'),
+          this.destinationPath('env/jenkins/jobs/start-qa'),
+          tokens
+        );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/stop-env'),
+          this.destinationPath('env/jenkins/jobs/stop-qa'),
+          tokens
+        );
+        this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/cron-env'),
           this.destinationPath('env/jenkins/jobs/cron-qa'),
           tokens
@@ -417,6 +443,16 @@ module.exports = yeoman.Base.extend({
         this.fs.copyTpl(
           this.templatePath('jenkins/jobs-optional/deploy-env'),
           this.destinationPath('env/jenkins/jobs/deploy-review'),
+          tokens
+        );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/start-env'),
+          this.destinationPath('env/jenkins/jobs/start-review'),
+          tokens
+        );
+        this.fs.copyTpl(
+          this.templatePath('jenkins/jobs-optional/stop-env'),
+          this.destinationPath('env/jenkins/jobs/stop-review'),
           tokens
         );
         this.fs.copyTpl(
