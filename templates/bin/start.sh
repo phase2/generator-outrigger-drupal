@@ -18,6 +18,9 @@ NO_VALIDATE=''
 NOOP=0
 START_VERSION=<%= pkg.version %>
 UPDATE=0
+# This is hard-wired, as currently the options are docker-compose manifests for
+# local or devcloud. If we wanted to have separate manifests from those, this
+# would need to be more meaningfully parameterized.
 COMPOSE_EXT=".devcloud"
 
 # Wrangle CLI options
@@ -53,12 +56,30 @@ while true ; do
 done
 
 DOCKER_ENV=${DOCKER_ENV-local}
-COMPOSE_PROJECT=${2-'-p <%= machineName %>_'${DOCKER_ENV}}
-
 if [[ $DOCKER_ENV == 'local' ]]; then
   COMPOSE_EXT=''
-  COMPOSE_PROJECT=''
+else
+  # This is a magic docker-compose environment variable that sets the -p flag.
+  # It is only needed for non-local environments assuming the project has only
+  # a single local instance.
+  #
+  # Instead of setting this environment variable, you could invoke commands with:
+  #
+  # docker-compose -p <project>_qa <args>
+  export COMPOSE_PROJECT_NAME=${2-'<%= machineName %>_'${DOCKER_ENV}}
 fi
+
+# This is a magic docker-compose environment variable that sets the path to the
+# docker manifest which will be used by default. With it set, no -f flag is
+# needed.
+#
+# We use it in this script to declutter the majority of docker-compose
+# commands--which use the build container.
+#
+# Instead of setting this environment variable, you could invoke commands with:
+#
+# docker-compose -f build.yml <args>
+export COMPOSE_FILE=build$COMPOSE_EXT.yml
 
 ##
 # Error handling.
@@ -68,7 +89,7 @@ fi
 # This will allow follow-up runs via Jenkins to manage the workspace.
 # Container rm is left to Jenkins or the developer.
 teardown() {
-  docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} stop || true
+  docker-compose -f docker-compose$COMPOSE_EXT.yml stop || true
 }
 
 # Handler for errors and interruptions.
@@ -96,15 +117,15 @@ export DOCKER_ENV
 
 # Spin up cache and db services to support build container.
 # Web container might take file locks on existing code, blocking the build process.
-cmd "docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(cache.external) { %>cache <% } %>db"
+cmd "docker-compose -f docker-compose$COMPOSE_EXT.yml up -d <% if(cache.external) { %>cache <% } %>db"
 
 # Install dependencies and run main application build.
 # Run grunt with --force to ignore errors.
 # --unsafe-perm ensures dispatch to theme-related operations can still run as root for Docker.
-cmd "docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli \"npm install --unsafe-perm && grunt --timer --quiet ${NO_VALIDATE}\""
+cmd "docker-compose run --rm cli \"npm install --unsafe-perm && grunt --timer --quiet ${NO_VALIDATE}\""
 
 # Now safe to activate web container to support end-to-end testing.
-cmd "docker-compose -f docker-compose$COMPOSE_EXT.yml ${COMPOSE_PROJECT} up -d <% if(proxy.exists) { %>proxy <% } %>www"
+cmd "docker-compose -f docker-compose$COMPOSE_EXT.yml up -d <% if(proxy.exists) { %>proxy <% } %>www"
 
 # Correct any issues in the web container.
 cmd "docker exec <%= machineName %>_${DOCKER_ENV}_www \"/var/www/bin/fix-perms.sh\""
@@ -113,17 +134,17 @@ cmd "docker exec <%= machineName %>_${DOCKER_ENV}_www \"/var/www/bin/fix-perms.s
 if [ "$UPDATE" == 0 ]; then
   # Errors in final steps of installation require --force to ensure bin/post-install.sh is run.
   # Dev triggers a development build of Open Atrium
-  cmd "docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli \"grunt install --no-db-load --force\""
+  cmd "docker-compose run --rm cli \"grunt install --no-db-load --force\""
 else
   echoInfo "`grunt update` is defined in Gruntconfig.json"
-  cmd "docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm cli grunt update"
+  cmd "docker-compose run --rm cli grunt update"
 fi
 
 # Wipe cache after permissions fix.
-cmd "docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm grunt cache-clear"
+cmd "docker-compose run --rm grunt cache-clear"
 
 echo
 echoSuccess "Application Setup Complete: "
-URL=$(docker-compose -f build$COMPOSE_EXT.yml ${COMPOSE_PROJECT} run --rm drush sa @<%= projectName %> --format=yaml | grep uri | cut -f2 -d: )
-echo $URL
+URL=$(docker-compose -f build$COMPOSE_EXT.yml run --rm drush sa @<%= projectName %> --format=list --fields=uri)
+echo "$URL"
 echo
