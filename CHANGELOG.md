@@ -1,20 +1,36 @@
 # CHANGELOG
 
+## 1.2.1-pre (???)
+
+* Fix networking with docker-compose schema v2
+* Fix more edge cases with permissions on Drupal files directory.
+* Explicitly declare that projects use Node 4 in build container.
+  This facilitates backwards compatibility if the build container switches to
+  Node 6 by default.
+* Explicit declare that Xdebug is disabled in build container to clarify
+  that it can be enabled.
+
 ## 1.2.0 (January 2017)
 
-* Add build container support for Drupal Console (must include as a project composer dependency.) Use with `docker-compose -f build.yml run --rm drupal`.
+* Add build container support for Drupal Console (must include as a project
+  composer dependency.) Use with `docker-compose -f build.yml run --rm drupal`.
 * Now using docker-compose manifest schema v2.1
-* Switched to use new DNSdock label configuration instead of environment variable configuration in docker-compose manifests.
-* Fixed `latest` not found for build container. (Drupal 7 now standardized on PHP 5.6 and Drupal 8 on PHP 7.0)
+* Switched to use new DNSdock label configuration instead of environment
+  variable configuration in docker-compose manifests.
+* Fixed `latest` not found for build container. (Drupal 7 now standardized on
+  PHP 5.6 and Drupal 8 on PHP 7.0)
 * Streamlined `bin/start.sh` script
-    * Added `--rm` to more docker-compose commands in bin/start.sh to avoid dangling containers.
-    * Using more of docker-compose tool's environment variables to minimize the number of option flags needed. (e.g., COMPOSE_FILE, COMPOSE_PROJECT_NAME)
+    * Added `--rm` to more docker-compose commands in bin/start.sh to avoid
+      dangling containers.
+    * Using more of docker-compose tool's environment variables to minimize the
+      number of option flags needed. (e.g., COMPOSE_FILE, COMPOSE_PROJECT_NAME)
     * Fixed site URI output at the end of execution.
 
 ## 1.1.0 (July 2016)
 
 * Added Docker container start and stop jobs for all environments.
-* Added rebuild script to run `bin/start.sh with --update` for greater clarity on already setup development environments.
+* Added rebuild script to run `bin/start.sh with --update` for greater clarity
+  on already setup development environments.
 * Added more Drupal 8 cache tables to default Drush excludes.
 
 ## 1.0.0 (May 2016)
@@ -23,18 +39,29 @@
 
 #### Doctor.sh in the House
 
-There is now `bin/doctor.sh` to check on project setup. If your project is not working, please run it to confirm easily checked problems are not the issue. Parts of this might later move into Grunt Drupal Tasks.
+There is now `bin/doctor.sh` to check on project setup. If your project is not
+working, please run it to confirm easily checked problems are not the issue.
+Parts of this might later move into Grunt Drupal Tasks.
 
 #### Operational vs. Base Build Container
 
-All build containers previously extended from `base`, a parent container that sets up common environment variables, volume mounts, and other behaviors. A new `operational` service definition is now the direct parent of the functional containers.
+All build containers previously extended from `base`, a parent container that
+sets up common environment variables, volume mounts, and other behaviors.
+A new `operational` service definition is now the direct parent of the
+functional containers.
 
-This allows projects to define new build services that extend from `operational` when they need the use of backing services like the database, or extend from `base` when they do not. This allows pure filesystem or build operations to be run without the additional overhead.
+This allows projects to define new build services that extend from `operational`
+ when they need the use of backing services like the database, or extend from
+`base` when they do not. This allows pure filesystem or build operations to be
+run without the additional overhead.
 
 ### Compatibility Breaks
 
-* `base` build container no longer has dependency on backing services like database or memcache. This means it also cannot run commands accessing those services.
-* New Drupal 7 projects or updates via the `--replay` will now use PHP 5.6. This can be manually changed.
+* `base` build container no longer has dependency on backing services like
+  database or memcache. This means it also cannot run commands accessing those
+  services.
+* New Drupal 7 projects or updates via the `--replay` will now use PHP 5.6.
+  This can be manually changed.
 
 ### Release Notes
 
@@ -140,7 +167,8 @@ The `bin/start.sh` script has got command-line options now, including:
 * start.sh now takes real options and has usage output.
 * Make better use of error handling to halt and clean up after errors in jobs.
 * Add volume mounts to persist tool caches across build runs.
-* Added optional MailHog service to capture Drupal email and facilitate testing. **See generated `TODOS.md`, this feature requires manual action per project.**
+* Added optional MailHog service to capture Drupal email and facilitate testing.
+  **See generated `TODOS.md`, this feature requires manual action per project.**
 * Streamline docker-compose manifests, `*.devcloud.yml` instead of one per environment.
 * Break Jenkins home into views by environment with primary for key shortcuts.
 * Add jenkins-test-fail job to check on Jenkins error handling.
@@ -167,7 +195,8 @@ Changes since version v0.2.0.
 * Add `--unsafe-perm` to start.sh so project package.json can postinstall theme.
 * Add optional support for Varnish via [phase2/varnish4](https://hub.docker.com/r/phase2/varnish4/) Docker image.
 (Direct application still available via `app.project.vm`)
-* Wipe Redis/Memcache caches on pre-install (via `pre-install.sh`, triggered by `grunt install`). This does not have any Drupal or Drush dependency.
+* Wipe Redis/Memcache caches on pre-install (via `pre-install.sh`, triggered by `grunt install`).
+  This does not have any Drupal or Drush dependency.
 * Allow CI job to run arbitrary Git revisions.
 
 ### Bugs
