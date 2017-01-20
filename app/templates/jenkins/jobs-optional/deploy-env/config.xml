@@ -113,6 +113,9 @@ docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run drus
 echo &quot;Generating Drupal test accounts...&quot;
 docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run grunt seed-users
 
+# Run drush cron to make sure site is in "typical" cron state.
+docker-compose run --rm drush cron -v
+
 # Generate Static Analysis Reports
 docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run grunt analyze --timer
 </command>
