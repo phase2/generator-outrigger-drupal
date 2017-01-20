@@ -62,6 +62,7 @@ services:
   # See https://docs.docker.com/compose/extends/#extending-services
   base:
     image: <%= buildImage %>
+    network_mode: "bridge"
     entrypoint: [ "/init" ]
     working_dir: /var/www
     command: /bin/bash

@@ -77,6 +77,7 @@ services:
   # See https://docs.docker.com/compose/extends/#extending-services
   base:
     image: phase2/devtools-build:php56
+    network_mode: "bridge"
     entrypoint: [ "/init" ]
     working_dir: /var/www
     command: /bin/bash
