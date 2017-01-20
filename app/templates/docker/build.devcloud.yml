@@ -76,7 +76,7 @@ services:
   # Other services inherit these settings via the extends property.
   # See https://docs.docker.com/compose/extends/#extending-services
   base:
-    image: phase2/devtools-build:php56
+    image: <%= buildImage %>
     network_mode: "bridge"
     entrypoint: [ "/init" ]
     working_dir: /var/www
