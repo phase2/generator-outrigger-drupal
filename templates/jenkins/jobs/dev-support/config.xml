@@ -54,11 +54,13 @@
     <hudson.tasks.Shell>
       <command>#!/usr/bin/env bash
 export DOCKER_ENV=int
+export COMPOSE_PROJECT_NAME=<%= machineName %>_${DOCKER_ENV:--local}
+export COMPOSE_FILE=build.<%= dockerComposeExt %>yml
 
 # Break down the Docker environment and remove generated files.
 teardown() {
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p <%= machineName %>_${DOCKER_ENV} stop || true
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p <%= machineName %>_${DOCKER_ENV} rm -f || true
+  docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop || true
+  docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f || true
   # Now that www container is stopped it's safe to clean up.
   # dev-support does this for the cleanest possible checkup.
   # git clean -fd
@@ -90,18 +92,18 @@ teardown
 bin/start.sh --environment=${DOCKER_ENV}
 
 # Run cron for maximized database freshness.
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= machineName %>_${DOCKER_ENV} run drush cron
+docker-compose run --rm drush cron
 
 # Export database. This process preserves the latest 5 databases.
 DATE=$(date +%Y-%m-%d_%H:%M:%S)
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= machineName %>_${DOCKER_ENV} run cli bin/db-export.sh nightlies/$DATE.sql
+docker-compose run --rm cli bin/db-export.sh nightlies/$DATE.sql
 
 # Run Behat Tests
 # Highly recommended, but not always used on projects.
-# docker-compose -f build.<%= dockerComposeExt %>yml -p <%= machineName %>_${DOCKER_ENV} run cli sh -c &quot;GDT_DOMAIN=${DOCKER_ENV}-<%= host.devcloud %> grunt test --force --timer&quot;
+# docker-compose run --rm cli sh -c &quot;GDT_DOMAIN=${DOCKER_ENV}-<%= host.devcloud %> grunt test --force --timer&quot;
 
 # Perform a scan for module updates.
-docker-compose -f build.<%= dockerComposeExt %>yml -p <%= machineName %>_${DOCKER_ENV} run cli bash bin/update-scanner.sh
+docker-compose run --rm cli bash bin/update-scanner.sh
 </command>
     </hudson.tasks.Shell>
   </builders>
