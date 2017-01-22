@@ -21,13 +21,14 @@
     <hudson.tasks.Shell>
       <command>#!/usr/bin/env bash
 export DOCKER_ENV=<% if (environment) { %><%= environment %><% } else { %>&apos;&apos;<% } %>
-export DOCKER_PROJECT=<%= machineName %>_${DOCKER_ENV:--local}
+export COMPOSE_PROJECT_NAME=<%= machineName %>_${DOCKER_ENV:--local}
+export COMPOSE_FILE=build.<%= dockerComposeExt %>yml
 export SITE_DOMAIN=<% if (environment == 'local') { %><%= host.local %><% } else { %>${DOCKER_ENV}-<%= host.devcloud %><% } %>
 
 # Break down the Docker environment and remove generated files.
 teardown() {
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} stop || true
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} rm -f || true
+  docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop || true
+  docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f || true
 }
 
 # Handler for errors or other interruptions.
@@ -47,7 +48,7 @@ trap &apos;cancel $LINENO $BASH_COMMAND&apos; ERR SIGINT SIGTERM SIGQUIT SIGHUP
 # Clean up on program termination.
 trap &apos;complete $?&apos; EXIT
 
-docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} up -d
+docker-compose up -d
 </command>
     </hudson.tasks.Shell>
   </builders>
@@ -96,4 +97,3 @@ docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT}
     </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
   </buildWrappers>
 </project>
-

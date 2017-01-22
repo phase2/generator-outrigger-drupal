@@ -55,13 +55,14 @@
     <hudson.tasks.Shell>
       <command>#!/usr/bin/env bash
 export DOCKER_ENV=<% if (environment) { %><%= environment %><% } else { %>&apos;&apos;<% } %>
-export DOCKER_PROJECT=<%= machineName %>_${DOCKER_ENV:--local}
+export COMPOSE_PROJECT_NAME=<%= machineName %>_${DOCKER_ENV:--local}
+export COMPOSE_FILE=build.<%= dockerComposeExt %>yml
 export SITE_DOMAIN=<% if (environment == 'local') { %><%= host.local %><% } else { %>${DOCKER_ENV}-<%= host.devcloud %><% } %>
 
 # Break down the Docker environment and remove generated files.
 teardown() {
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} stop || true
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} rm -f || true
+  docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop || true
+  docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f || true
   # Now that www container is stopped it's safe to clean up.
   # This is not done by default to keep most environments fast.
   <% if (environment != 'review') { %>#<% } %> git clean -fd
@@ -100,14 +101,14 @@ echo &quot;Warm cache and review HTTP response headers...&quot;
 curl -I -vvv http://${SITE_DOMAIN}
 
 # Run Behat Tests
-docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run cli &quot;GDT_DOMAIN=${SITE_DOMAIN} grunt test --force --timer&quot;
+docker-compose run --rm cli &quot;GDT_DOMAIN=${SITE_DOMAIN} grunt test --force --timer&quot;
 
 # Run Features Health Check
-docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run cli bin/features-health.sh || true
+docker-compose run --rm cli bin/features-health.sh || true
 
 # Generate a one-time password reset link.
 echo &quot;Generating a one-time password-reset link...&quot;
-docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run drush uli
+docker-compose run --rm drush uli
 
 # Generating test users.
 echo &quot;Generating Drupal test accounts...&quot;
@@ -117,7 +118,7 @@ docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run grun
 docker-compose run --rm drush cron -v
 
 # Generate Static Analysis Reports
-docker-compose -f build.<%= dockerComposeExt %>yml -p ${DOCKER_PROJECT} run grunt analyze --timer
+docker-compose run --rm grunt analyze --timer
 </command>
     </hudson.tasks.Shell>
   </builders>
