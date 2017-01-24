@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description>Deploy changes to &apos;<%= virtualHost %>&apos;. This job is managed in the project code repository, changes made via UI will be lost.</description>
+  <description>Deploy changes to &apos;<%= virtualHost %>&apos;. Behat tests and code analysis are performed, user accounts seeded if configured, features health reviewed and cron is executed. This job is managed in the project code repository, changes made via UI will be lost.</description>
   <keepDependencies>false</keepDependencies>
   <properties>
     <hudson.model.ParametersDefinitionProperty>
@@ -115,6 +115,9 @@ if [ $UPDATE != &quot;true&quot; ]; then
   echo &quot;Generating Drupal test accounts...&quot;
   docker-compose run --rm grunt seed-users
 fi
+
+# Run drush cron to make sure site is in "typical" cron state.
+docker-compose run --rm drush cron -v
 
 # Generate Static Analysis Reports
 docker-compose run --rm grunt analyze --timer
