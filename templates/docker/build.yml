@@ -95,7 +95,7 @@ services:
       # SSH key grants read access to private Git repositories.
       - ~/.ssh/${DEVTOOLS_SSH_KEY:-id_rsa}:/root/.ssh/id_rsa
       # Preserve BASH history across build container runs.
-      - ~/.bash_history:/root/.bash_history 
+      - /data/<%= projectName %>_local/.bash_history:/root/.bash_history
     environment:
       APP_DOMAIN: <%= host.local %>
       GDT_DOMAIN: <%= host.local %>
