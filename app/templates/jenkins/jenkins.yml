@@ -5,7 +5,7 @@ version: '2.1'
 
 services:
   jenkins:
-    image: phase2/jenkins-docker:1.9.1
+    image: phase2/jenkins-docker:latest
     volumes:
       # Primary jenkins configuration. Direct file mount prevents writing updates from running instance.
       - ./env/jenkins/config.xml:/var/jenkins_home/config.xml
