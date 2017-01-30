@@ -16,7 +16,12 @@ source "$CALLPATH/framework.sh"
 NAME=`basename "$0"`
 NO_VALIDATE=''
 NOOP=0
+# This version is used to facilitate troubleshooting, by indicating which
+# version of the generator-p2-env project produced this script. If you re-run
+# the generator please include the update. If you make significant changes
+# consider creating a compount version "number" indicating that.
 START_VERSION=<%= pkg.version %>
+# By default we install a new Drupal site rather than update an existing Drupal site.
 UPDATE=0
 # This is hard-wired, as currently the options are docker-compose manifests for
 # local or devcloud. If we wanted to have separate manifests from those, this
@@ -55,7 +60,9 @@ while true ; do
   esac
 done
 
-DOCKER_ENV=${DOCKER_ENV-local}
+# The ':-' operator sets local as default if an empty string has been specified
+# as the Docker Environment.
+DOCKER_ENV=${DOCKER_ENV:-local}
 if [[ $DOCKER_ENV == 'local' ]]; then
   COMPOSE_EXT=''
 else
