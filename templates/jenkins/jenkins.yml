@@ -17,6 +17,7 @@ services:
       - /opt/development/<%= projectName %>/jenkins/env/workspace:/opt/development/<%= projectName %>/jenkins/env/workspace
       # SSH key grants read access to private Git repositories.
       - ~/.ssh/${DEVTOOLS_SSH_KEY:-id_rsa}:/root/.ssh/devtools.key
+    network_mode: "bridge"
     environment:
       VIRTUAL_HOST: build.<%= host.devcloud %>
       VIRTUAL_PORT: 8080
