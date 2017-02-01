@@ -212,6 +212,12 @@ module.exports = yeoman.Base.extend({
         this.destinationPath('docs/DEVTOOLS.md'),
         tokens
       );
+
+      this.fs.copyTpl(
+        this.templatePath('docs/DEVCLOUD.md'),
+        this.destinationPath('docs/DEVCLOUD.md'),
+        tokens
+      );
     },
 
     drushConfig: function() {
