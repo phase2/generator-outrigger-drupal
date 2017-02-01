@@ -32,7 +32,7 @@ by the system.
 | Tool       | Config Files  | Development & QA | Build & Deployment | Production |
 | ---------- | ------------- | :--------------: | :----------------: | :--------: |
 | Composer   | composer.json |        ✔         |         ✔          |      ✗     |
-| Drush Make | project.make  |        ✔         |         ✔          |      ✗     |
+<% if (drupalDistroVersion == '7.x') { %>| Drush Make | project.make  |        ✔        |         ✔          |      ✗     |<% } -%>
 | npm        | package.json  |        ✔         |         ✔          |      ✗     |
 
 ### When To Run
