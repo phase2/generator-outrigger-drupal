@@ -29,7 +29,8 @@ module.exports = {
     'package.json',
     'src/sites/settings.common.php',
     'TODOS.md',
-    'docs/DEVTOOLS.md'
+    'docs/DEVTOOLS.md',
+    'docs/DEVCLOUD.md'
   ],
   extended: [
     'env/jenkins/jobs/cron-dev/config.xml',
