@@ -51,7 +51,7 @@ All command-line operations to interact with the application are executed via a 
 * **Run Drupal Console Command**: `docker-compose -f build.yml run drupal <command>`
 * **Start an interactive BASH session**: `docker-compose -f build.yml run cli`
   * There is no webserver running in this container, so testing operations will require the web container to be active.
-  * Run Drush commands with the alias `@ncl-oar`.
+  * Run Drush commands with the alias `@<%- projectName %>`.
 
 You may want to add an alias to your shell to reduce the typing:
 
@@ -77,8 +77,8 @@ These operations are for local development.
 
 * **Start Containers:** `docker-compose up`
 * **Build the Site:** `docker-compose -f build.yml run grunt`
-* **Open a Terminal Session to the Web Host container:** `docker exec -it ncl_oar_local_www bash`
-* **Fix File Permissions:** `docker exec  ncl_oar_local_www /var/www/bin/fix-perms.sh`
+* **Open a Terminal Session to the Web Host container:** `docker-compose exec www bash`
+* **Fix File Permissions:** `docker-compose exec www /var/www/bin/fix-perms.sh`
 * **Open a Terminal Session to the Virtual machine:** `docker-machine ssh dev`
 
 ## Services
