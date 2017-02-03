@@ -96,7 +96,7 @@ module.exports = yeoman.generators.Base.extend({
     }
 
     // ensuring we only ask questions with the same `name` value once; earlier questions take priority
-    prompts = _.uniq(prompts, 'name');
+    prompts = _.uniqBy(prompts, 'name');
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
