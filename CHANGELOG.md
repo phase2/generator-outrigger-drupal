@@ -1,14 +1,32 @@
 # CHANGELOG
 
-## 1.2.1-pre (???)
+## 1.3.0-pre (???)
 
-* Fix networking with docker-compose schema v2
-* Fix more edge cases with permissions on Drupal files directory.
+* Fixed networking with docker-compose schema v2
+* Fixed more edge cases with permissions on Drupal files directory.
 * Explicitly declare that projects use Node 4 in build container.
   This facilitates backwards compatibility if the build container switches to
   Node 6 by default.
 * Explicit declare that Xdebug is disabled in build container to clarify
   that it can be enabled.
+* Fixed `bin/start.sh` would use empty DOCKER_ENV instead of defaulting to
+  `local` if you explicitly set your $DOCKER_ENV to an empty string.
+* Update Jenkins image to pull `latest` instead of the version released
+  alongside support for Docker 1.9. Recommend you pin your Jenkins image!
+* Added `drush cron` to the tasks that are run after site install or database
+  update on Jenkins deploy jobs.
+* Streamlined Jenkins jobs to use docker-compose environment variables instead
+  of the more verbose command-line flags. (COMPOSE_PROJECT_NAME and COMPOSE_FILE
+  instead of using the -f and -p flags all the time.)
+* Do not re-run the seed-users script on update deploys.
+
+### Major Features
+
+* [EXPERIMENTAL] Pull your local BASH history into the build container, and
+  persist BASH commands from the build container to your local BASH history.
+  (This may change in the future as we would prefer not to tangle history with
+  your local environment or across projects.)
+
 
 ## 1.2.0 (January 2017)
 
