@@ -4,47 +4,9 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
 
+var util;
 var options = {},
   tokens = {};
-
-var webImage = function(webserver, majorVersion) {
-  var image = {
-    apache: majorVersion == '8.x' ? 'phase2/apache-php:php70' : 'phase2/apache-php:php56',
-    nginx: 'phase2/nginx16-php55'
-  };
-  return image[webserver];
-};
-
-var buildImage = function(majorVersion) {
-  return majorVersion == '8.x' ? 'phase2/devtools-build:php70' : 'phase2/devtools-build:php56';
-};
-
-var cacheImage = function(service, majorVersion) {
-  var image = {
-    memcache: 'phase2/memcache',
-    redis: 'phase2/redis'
-  };
-
-  return image[service] || service;
-};
-
-var virtualHost = function(env, namespace) {
-  namespace = env ? '-' + namespace : namespace;
-  if (!env) {
-    env = '';
-  }
-
-  return env + namespace + '.' + options['ciHost'];
-};
-
-/**
- * Determine if a given environment has been enabled by name.
- *
- * This function should only be used after options parameter is initialized from prompts.
- */
-var envActive = function(environment) {
-  return options.environments.indexOf(environment) != -1;
-}
 
 module.exports = yeoman.Base.extend({
   initializing: function () {
@@ -52,7 +14,7 @@ module.exports = yeoman.Base.extend({
     // Have Yeoman greet the user.
     if (!this.options.skipWelcome) {
       this.log(yosay(
-        'Welcome to the tubular ' + chalk.cyan('Phase2 Docker') + ' generator!'
+        'Welcome to the tubular ' + chalk.cyan('Phase2 Environment') + ' generator!'
       ));
     }
 
@@ -61,6 +23,7 @@ module.exports = yeoman.Base.extend({
     }, this.options);
 
     options['ciHost'] = options['ciHost'] || 'ci2.p2devcloud.com';
+    util = require('../lib/util')(options);
   },
 
   prompting: function() {
@@ -75,73 +38,10 @@ module.exports = yeoman.Base.extend({
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
       options.machineName = options.projectName.replace(/\-/g, '_');
-
-      tokens = options;
-      tokens.debugMode = 'true';
-      tokens.environment = '';
-      tokens.dockerComposeExt = '';
-      tokens.pkg = require('../package.json');
-
-      if (!tokens['gitRepoUrl']) {
-        tokens['gitRepoUrl'] = 'git@bitbucket.org:phase2tech/' + options.projectName + '.git';
-      }
-      if (!tokens['flowdockApiKey']) {
-        tokens['flowdockApiKey'] = '';
-      }
-
-      tokens.app = {
-        image: webImage(options.webserver, options.drupalDistroVersion) || options.webImage,
-      };
-
-      tokens.cache = {
-        image: cacheImage(options.cacheInternal, options.drupalDistroVersion),
-        service: options.cacheInternal,
-        external: options.cacheInternal != 'database',
-        docker: {
-          link: "\n      - cache"
-        }
-      };
-
-      tokens.db = {
-        docker: {}
-      };
-
-      tokens.proxy = {
-        image: 'phase2/varnish',
-        service: 'varnish',
-        exists: options['proxyCache'] && options.proxyCache != 'none',
-      }
-
-      tokens.mail = {
-        image: 'mailhog/mailhog',
-        service: 'mail',
-        exists: options['mailhog'],
-        docker: {
-          link: "\n      - mail"
-        }
-      }
-
-      tokens.host = {
-        int: virtualHost('int', options.projectName),
-        local: 'www.' + options.domain + '.vm',
-        devcloud: virtualHost(false, options.projectName),
-        master: options.ciHost
-      };
-
-      if (envActive('dev')) {
-        tokens.host.dev = virtualHost('dev', options.projectName);
-      }
-      if (envActive('qa')) {
-        tokens.host.qa = virtualHost('qa', options.projectName);
-      }
-      if (envActive('review')) {
-        tokens.host.review = virtualHost('review', options.projectName);
-      }
-
-      tokens.buildImage = buildImage(options.drupalDistroVersion);
-
+      tokens = require('../lib/tokens')(options);
       done();
     }.bind(this));
+
   },
 
   writing: {
@@ -214,7 +114,6 @@ module.exports = yeoman.Base.extend({
       );
     },
 
-
     npmConfig: function() {
       var pkg = this.fs.readJSON('package.json');
       if (!pkg) {
@@ -268,7 +167,7 @@ module.exports = yeoman.Base.extend({
 
       // Backups configuration is introduced by p2-env.
       gcfg.project.backups = {
-        url: 'http://' + virtualHost(false, 'backups') + '/' + options.projectName,
+        url: 'http://' + util.virtualHost(false, 'backups') + '/' + options.projectName,
         env: 'int'
       };
 
@@ -342,138 +241,21 @@ module.exports = yeoman.Base.extend({
       );
     },
 
-    jenkins: function() {
-      this.fs.copyTpl(
-        this.templatePath('jenkins/jenkins.yml'),
-        this.destinationPath('jenkins.yml'),
-        tokens
-      );
-      this.fs.copyTpl(
-        this.templatePath('jenkins/config.xml'),
-        this.destinationPath('env/jenkins/config.xml'),
-        tokens
-      );
-      this.fs.copyTpl(
-        this.templatePath('jenkins/jobs'),
-        this.destinationPath('env/jenkins/jobs'),
-        tokens
-      );
-      this.fs.copyTpl(
-        this.templatePath('jenkins/JENKINS.md'),
-        this.destinationPath('JENKINS.md'),
-        tokens
-      );
-
-      // Add local environment to facilitate testing.
-      tokens.virtualHost = tokens.host.local;
-      tokens.environment = 'local';
-      tokens.dockerComposeExt = '';
-      this.fs.copyTpl(
-        this.templatePath('jenkins/jobs-optional/deploy-env'),
-        this.destinationPath('env/jenkins/jobs/deploy-local'),
-        tokens
-      );
-
-      if (tokens.host['dev']) {
-        tokens.virtualHost = tokens.host.dev;
-        tokens.environment = 'dev';
-        tokens.dockerComposeExt = 'devcloud.';
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/deploy-env'),
-          this.destinationPath('env/jenkins/jobs/deploy-dev'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/start-env'),
-          this.destinationPath('env/jenkins/jobs/start-dev'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/stop-env'),
-          this.destinationPath('env/jenkins/jobs/stop-dev'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/cron-env'),
-          this.destinationPath('env/jenkins/jobs/cron-dev'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/password-reset-env'),
-          this.destinationPath('env/jenkins/jobs/password-reset-dev'),
-          tokens
-        );
-      }
-
-      if (tokens.host['qa']) {
-        tokens.virtualHost = tokens.host.qa;
-        tokens.environment = 'qa';
-        tokens.dockerComposeExt = 'devcloud.';
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/deploy-env'),
-          this.destinationPath('env/jenkins/jobs/deploy-qa'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/start-env'),
-          this.destinationPath('env/jenkins/jobs/start-qa'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/stop-env'),
-          this.destinationPath('env/jenkins/jobs/stop-qa'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/cron-env'),
-          this.destinationPath('env/jenkins/jobs/cron-qa'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/password-reset-env'),
-          this.destinationPath('env/jenkins/jobs/password-reset-qa'),
-          tokens
-        );
-      }
-
-      if (tokens.host['review']) {
-        tokens.virtualHost = tokens.host.review;
-        tokens.environment = 'review';
-        tokens.dockerComposeExt = 'devcloud.';
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/deploy-env'),
-          this.destinationPath('env/jenkins/jobs/deploy-review'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/start-env'),
-          this.destinationPath('env/jenkins/jobs/start-review'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/stop-env'),
-          this.destinationPath('env/jenkins/jobs/stop-review'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/cron-env'),
-          this.destinationPath('env/jenkins/jobs/cron-review'),
-          tokens
-        );
-        this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/password-reset-env'),
-          this.destinationPath('env/jenkins/jobs/password-reset-review'),
-          tokens
-        );
-      }
-    },
-
     gitignore: function() {
       this.fs.copyTpl(
         this.templatePath('gitignore'),
         this.destinationPath('env/.gitignore'),
         tokens
       );
+    },
+
+    jenkins: function() {
+      this.composeWith('p2-env:jenkins', {
+        options: options
+      },
+      {
+        local: require.resolve('../jenkins/index')
+      });
     }
   },
 
