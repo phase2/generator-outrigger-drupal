@@ -34,10 +34,12 @@ module.exports = yeoman.Base.extend({
 
     this.prompt(prompts, function (props) {
       options = _.assign(options, props);
-      ptions.machineName = options.projectName.replace(/\-/g, '_');
+      options.machineName = options.projectName.replace(/\-/g, '_');
       tokens = require('../lib/tokens')(options);
       done();
     }.bind(this));
+
+    tokens = tokens || require('../lib/tokens')(options);
   },
 
   writing: {
@@ -51,7 +53,7 @@ module.exports = yeoman.Base.extend({
 
     jenkinsConfig: function() {
       this.fs.copyTpl(
-        this.templatePath('jenkins/config.xml'),
+        this.templatePath('config.xml'),
         this.destinationPath('env/jenkins/config.xml'),
         tokens
       );
@@ -59,49 +61,60 @@ module.exports = yeoman.Base.extend({
 
     jenkinsCoreJobs: function() {
       this.fs.copyTpl(
-        this.templatePath('jenkins/jobs'),
+        this.templatePath('jobs'),
         this.destinationPath('env/jenkins/jobs'),
         tokens
       );
-    }
+    },
 
-    jenkinsEnvJobs(): function() {
-      _.forEach(tokens.host, function(value, key) {
+    jenkinsEnvJobs: function() {
+      var hosts = tokens.host;
+      // Integration environment is for CI and other scheduled tasks.
+      delete hosts['int'];
+      // Master environment is used for Project Jenkins.
+      delete hosts['master'];
+      // devcloud is the base domain from which more complete devcloud VIRTUAL
+      // HOST URLs are constructed.
+      delete hosts['devcloud'];
+
+      _.forEach(hosts, function(value, key) {
+        console.log(key);
         tokens.virtualHost = tokens.host[key];
         tokens.environment = key;
         if (key == 'local') {
           tokens.dockerComposeExt = '';
+        }
         else {
           tokens.dockerComposeExt = 'devcloud.';
         }
 
         this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/deploy-env'),
+          this.templatePath('jobs-optional/deploy-env'),
           this.destinationPath('env/jenkins/jobs/deploy-' + key),
           tokens
         );
 
         this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/start-env'),
+          this.templatePath('jobs-optional/start-env'),
           this.destinationPath('env/jenkins/jobs/start-' + key),
           tokens
         );
         this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/stop-env'),
+          this.templatePath('jobs-optional/stop-env'),
           this.destinationPath('env/jenkins/jobs/stop-' + key),
           tokens
         );
         this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/cron-env'),
+          this.templatePath('jobs-optional/cron-env'),
           this.destinationPath('env/jenkins/jobs/cron-' + key),
           tokens
         );
         this.fs.copyTpl(
-          this.templatePath('jenkins/jobs-optional/password-reset-env'),
+          this.templatePath('jobs-optional/password-reset-env'),
           this.destinationPath('env/jenkins/jobs/password-reset-' + key),
           tokens
         );
-      });
+      }.bind(this));
     }
   },
 
