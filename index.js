@@ -254,7 +254,7 @@ module.exports = yeoman.Base.extend({
         options: options
       },
       {
-        local: require.resolve('../jenkins/index')
+        local: require.resolve('../jenkins')
       });
     }
   },
