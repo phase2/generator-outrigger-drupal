@@ -78,7 +78,6 @@ module.exports = yeoman.Base.extend({
       delete hosts['devcloud'];
 
       _.forEach(hosts, function(value, key) {
-        console.log(key);
         tokens.virtualHost = tokens.host[key];
         tokens.environment = key;
         if (key == 'local') {
