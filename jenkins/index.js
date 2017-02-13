@@ -22,6 +22,8 @@ module.exports = yeoman.Base.extend({
       skipWelcome: true,
       skipGoodbye: true
     }, this.options);
+
+    options['ciHost'] = options['ciHost'] || 'ci2.p2devcloud.com';
   },
 
   prompting: function() {
