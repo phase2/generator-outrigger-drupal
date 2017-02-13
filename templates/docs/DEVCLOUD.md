@@ -5,6 +5,27 @@
 The Phase2 Dev Cloud is the hosting infrastructure for non-local development,
 testing, and other project-specific web resources.
 
+## Server Location
+
+All Docker-based Dev Cloud sites are located on ci.p2devcloud.com or
+ci2.p2devcloud.com.
+
+You can reach an environment on the server via:
+
+```
+http://[env]-<%= projectName %>.<%= host.devcloud %>
+```
+
+You will find this on disk at `/opt/development/<%= projectName %>/jenkins/env/deploy-[env]`
+
+In order to run commands such as clearing the Drupal application cache, you
+would run:
+
+```
+cd /opt/development/<%= projectName %>/jenkins/env/deploy-[env]
+DOCKER_ENV=[env] docker-compose -f build.devcloud.yml -p <%= machineName %>_[env] run --rm drush cache-rebuild
+```
+
 ## Jenkins Integration
 
 This project is packaged with the ability to easily spin up a project-specific
@@ -18,13 +39,16 @@ This Jenkins implementation does a majority of its work by spinning up Docker
 containers for the different environments of the project and executing necessary
 commands to build code, run tests, or generate reports.
 
-## Starting Up Jenkins
+### Starting Up Jenkins
+
+This is normally done by the "master Jenkins" ci-start job, you will use this
+for local development of Jenkins jobs, configuration, and customization.
 
 ```bash
-docker-compose -f jenkins.yml -p <%= projectName %> run jenkins
+docker-compose -f jenkins.yml -p <%= machineName %> run jenkins
 ```
 
-## Accessing Private Repositories
+### Accessing Private Repositories
 
 When you startup Jenkins it will automatically create a volume mount to pull in
 your `id_rsa` key for use in SSH-based git checkouts.
@@ -39,7 +63,7 @@ export DEVTOOLS_SSH_KEY=devcloud_bitbucket_rsa
 
 This same mechanism is available to the build container.
 
-## Developing Your Jenkins System
+### Developing Your Jenkins System
 
 By pulling Jenkins into the project repository it is under more direct control
 by the development team. The recommended approach is to focus on Jenkins as a
@@ -75,7 +99,7 @@ There are several Jenkins jobs packaged in the repository.
   cron, and admin password reset job.
 * See a running Jenkins instance for additional jobs.
 
-### Updating for Use Outside Phase2 Infrastructure
+## Updating for Use Outside Phase2 Infrastructure
 
 Phase2 uses [Flowdock](https://flowdock.com) for team messaging, commonly the
 Jenkins jobs are configured to send a message to the project chat room.
