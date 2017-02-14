@@ -1,5 +1,10 @@
 ##
 # Build and command-line operations containers for your local environment.
+#
+# By setting your local DOCKER_ENV environment variable you can spin up
+# multiple environments. Keep in mind you should also vary the docker-compose
+# --project-name as needed. The `bin/start.sh` script sets a project name of
+# <%= machineName %>_${DOCKER_ENV:-local}.
 ##
 version: '2.1'
 
@@ -77,7 +82,7 @@ services:
       # successfully cleaned without then needing to touch the files
       # directory. This mount is present so that drush and other build
       # container operations can operate on the files for a site.
-      - /data/<%= projectName %>_local/files:/var/www/src/sites/default/files
+      - /data/<%= projectName %>_${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
       # By volume mounting project Drush configuration to the user profile the
       # Docker image can carry Drush configuration and commands itself.
       # Would be more clean if this volume mount placed the Drush configuration
@@ -87,11 +92,11 @@ services:
       # platform.
       - ./build/backups:/opt/backups
       # Persist the cache directories associated with various build tools.
-      - /data/<%= projectName %>_local/cache/drush:/root/.drush/cache
-      - /data/<%= projectName %>_local/cache/composer:/root/.composer/cache
-      - /data/<%= projectName %>_local/cache/npm:/root/.npm
-      - /data/<%= projectName %>_local/cache/bower:/root/.cache/bower
-      - /data/<%= projectName %>_local/cache/fontconfig:/root/.cache/fontconfig
+      - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/drush:/root/.drush/cache
+      - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/composer:/root/.composer/cache
+      - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/npm:/root/.npm
+      - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/bower:/root/.cache/bower
+      - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/fontconfig:/root/.cache/fontconfig
       # SSH key grants read access to private Git repositories.
       - ~/.ssh/${DEVTOOLS_SSH_KEY:-id_rsa}:/root/.ssh/id_rsa
       # Preserve BASH history across build container runs.
