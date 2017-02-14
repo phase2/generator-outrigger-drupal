@@ -179,29 +179,43 @@ module.exports = yeoman.Base.extend({
       );
     },
 
-    contributing: function() {
+    docs: function() {
       this.fs.copyTpl(
-        this.templatePath('CONTRIBUTING.md'),
+        this.templatePath('docs/CONTRIBUTING.md'),
         this.destinationPath('CONTRIBUTING.md'),
         tokens
       );
-    },
 
-    readme: function() {
       if (!options['skip-readme']) {
         // Inject our new README section.
         this.fs.copyTpl(
-          this.templatePath('README.md'),
+          this.templatePath('docs/README.md'),
           this.destinationPath('DOCKER.md'),
           tokens
         );
       }
-    },
 
-    todos: function() {
       this.fs.copyTpl(
-        this.templatePath('TODOS.md'),
+        this.templatePath('docs/TODOS.md'),
         this.destinationPath('TODOS.md'),
+        tokens
+      );
+
+      this.fs.copyTpl(
+        this.templatePath('docs/TODOS.md'),
+        this.destinationPath('TODOS.md'),
+        tokens
+      );
+
+      this.fs.copyTpl(
+        this.templatePath('docs/DEVTOOLS.md'),
+        this.destinationPath('docs/DEVTOOLS.md'),
+        tokens
+      );
+
+      this.fs.copyTpl(
+        this.templatePath('docs/DEVCLOUD.md'),
+        this.destinationPath('docs/DEVCLOUD.md'),
         tokens
       );
     },
