@@ -107,7 +107,7 @@ services:
       - /data/<%= projectName %>_${DOCKER_ENV}/cache/bower:/root/.cache/bower
       - /data/<%= projectName %>_${DOCKER_ENV}/cache/fontconfig:/root/.cache/fontconfig
       # Preserve BASH history across build container runs.
-      - ~/.bash_history:/root/.bash_history
+      - /data/<%= projectName %>_${DOCKER_ENV}/bash:/root/bash
     environment:
       APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
       GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
