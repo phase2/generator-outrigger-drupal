@@ -1,21 +1,5 @@
 module.exports = {
   minimum: [
-    'bin/db-export.sh',
-    'bin/features-health.sh',
-    'bin/fix-perms.sh',
-    'bin/framework.sh',
-    'bin/pre-install.sh',
-    'bin/seed-users.sh',
-    'bin/start.sh',
-    'bin/update-scanner.sh',
-    'build.yml',
-    'build.devcloud.yml',
-    'CONTRIBUTING.md',
-    'DOCKER.md',
-    'docker-compose.yml',
-    'docker-compose.devcloud.yml',
-    'env/build/etc/drush/drushrc.php',
-    'env/build/etc/drush/aliases.drushrc.php',
     'env/jenkins/config.xml',
     'env/jenkins/jobs/ci/config.xml',
     'env/jenkins/jobs/deploy-local/config.xml',
@@ -23,14 +7,7 @@ module.exports = {
     'env/jenkins/jobs/jenkins-test-default/config.xml',
     'env/jenkins/jobs/jenkins-test-docker/config.xml',
     'env/jenkins/jobs/jenkins-test-fail/config.xml',
-    'Gruntconfig.json',
-    'JENKINS.md',
     'jenkins.yml',
-    'package.json',
-    'src/sites/settings.common.php',
-    'TODOS.md',
-    'docs/DEVTOOLS.md',
-    'docs/DEVCLOUD.md'
   ],
   extended: [
     'env/jenkins/jobs/cron-dev/config.xml',
@@ -43,9 +20,6 @@ module.exports = {
     'env/jenkins/jobs/password-reset-qa/config.xml',
     'env/jenkins/jobs/password-reset-review/config.xml',
   ],
-  json: {
-    'Gruntconfig.json': 'Gruntconfig.json'
-  },
   minimumXml: {
     'env/jenkins/config.xml': 'main configuration',
     'env/jenkins/jobs/ci/config.xml': '"ci" job configuration',
@@ -57,12 +31,16 @@ module.exports = {
   },
   extendedXml: {
     'env/jenkins/jobs/deploy-qa/config.xml': '"deploy-qa" job configuration',
+    'env/jenkins/jobs/start-qa/config.xml': '"start-qa" job configuration',
+    'env/jenkins/jobs/stop-qa/config.xml': '"stop-qa" job configuration',
+    'env/jenkins/jobs/deploy-dev/config.xml': '"deploy-dev" job configuration',
+    'env/jenkins/jobs/start-dev/config.xml': '"start-dev" job configuration',
+    'env/jenkins/jobs/stop-dev/config.xml': '"stop-dev" job configuration',
+    'env/jenkins/jobs/deploy-review/config.xml': '"deploy-review" job configuration',
+    'env/jenkins/jobs/start-review/config.xml': '"start-review" job configuration',
+    'env/jenkins/jobs/stop-review/config.xml': '"stop-review" job configuration',
   },
   yaml: {
-    'docker-compose.yml': 'docker-compose.yml',
-    'docker-compose.devcloud.yml': 'docker-compose.devcloud.yml',
-    'build.yml': 'build.yml',
-    'build.devcloud.yml': 'build.devcloud.yml',
-    'jenkins.yml': 'jenkins.yml',
+    'jenkins.yml': 'jenkins.yml'
   }
 };

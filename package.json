@@ -17,11 +17,13 @@
   },
   "files": [
     "app",
+    "jenkins",
     "lib"
   ],
   "keywords": [
     "yeoman-generator",
-    "docker"
+    "docker",
+    "jenkins"
   ],
   "dependencies": {
     "chalk": "^1.0.0",
