@@ -2,31 +2,44 @@
 
 ## 1.3.0-pre (???)
 
-* Fixed networking with docker-compose schema v2
-* Fixed more edge cases with permissions on Drupal files directory.
-* Explicitly declare that projects use Node 4 in build container.
-  This facilitates backwards compatibility if the build container switches to
-  Node 6 by default.
-* Explicit declare that Xdebug is disabled in build container to clarify
-  that it can be enabled.
-* Fixed `bin/start.sh` would use empty DOCKER_ENV instead of defaulting to
-  `local` if you explicitly set your $DOCKER_ENV to an empty string.
+This release was originally meant to be a bugfix release, but many great things
+happened that postponed release.
+
+#### BASH History
+
+Persist BASH history in the build container across runs for a given project and
+environment.
+
+#### Jenkins Overhaul
+
+Split Jenkins into its own sub-generator which can be separately used as
+`yo p2-env:jenkins`. Further Jenkins-related changes:
+
 * Update Jenkins image to pull `latest` instead of the version released
   alongside support for Docker 1.9. Recommend you pin your Jenkins image!
-* Added `drush cron` to the tasks that are run after site install or database
-  update on Jenkins deploy jobs.
 * Streamlined Jenkins jobs to use docker-compose environment variables instead
   of the more verbose command-line flags. (COMPOSE_PROJECT_NAME and COMPOSE_FILE
   instead of using the -f and -p flags all the time.)
 * Do not re-run the seed-users script on update deploys.
+* Added `drush cron` to the tasks that are run after site install or database
+  update on Jenkins deploy jobs.
 
-### Major Features
+### Other Changes
 
-* [EXPERIMENTAL] Pull your local BASH history into the build container, and
-  persist BASH commands from the build container to your local BASH history.
-  (This may change in the future as we would prefer not to tangle history with
-  your local environment or across projects.)
-
+* Explicitly declare that projects use Node 4 in build container.
+  This facilitates backwards compatibility if the build container switches to
+  Node 6 by default.
+* Explicitly declare that Xdebug is disabled in build container to clarify
+  that it can be enabled.
+* Shift docker-compose.yml and build.yml to use DOCKER_ENV environment variable
+  instead of hard-coding a local environment. This is a stepping stone to:
+    * Easily operate multiple local environment for the same project.
+    * Potential elimination of the separate build.devcloud.yml and
+      docker-compose.devcloud.yml files.
+* Fixed networking with docker-compose schema v2
+* Fixed more edge cases with permissions on Drupal files directory.
+* Fixed `bin/start.sh` would use empty DOCKER_ENV instead of defaulting to
+  `local` if you explicitly set your $DOCKER_ENV to an empty string.
 
 ## 1.2.0 (January 2017)
 
