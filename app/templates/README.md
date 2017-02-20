@@ -1,5 +1,5 @@
 <% include ../../node_modules/generator-gadget/app/templates/README.md %>
-<% if (useENV) { %><% include ../../node_modules/generator-p2-env/app/templates/README.md %><% } -%>
+<% if (useENV) { %><% include ../../node_modules/generator-p2-env/app/templates/docs/README.md %><% } -%>
 
 ## Scaffolded with Generators
 
