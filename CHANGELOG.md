@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.3.0-pre (???)
+## 1.3.0 (February 2017)
 
 This release was originally meant to be a bugfix release, but many great things
 happened that postponed release.
