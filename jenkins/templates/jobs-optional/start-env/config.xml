@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Start the <%= environment %> environment without performing any installation functions. Depends on a previously successfully executed deploy-<%= environment %> job having been done. This job is managed in the project code repository, changes made via UI will be lost.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.25">
+      <autoRebuild>false</autoRebuild>
+      <rebuildDisabled>false</rebuildDisabled>
+    </com.sonyericsson.rebuild.RebuildSettings>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <customWorkspace>/opt/development/<%= projectName %>/jenkins/env/workspace/deploy-<%= environment %></customWorkspace>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>#!/usr/bin/env bash
+export DOCKER_ENV=<% if (environment) { %><%= environment %><% } else { %>&apos;&apos;<% } %>
+export COMPOSE_PROJECT_NAME=<%= machineName %>_${DOCKER_ENV:--local}
+export COMPOSE_FILE=build.<%= dockerComposeExt %>yml
+export SITE_DOMAIN=<% if (environment == 'local') { %><%= host.local %><% } else { %>${DOCKER_ENV}-<%= host.devcloud %><% } %>
+
+# Break down the Docker environment and remove generated files.
+teardown() {
+  docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop || true
+  docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f || true
+}
+
+# Handler for errors or other interruptions.
+cancel() {
+  echo &quot;$JOB_NAME: Error: Line $1: $2&quot;
+  exit 32
+}
+
+# End-of-job cleanup.
+complete() {
+  ret=$1
+  [ &quot;$ret&quot; -eq 0 ] || echo &gt;&amp;2 &quot;$JOB_NAME: aborted ($ret)&quot;
+}
+
+# Abort build step on errors.
+trap &apos;cancel $LINENO $BASH_COMMAND&apos; ERR SIGINT SIGTERM SIGQUIT SIGHUP
+# Clean up on program termination.
+trap &apos;complete $?&apos; EXIT
+
+docker-compose up -d
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <% if (flowdockApiKey && environment) { %><com.flowdock.jenkins.FlowdockNotifier plugin="jenkins-flowdock-plugin@1.1.8">
+      <flowToken><%= flowdockApiKey %></flowToken>
+      <notificationTags>start, <%= environment %></notificationTags>
+      <chatNotification>false</chatNotification>
+      <notifyMap>
+        <entry>
+          <com.flowdock.jenkins.BuildResult>SUCCESS</com.flowdock.jenkins.BuildResult>
+          <boolean>true</boolean>
+        </entry>
+        <entry>
+          <com.flowdock.jenkins.BuildResult>UNSTABLE</com.flowdock.jenkins.BuildResult>
+          <boolean>false</boolean>
+        </entry>
+        <entry>
+          <com.flowdock.jenkins.BuildResult>ABORTED</com.flowdock.jenkins.BuildResult>
+          <boolean>false</boolean>
+        </entry>
+        <entry>
+          <com.flowdock.jenkins.BuildResult>FIXED</com.flowdock.jenkins.BuildResult>
+          <boolean>true</boolean>
+        </entry>
+        <entry>
+          <com.flowdock.jenkins.BuildResult>NOT_BUILT</com.flowdock.jenkins.BuildResult>
+          <boolean>false</boolean>
+        </entry>
+        <entry>
+          <com.flowdock.jenkins.BuildResult>FAILURE</com.flowdock.jenkins.BuildResult>
+          <boolean>true</boolean>
+        </entry>
+      </notifyMap>
+      <notifySuccess>true</notifySuccess>
+      <notifyFailure>true</notifyFailure>
+      <notifyFixed>true</notifyFixed>
+      <notifyUnstable>false</notifyUnstable>
+      <notifyAborted>false</notifyAborted>
+      <notifyNotBuilt>false</notifyNotBuilt>
+    </com.flowdock.jenkins.FlowdockNotifier><% } -%>
+  </publishers>
+  <buildWrappers>
+    <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.4.3">
+      <colorMapName>xterm</colorMapName>
+    </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
+  </buildWrappers>
+</project>
