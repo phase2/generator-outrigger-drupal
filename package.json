@@ -13,7 +13,7 @@
     "node": ">=0.12.0"
   },
   "scripts": {
-    "test": "mocha --timeout=6000"
+    "test": "mocha --timeout=3000 test/app.test.js && mocha --timeout=6000 test/environment.test.js && mocha --timeout=3000 test/jenkins.test.js",
   },
   "files": [
     "app",

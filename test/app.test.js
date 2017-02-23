@@ -5,7 +5,7 @@ var os = require('os');
 var path = require('path');
 var test = require('yeoman-test');
 
-var appDir = path.join(os.tmpdir(), './temp-test');
+var appDir = path.join(os.tmpdir(), './temp-test-app');
 console.log('Tests will be generated in "' + appDir + '"');
 
 var originalTestDirectory;
@@ -124,7 +124,7 @@ describe('p2:app --replay', function () {
   });
 });
 
-describe('p2:app w/ Gadget + p2-env', function () {
+describe('p2:app w/ Gadget + p2:environment', function () {
   before(function (done) {
     test.run(path.join(__dirname, '../app'))
       .inDir(appDir)

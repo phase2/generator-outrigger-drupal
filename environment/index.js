@@ -264,7 +264,7 @@ module.exports = yeoman.Base.extend({
     },
 
     jenkins: function() {
-      this.composeWith('p2-env:jenkins', {
+      this.composeWith('p2:jenkins', {
         options: options
       },
       {
