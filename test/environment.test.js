@@ -223,11 +223,11 @@ describe('p2:environment', function() {
           it('should extend from docker-compose.yml for db container', function() {
             assert.ok(manifest['services']['db']['extends']['file'] === 'docker-compose.yml');
           });
-          it('should use apache-php:php70 with Drupal 8', function() {
-            assert.ok(manifest['services']['www']['image'] == 'phase2/apache-php:php70');
+          it('should extend from docker-compose.yml for www container', function() {
+            assert.ok(manifest['services']['www']['extends']['file'] === 'docker-compose.yml');
           });
-          it('should use Varnish for reverse-proxy caching', function() {
-            assert.ok(manifest['services']['proxy']['image'] == 'phase2/varnish:4.0');
+          it('should extend from docker-compose.yml for reverse-proxy caching container', function() {
+            assert.ok(manifest['services']['proxy']['extends']['file'] === 'docker-compose.yml');
           });
         });
       });
