@@ -32,7 +32,7 @@ WORKDIR /generated
 # Always run as the yeoman user
 USER yeoman
 
-CMD /usr/bin/bash
+CMD /usr/bin/env sh
 
 # Run a Yeoman generator with a command such as:
 # docker build -t yeoman .

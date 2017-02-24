@@ -51,7 +51,7 @@ services:
   # '~/Projects/newproject', however you can run with YO_PROJECT_DIRECTORY
   # environment variable to choose a different location.
   base:
-    build: .
+    build: docker
     network_mode: "bridge"
     volumes:
       - ${YO_PROJECT_DIRECTORY:-~/Projects/newproject}:/generated
