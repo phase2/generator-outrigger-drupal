@@ -11,11 +11,17 @@ best practices.
 
 ## Installation
 
+Look up the latest tagged version of the generator and replace `{version}` below.
+
 ```bash
-npm install --global git+ssh://bitbucket.org/phase2tech/generator-p2.git#master
+npm install --global git+ssh://bitbucket.org/phase2tech/generator-p2.git#{version}
 ```
 
-## Use the Tool
+## Run the Generator
+
+> If you have trouble getting the generator to run, or updating the generator,
+check out the [CONTRIBUTING.md](./CONTRIBUTING.md) guide for the instructions on
+how to use Docker to run the generator.
 
 Make an empty folder, and initiate the generator:
 
@@ -30,62 +36,59 @@ Generate a working codebase with another one-liner:
 grunt
 ```
 
-The backend is handled by GDT and the frontend is handled by Pattern Lab Starter.
-They are integrated with each other via the
-[Theme Scripts of GDT](https://github.com/phase2/grunt-drupal-tasks/blob/master/CONFIG.md#theme-scripts)
-so a full site compile can happen by running the project's default build task: `grunt`.
+> **Note that if you opted-in to create a Docker-based environment you will have
+alternate instructions, you will not be running grunt.**
+
+> ***Please read the output at the end of the generator run, it has instructions
+on next steps.***
 
 ### Command-line Options
 
-* `--replay`: Re-run the generator against an existing project, using previously
+* **`--replay`**: Re-run the generator against an existing project, using previously
 entered answers.
-* `--use-master`: Will make a point of leveraging the master version of
+* **`--use-master`**: Will make a point of leveraging the master version of
 grunt-drupal-tasks.
-* `--skip-install`: Will skip running `npm install` at the end of the
+* **`--skip-install`**: Will skip running `npm install` at the end of the
 generation process. (Applied by default when you opt-in for the
 Docker-based Phase2 Environment.)
 
-## Leveraged Projects
+## Features
 
-Here are the projects that are currently integrated as part of Yo P2.
-Each will need to be installed.
-
-### Grunt Drupal Tasks
+### Backend Build Process, Testing, & Task Runner
 
 [Grunt Drupal Tasks](https://github.com/phase2/grunt-drupal-tasks) manages backend
 development, continuous integration, and overall project tooling for the Drupal
-application. It has its own generator which must be installed, you can find it
-on Github at [Gadget](https://github.com/phase2/generator-gadget).
+application.
 
-### Pattern Lab Starter
+A best practice setup of GDT with a few extra goodies are provided by Yo P2's
+use of [Generator Gadget](https://github.com/phase2/generator-gadget) to produce
+the top-level Drupal application scaffolding.
 
-[Pattern Lab Starter](http://git.io/p2pls) initializes new, Pattern-lab integrated
-themes and manages frontend development practices. It has its own generator which
-must be installe, you can find it on Github at
-[Generator PLS](https://github.com/phase2/generator-pattern-lab-starter).
+### Best Practices Frontend
 
-### Phase2 Environment
+[Pattern Lab Starter]([Pattern Lab Starter](http://git.io/p2pls)) is used to
+provide an optional Drupal theme with Pattern Lab for collaborative,
+design-driven development.
 
-[Phase2 Environment](https://bitbucket.org/phase2tech/generator-p2-env) initializes
-support for Docker-based development with Phase2's DevTools, including Drush
-configuration enabled by controlling the server environment and Grunt-Drupal-Tasks
-changes needed for Docker compatibility.
+This is set up by [Generator PLS](https://github.com/phase2/generator-pattern-lab-starter).
 
-## Contributing
+Grunt Drupal Tasks manages theme compilation via the [Theme Scripts of GDT](https://phase2.github.io/grunt-drupal-tasks/30_FRONTEND/)
+so a full site compile can happen by running the project's default build task: `grunt`.
 
-### Testing Branches
+### Docker-based Development Environment
 
-If you would like to test out changes to generator-p2 or one of the above
-projects, please take the following steps:
+We integrate with Phase2 DevTools (now http://outrigger.sh) to provide a quick,
+consistent, container-based local development environment that can also be used
+on Phase2's centralized docker hosts to provide testing and review environments.
 
-1. `git clone git@bitbucket.org:phase2tech/generator-p2.git`
-2. Check out the alternate branch of generator-p2. If testing alternate
-branches of one of the other generators, edit the package.json dependency entry
-according to the [package.json dependency
-documenation](https://docs.npmjs.com/files/package.json#git-urls-as-dependencies).
-3. Run `npm link` to use this copy as the global version. (May require `sudo`)
+This uses a sub-generator of generator-p2 which can be separately executed as
+`yo p2:environment`.
 
-If you would like to take it a step further and develop in the other generators
-while testing with `yo p2`, clone those repositories as well and replace the
-version installed in `generator-2/node_modules` with a symlink. **Note this may
-not work in npm v3.x.**
+### Project-specific CI & Environment Management
+
+If you liked the Docker-based environments, you can also use our Docker-based
+Jenkins instance to manage your central test environments, complete with default
+jobs so you can start continuous integration with zero further configuration.
+
+This uses a sub-generator of generator-p2 which can be separately executed as
+`yo p2:jenkins`.
