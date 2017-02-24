@@ -42,7 +42,7 @@ describe('p2:environment', function() {
 
   describe('minimal configuration', function() {
     before(function(done) {
-      test.run(path.join(__dirname, '../environment'))
+      test.run(path.join(__dirname, '../generators/environment'))
         .inDir(appDir)
         .withPrompts({
           cacheInternal: 'database',
@@ -106,7 +106,7 @@ describe('p2:environment', function() {
 
   describe('extended configuration', function() {
     before(function(done) {
-      test.run(path.join(__dirname, '../environment'))
+      test.run(path.join(__dirname, '../generators/environment'))
         .inDir(appDir)
         .withPrompts({
           cacheInternal: 'memcache',

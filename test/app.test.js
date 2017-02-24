@@ -49,7 +49,7 @@ var gdtFiles = [
 
 describe('p2:app w/ Gadget', function () {
   before(function (done) {
-    test.run(path.join(__dirname, '../app'))
+    test.run(path.join(__dirname, '../generators/app'))
       .inDir(appDir)
       .withOptions({
         'skip-install': true,
@@ -86,7 +86,7 @@ describe('p2:app --replay', function () {
 
   before(function (done) {
     swapTestDirectory(true);
-    test.run(path.join(__dirname, '../app'))
+    test.run(path.join(__dirname, '../generators/app'))
       .inDir(appDir)
       .withOptions({
         replay: true,
@@ -126,7 +126,7 @@ describe('p2:app --replay', function () {
 
 describe('p2:app w/ Gadget + p2:environment', function () {
   before(function (done) {
-    test.run(path.join(__dirname, '../app'))
+    test.run(path.join(__dirname, '../generators/app'))
       .inDir(appDir)
       .withOptions({
         'skip-install': true,
@@ -141,7 +141,7 @@ describe('p2:app w/ Gadget + p2:environment', function () {
         proxyCache: 'none',
         environments: [],
         offline: true,
-	domain: 'drupal8-p2env',
+	      domain: 'drupal8-p2env',
       })
       .on('end', done);
   });
