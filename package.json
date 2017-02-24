@@ -13,7 +13,7 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "mocha --timeout=3000 test/app.test.js && mocha --timeout=6000 test/environment.test.js && mocha --timeout=3000 test/jenkins.test.js"
+    "test": "mocha --timeout=5000 test/app.test.js && mocha --timeout=6000 test/environment.test.js && mocha --timeout=3000 test/jenkins.test.js"
   },
   "files": [
     "README.md",

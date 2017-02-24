@@ -59,7 +59,8 @@ describe('p2:app w/ Gadget', function () {
         drupalDistroVersion: '8.x',
         usePLS: false,
         useENV: false,
-        offline: true
+        offline: true,
+        force: true
       })
       .on('end', done);
   });
@@ -92,7 +93,8 @@ describe('p2:app --replay', function () {
         replay: true,
         // The lack of this option trips up the test.
         drupalDistroVersion: '8.x',
-        offline: true
+        offline: true,
+        force: true
       })
       .on('end', done);
   });
@@ -142,6 +144,7 @@ describe('p2:app w/ Gadget + p2:environment', function () {
         environments: [],
         offline: true,
 	      domain: 'drupal8-p2env',
+        force: true
       })
       .on('end', done);
   });
