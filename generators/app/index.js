@@ -51,7 +51,7 @@ module.exports = yeoman.Base.extend({
         message: 'Use Phase2 DevTools/Docker Environment?'
       });
     }
-    var envPrompts = require('..//lib/prompts.js');
+    var envPrompts = require('../lib/prompts.js');
     envPrompts.forEach(function (item) {
       if (_.isUndefined(options[item.name])) {
         var validate = item.when;

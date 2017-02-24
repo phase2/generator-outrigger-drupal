@@ -10,19 +10,18 @@
   },
   "private": true,
   "engines": {
-    "node": ">=0.12.0"
+    "node": ">=4"
   },
   "scripts": {
     "test": "mocha --timeout=3000 test/app.test.js && mocha --timeout=6000 test/environment.test.js && mocha --timeout=3000 test/jenkins.test.js"
   },
   "files": [
-    "app",
-    "environment",
-    "jenkins",
-    "lib"
+    "README.md",
+    "generators"
   ],
   "keywords": [
     "yeoman-generator",
+    "drupal",
     "docker",
     "jenkins"
   ],

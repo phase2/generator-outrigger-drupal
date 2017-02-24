@@ -42,7 +42,7 @@ describe('p2:jenkins', function() {
 
   describe('minimal configuration', function() {
     before(function(done) {
-      test.run(path.join(__dirname, '../jenkins'))
+      test.run(path.join(__dirname, '../generators/jenkins'))
         .inDir(appDir)
         .withPrompts({
           cacheInternal: 'database',
@@ -69,7 +69,7 @@ describe('p2:jenkins', function() {
 
   describe('extended configuration', function() {
     before(function(done) {
-      test.run(path.join(__dirname, '../jenkins'))
+      test.run(path.join(__dirname, '../generators/jenkins'))
         .inDir(appDir)
         .withPrompts({
           drupalDistroVersion: '8.x',
