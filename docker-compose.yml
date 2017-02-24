@@ -1,0 +1,57 @@
+version: "2.1"
+
+services:
+  # Run the gadget generator.
+  gadget:
+    extends: base
+    entrypoint: [ "yo", "gadget", "--no-insight", "--skip-install" ]
+
+  # Run the pattern-label-starter generator.
+  pls:
+    extends: base
+    entrypoint: [ "yo", "pattern-lab-starter", "--no-insight", "--skip-install" ]
+
+  # Run the generator-p2 generator. Extends from 'cli' service because we
+  # cannot install private libraries in the Dockerfile.
+  p2:
+    extends: cli
+    entrypoint: [ "yo", "p2", "--no-insight", "--skip-install" ]
+
+  # Run the generator-p2-env generator. Extends from 'cli' service because we
+  # cannot install private libraries in the Dockerfile.
+  environment:
+    extends: cli
+    entrypoint: [ "yo", "p2:environment", "--no-insight", "--skip-install" ]
+
+  # Run the generator-p2-env generator. Extends from 'cli' service because we
+  # cannot install private libraries in the Dockerfile.
+  jenkins:
+    extends: cli
+    entrypoint: [ "yo", "p2:jenkins", "--no-insight", "--skip-install" ]
+
+  # Run npm commands against the current development state of the generator.
+  # E.g., docker-compose run --rm npm install; docker-compose run --rm npm test
+  npm:
+    extends: cli
+    entrypoint: npm
+    working_dir: /usr/local/lib/node_modules/generator-p2
+ 
+  # Volume mounts the working code of the repo into the Docker image.
+  # This facilitates running the generator, while the cli service and those
+  # extending from it are used for development.
+  cli:
+    extends: base
+    volumes:
+      - .:/usr/local/lib/node_modules/generator-p2
+
+  # Provides a common baseline of assembling the Docker image and output
+  # location of the generated code.
+  #
+  # All generated output via normal use of this Dockerfile outputs code in
+  # '~/Projects/newproject', however you can run with YO_PROJECT_DIRECTORY
+  # environment variable to choose a different location.
+  base:
+    build: .
+    network_mode: "bridge"
+    volumes:
+      - ${YO_PROJECT_DIRECTORY:-~/Projects/newproject}:/generated
