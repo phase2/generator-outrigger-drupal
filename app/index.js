@@ -1,4 +1,5 @@
 'use strict';
+
 var yeoman = require('yeoman-generator');
 var path = require('path');
 var chalk = require('chalk');
@@ -6,7 +7,7 @@ var yosay = require('yosay');
 var _ = require('lodash');
 var options = {};
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = yeoman.Base.extend({
   initializing: function () {
     this.pkg = require('../package.json');
     // Have Yeoman greet the user.
@@ -50,7 +51,7 @@ module.exports = yeoman.generators.Base.extend({
         message: 'Use Phase2 DevTools/Docker Environment?'
       });
     }
-    var envPrompts = require('generator-p2-env/lib/prompts.js');
+    var envPrompts = require('..//lib/prompts.js');
     envPrompts.forEach(function (item) {
       if (_.isUndefined(options[item.name])) {
         var validate = item.when;
@@ -139,8 +140,11 @@ module.exports = yeoman.generators.Base.extend({
     },
     env: function() {
       if (options['useENV']) {
-        this.composeWith('p2-env', { options: options }, {
-          local: require.resolve('generator-p2-env')
+        this.composeWith('p2:environment', {
+          options: options
+        },
+        {
+          local: require.resolve('../environment')
         });
       }
     },
@@ -177,7 +181,7 @@ module.exports = yeoman.generators.Base.extend({
   end: function() {
     var version = {
       gadget: require('generator-gadget/package.json').version,
-      env: require('generator-p2-env/package.json').version,
+      env: require('generator-p2/package.json').version,
       pls: require('generator-pattern-lab-starter/package.json').version,
     }
 
@@ -185,8 +189,8 @@ module.exports = yeoman.generators.Base.extend({
     this.log('Primary scaffolding created by ' + chalk.red('generator-gadget v' + version.gadget) + '.');
     this.log('Check out your new READMEs to get oriented.');
     if (options['useENV']) {
-      this.log('You have chosen a ' + chalk.bold('Docker-based development environment') + ' created by ' + chalk.red('generator-p2-env v' + version.env) + '.');
-      this.log(chalk.yellow('All tools and application code should be run via the Docker containers.'))
+      this.log('You have chosen a ' + chalk.bold('Docker-based development environment') + ' created by ' + chalk.red('generator-p2:environment v' + version.env) + '.');
+      this.log(chalk.yellow('All tools and application code should be run via the Docker containers.'));
       this.log(chalk.green('A handy TODOS.md checklist has been created for your next steps.'));
       this.log('Want to see a running Drupal site without opening a text editor? Run ' + chalk.bold('bash bin/start.sh') + ' now.');
     }

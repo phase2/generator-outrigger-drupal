@@ -1,0 +1,114 @@
+##
+# Build and command-line operations containers for DevCloud-hosted Docker environments.
+#
+# In-line documentation assumes the "Integration" or 'int' environment, in practice
+# any environment name can be used. Standard names also include: Development (dev),
+# Testing (qa), and Review/Milestone (ms).
+#
+# "Dev Cloud" is the name of the internal Phase2 development infrastructure.
+#
+# To ensure this works as expected for multiple environments, both environment
+# settings must be carefully respected in *every* command invocation:
+#
+# * The `DOCKER_ENV` environment variable which is used as a template parameter for
+#   how this configuration is used.
+# * The -p|--project-name option for Docker Compose, which used the provided name
+#   in lieu of deriving key Docker namespacing from whatever the current directory
+#   happens to be named.
+##
+version: '2.1'
+
+services:
+  # Container for starting a cli for build commands
+  # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm cli
+  cli:
+    extends:
+      service: operational
+
+  # Container for running drush in the docroot.
+  # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm drush <command>
+  # Where <command> is a direct drush command like cache-rebuild
+  drush:
+    extends:
+      service: operational
+    entrypoint: [ "/init", "drush", "@<%= projectName %>" ]
+    working_dir: /var/www/build/html
+
+  # Container for running Drupal Console in the docroot.
+  # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm drupal <command>
+  # Where <command> is a direct drupal command like generate
+  # Note: Only works if the project includes Drupal Console as a composer dependency.
+  drupal:
+    extends:
+      service: operational
+    entrypoint: [ "/init", "/var/www/vendor/bin/drupal --ansi" ]
+    working_dir: /var/www/build/html
+
+  # Container for running grunt in the docroot.
+  # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm grunt <command>
+  grunt:
+    extends:
+      service: operational
+    entrypoint: [ "/init", "grunt" ]
+
+  # Operational base service definition for Phase2 Dev Cloud environment.
+  #
+  # Unlike `base`, this layer is functional for application interactions.
+  #
+  # Other services inherit these settings via the extends property.
+  # See https://docs.docker.com/compose/extends/#extending-services
+  operational:
+    extends:
+      service: base
+    external_links:
+      - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
+
+  # Base service definition for Phase2 Dev Cloud environment.
+  #
+  # This is not a fully operational build container, lacking access to other
+  # services such as the database or cache needed to properly interact with the
+  # application.
+  #
+  # Uses for this container include filesystem operations. For example:
+  #
+  # DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm base 'rm -Rf node_modules'
+  #
+  # Other services inherit these settings via the extends property.
+  # See https://docs.docker.com/compose/extends/#extending-services
+  base:
+    image: <%= buildImage %>
+    network_mode: "bridge"
+    entrypoint: [ "/init" ]
+    working_dir: /var/www
+    command: /bin/bash
+    volumes:
+      # Primary code mount.
+      - .:/var/www/
+      # /var/www/src is used here rather than /var/www/build/html to
+      # prevent the grunt clean:default task from encountering an error
+      # because docker won't let the files directory be removed as the
+      # container is using it in its filesystem magic. Since the
+      # /var/www/build/html/sites/default item is a symlink it can be
+      # successfully cleaned without then needing to touch the files
+      # directory. This mount is present so that drush and other build
+      # container operations can operate on the files for a site.
+      - /data/<%= projectName %>_${DOCKER_ENV}/files:/var/www/src/sites/default/files
+      # By volume mounting project Drush configuration to the user profile the
+      # Docker image can carry Drush configuration and commands itself.
+      # Would be more clean if this volume mount placed the Drush configuration
+      # within the Drupal directory structure.
+      - ./env/build/etc/drush:/root/.drush
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+      # Persist the cache directories associated with various build tools.
+      - /data/<%= projectName %>_${DOCKER_ENV}/cache/drush:/root/.drush/cache
+      - /data/<%= projectName %>_${DOCKER_ENV}/cache/composer:/root/.composer/cache
+      - /data/<%= projectName %>_${DOCKER_ENV}/cache/npm:/root/.npm
+      - /data/<%= projectName %>_${DOCKER_ENV}/cache/bower:/root/.cache/bower
+      - /data/<%= projectName %>_${DOCKER_ENV}/cache/fontconfig:/root/.cache/fontconfig
+      # Preserve BASH history across build container runs.
+      - /data/<%= projectName %>_${DOCKER_ENV}/bash:/root/bash
+    environment:
+      APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
