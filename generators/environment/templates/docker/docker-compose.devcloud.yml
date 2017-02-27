@@ -26,54 +26,43 @@ version: '2.1'
 services:
   # Database service
   db:
-    container_name: <%= machineName %>_${DOCKER_ENV}_db
     extends:
       file: docker-compose.yml
       service: db
-    volumes:
-      - /data/<%= projectName %>_${DOCKER_ENV}/mysql:/var/lib/mysql
   <% if (cache.external) { %>
   # Application Cache service
   cache:
-    container_name: <%= machineName %>_${DOCKER_ENV}_cache
     extends:
       file: docker-compose.yml
       service: cache
   <% } %><% if (proxy.exists) { %>
   # Reverse-proxy Cache service
   proxy:
-    container_name: <%= machineName %>_${DOCKER_ENV}_proxy
-    image: phase2/varnish:4.0
-    network_mode: "bridge"
+    extends:
+      file: docker-compose.yml
+      service: proxy
     environment:
-      VARNISH_BACKEND_HOST: www
       VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %>
     links:
       - www
   <% } if (mail.exists) { %>
   # MailHog SMTP and UI service.
   mail:
-    container_name: <%= machineName %>_${DOCKER_ENV}_mail
-    image: mailhog/mailhog
-    network_mode: "bridge"
+    extends:
+      file: docker-compose.yml
+      service: mail
     environment:
       VIRTUAL_HOST: mail-${DOCKER_ENV}-<%= host.devcloud %>
       VIRTUAL_PORT: '8025'
   <% } %>
   # Main Application service.
   www:
-    container_name: <%= machineName %>_${DOCKER_ENV}_www
-    image: <%= app.image %>
-    network_mode: "bridge"
+    extends:
+      file: docker-compose.yml
+      service: www
     environment:
-      DOCROOT: /var/www/build/html
-      PHP_MAX_EXECUTION_TIME: 60
       PHP_XDEBUG: "<%= debugMode %>"
       PHP_XHPROF: "<%= debugMode %>"
       <% if (!proxy.exists) { %>VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
     links:
       - db<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (mail.exists) { %><%= mail.docker.link %><% } %>
-    volumes:
-      - .:/var/www/
-      # /var/www/src is used for consistency with the build container.
-      - /data/<%= projectName %>_${DOCKER_ENV}/files:/var/www/src/sites/default/files
