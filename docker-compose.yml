@@ -14,32 +14,31 @@ services:
   # Run the generator-p2 generator. Extends from 'cli' service because we
   # cannot install private libraries in the Dockerfile.
   p2:
-    extends: cli
+    extends: dev
     entrypoint: [ "yo", "p2", "--no-insight", "--skip-install" ]
 
   # Run the generator-p2-env generator. Extends from 'cli' service because we
   # cannot install private libraries in the Dockerfile.
   environment:
-    extends: cli
+    extends: dev
     entrypoint: [ "yo", "p2:environment", "--no-insight", "--skip-install" ]
 
   # Run the generator-p2-env generator. Extends from 'cli' service because we
   # cannot install private libraries in the Dockerfile.
   jenkins:
-    extends: cli
+    extends: dev
     entrypoint: [ "yo", "p2:jenkins", "--no-insight", "--skip-install" ]
 
   # Run npm commands against the current development state of the generator.
   # E.g., docker-compose run --rm npm install; docker-compose run --rm npm test
-  npm:
-    extends: cli
-    entrypoint: npm
+  cli:
+    extends: dev
     working_dir: /usr/local/lib/node_modules/generator-p2
  
   # Volume mounts the working code of the repo into the Docker image.
   # This facilitates running the generator, while the cli service and those
   # extending from it are used for development.
-  cli:
+  dev:
     extends: base
     volumes:
       - .:/usr/local/lib/node_modules/generator-p2

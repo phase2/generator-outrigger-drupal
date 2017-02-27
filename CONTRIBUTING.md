@@ -12,7 +12,7 @@ npm test
 or
 
 ```bash
-docker-compose run --rm npm test
+docker-compose run --rm cli npm test
 ```
 
 ## Docker-based Development
@@ -22,7 +22,7 @@ provides Docker integration. Clone git to the version you want and run from
 inside the repo:
 
 ```bash
-docker-compose run --rm npm install
+docker-compose run --rm cli npm install
 YO_PROJECT_DIRECTORY=path/to/empty/directory docker-compose run --rm p2
 ```
 
