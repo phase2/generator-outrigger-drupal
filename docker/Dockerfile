@@ -2,15 +2,18 @@ FROM node:4-alpine
 
 ENV YO_P2_VERSION 2.2.0
 ENV PATTERN_LAB_STARTER_VERSION 2.0.0
-ENV GADGET_VERSION 1.0.0-rc1
+ENV GADGET_VERSION 1.0.0
 ENV P2_ENV_VERSION 1.2.0
+
+RUN apk update && apk upgrade && \
+    apk add --no-cache bash git openssh
 
 RUN node -v
 RUN npm -v
 RUN echo "Yeoman Doctor will warn about our npm version being outdated. It is expected and OK."
-RUN npm install --global --silent yo
-RUN npm install --global --silent generator-gadget@v$GADGET_VERSION
+RUN npm install --global --silent yo node-inspector
 RUN npm install --global --silent generator-pattern-lab-starter@v$PATTERN_LAB_STARTER_VERSION
+RUN npm install --global --silent generator-gadget@v$GADGET_VERSION
 # These generators remain private and so cannot be installed yet.
 # RUN npm install --global --silent git+ssh://bitbucket.org/phase2tech/generator-p2.git#v$YO_P2_VERSION
 # RUN npm install --global --silent git+ssh://bitbucket.org/phase2tech/generator-p2-env.git#v$P2_ENV_VERSION
@@ -32,7 +35,7 @@ WORKDIR /generated
 # Always run as the yeoman user
 USER yeoman
 
-CMD /usr/bin/env sh
+CMD /usr/bin/env bash
 
 # Run a Yeoman generator with a command such as:
 # docker build -t yeoman .

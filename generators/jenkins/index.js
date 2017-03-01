@@ -1,6 +1,6 @@
 'use strict';
 
-var yeoman = require('yeoman-generator');
+var Generator = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
@@ -8,7 +8,7 @@ var _ = require('lodash');
 var options = {},
   tokens = {};
 
-module.exports = yeoman.Base.extend({
+module.exports = Generator.extend({
   initializing: function() {
     this.pkg = require('../../package.json');
     // Have Yeoman greet the user.
@@ -27,18 +27,15 @@ module.exports = yeoman.Base.extend({
   },
 
   prompting: function() {
-    var done = this.async();
-
     var prompts = require('../lib/prompts');
     prompts = _.filter(prompts, function (item) {
       return _.isUndefined(options[item.name]);
     });
 
-    this.prompt(prompts, function (props) {
+    return this.prompt(prompts).then(function (props) {
       options = _.assign(options, props);
       options.machineName = options.projectName.replace(/\-/g, '_');
       tokens = require('../lib/tokens')(options);
-      done();
     }.bind(this));
 
     tokens = tokens || require('../lib/tokens')(options);
