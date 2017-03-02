@@ -1,13 +1,13 @@
 'use strict';
 
-var yeoman = require('yeoman-generator');
+var Generator = require('yeoman-generator');
 var path = require('path');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
 var options = {};
 
-module.exports = yeoman.Base.extend({
+module.exports = Generator.extend({
   initializing: function () {
     this.pkg = require('../../package.json');
     // Have Yeoman greet the user.
@@ -31,12 +31,8 @@ module.exports = yeoman.Base.extend({
       }
     }
 
-    // Even if replay mode is active, we need to process the prompts in case there
-    // are new ones since the last time this was asked.
-    var done = this.async();
     var prompts = [];
-
-    var gadgetPrompts = require('generator-gadget/lib/prompts.js');
+    var gadgetPrompts = require('generator-gadget/lib/prompts');
     gadgetPrompts.forEach(function (item) {
       if (_.isUndefined(options[item.name])) {
         item.default = this.config.get(item.name) || item.default;
@@ -98,8 +94,7 @@ module.exports = yeoman.Base.extend({
 
     // ensuring we only ask questions with the same `name` value once; earlier questions take priority
     prompts = _.uniqBy(prompts, 'name');
-
-    this.prompt(prompts, function (props) {
+    return this.prompt(prompts).then(function (props) {
       options = _.assign(options, props);
       // The complete distro includes callbacks that break when serialized to a file.
       options.drupalDistro = options.drupalDistro.id;
@@ -116,8 +111,9 @@ module.exports = yeoman.Base.extend({
       // If using Docker-based environment defer running install locally.
       if (options['useENV']) {
         options['skip-install'] = true;
+        // The prompt key for the PLS npm install toggle.
+        options['installDeps'] = true;
       }
-      done();
     }.bind(this));
   },
 
@@ -131,28 +127,18 @@ module.exports = yeoman.Base.extend({
         };
       }
 
-      this.composeWith('gadget', {
-        options: _.assign(options, gadgetOptions)
-      },
-      {
-        local: require.resolve('generator-gadget')
-      });
+      this.composeWith(require.resolve('generator-gadget'), _.assign(options, gadgetOptions));
     },
+
     env: function() {
       if (options['useENV']) {
-        this.composeWith('p2:environment', {
-          options: options
-        },
-        {
-          local: require.resolve('../environment')
-        });
+        this.composeWith(require.resolve('../environment'), options);
       }
     },
+
     pls: function() {
       if (options['usePLS']) {
-        this.composeWith('pattern-lab-starter', { options: options }, {
-          local: require.resolve('generator-pattern-lab-starter')
-        });
+        this.composeWith(require.resolve('generator-pattern-lab-starter'), options);
       }
     },
 

@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+##
+# Run the tests.
+#
+# Test files after the first have been mysteriously failing in what appears
+# to be async failures. By splitting the tests up into separate files we hit one
+# at a time and that stabilizes the tests somewhat.
+#
+# More recently, this has clarified to be at least partially:
+# @code
+#     Uncaught TypeError: Cannot read property 'replace' of undefined
+#     at null.<anonymous> (generators/environment/index.js:44:48)
+# @endcode
+#
+# @todo fix the tests and run with a single command in package.json.
+##
+
+set -e
+mocha --timeout=5000 test/app.test.js
+mocha --timeout=6000 test/environment.test.js
+mocha --timeout=3000 test/jenkins.test.js
+mocha --timeout=2000 test/lib.test.js

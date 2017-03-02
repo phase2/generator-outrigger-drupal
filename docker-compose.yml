@@ -17,6 +17,15 @@ services:
     extends: dev
     entrypoint: [ "yo", "p2", "--no-insight", "--skip-install" ]
 
+  p2-debug:
+    extends: dev
+    entrypoint: "/usr/local/lib/node_modules/generator-p2/bin/debug 'p2 --no-insight --skip-install'"
+    ports:
+      - "8080"
+    labels:
+      com.dnsdock.image: yo
+      com.dnsdock.name: debug
+
   # Run the generator-p2-env generator. Extends from 'cli' service because we
   # cannot install private libraries in the Dockerfile.
   environment:
@@ -34,7 +43,7 @@ services:
   cli:
     extends: dev
     working_dir: /usr/local/lib/node_modules/generator-p2
- 
+
   # Volume mounts the working code of the repo into the Docker image.
   # This facilitates running the generator, while the cli service and those
   # extending from it are used for development.

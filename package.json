@@ -13,7 +13,7 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "mocha --timeout=5000 test/app.test.js && mocha --timeout=6000 test/environment.test.js && mocha --timeout=3000 test/jenkins.test.js"
+    "test": "bin/test"
   },
   "files": [
     "README.md",
@@ -27,10 +27,10 @@
   ],
   "dependencies": {
     "chalk": "^1.0.0",
-    "generator-gadget": "1.0.0",
+    "generator-gadget": "git+https://git@github.com/phase2/generator-gadget.git#7513ec1",
     "generator-pattern-lab-starter": "^2.0.0",
     "lodash": "^4.17.4",
-    "yeoman-generator": "^0.22.5",
+    "yeoman-generator": "^1.1.0",
     "yosay": "^1.1.0"
   },
   "devDependencies": {
