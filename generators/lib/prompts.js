@@ -1,6 +1,9 @@
 'use strict';
 
 var _ = require('lodash');
+var platforms = require('./platforms');
+var docker = require('./docker');
+
 
 var prompts = [
   {
@@ -25,55 +28,82 @@ var prompts = [
   },
   {
     type: 'list',
+    name: 'hosting',
+    message: 'Choose your hosting platform:',
+    choices: function(answers) {
+      return platforms.toPromptOptions(answers);
+    },
+    default: 'outrigger'
+  },
+  {
+    type: 'list',
     name: 'webserver',
     message: 'Choose your webserver:',
-    choices: [
-      'apache',
-      'custom'
-    ],
-    default: 'apache'
+    choices: function (answers) {
+      var options = docker.imageOptions(answers.hosting, 'www');
+      options.push('custom');
+      return options;
+    }
   },
   {
     name: 'webImage',
-    message: 'Specify your webserver Docker image:',
-    default: 'phase2/apache24php55',
+    message: 'Specify an override of the webserver Docker image (default is an example, not necessarily the image used.):',
+    default: 'phase2/apache-php:php70',
     when: function(answers) {
       return answers.webserver == 'custom';
     },
     validate: function(input) {
-      if (_.isString(input)) {
-        return true;
+      if (!_.isString(input) || input.length == 0 || input.search(' ') !== -1) {
+        return 'A valid docker image identifier is required.';
       }
 
-      return 'A validate docker image identifier is required.';
+      return true;
     }
   },
   {
     type: 'list',
     name: 'cacheInternal',
     message: 'Choose a cache backend:',
-    default: 'memcache',
-    choices: [
-      'memcache',
-      'redis',
-      'database'
-    ]
+    choices: function(answers) {
+      var options = docker.imageOptions(answers.hosting, 'cache');
+      options.push('database');
+      return options;
+    },
+    default: function (answers) {
+      if (answers.drupalDistroVersion == '8.x') {
+        return 'database';
+      }
+      return 'memcache';
+    }
+
   },
   {
     type: 'list',
     name: 'proxyCache',
     message: 'Choose a proxy cache:',
-    default: 'none',
-    choices: [
-      'none',
-      'varnish'
-    ]
+    choices: function(answers) {
+      var options = docker.imageOptions(answers.hosting, 'proxy');
+      options.push('none');
+      return options;
+    },
+    when: function (answers) {
+      return docker.hasService(answers.hosting, 'proxy');
+    },
+    default: 'none'
   },
   {
-    type: 'confirm',
-    name: 'mailhog',
-    message: 'Use MailHog for email testing?',
-    default: false
+    type: 'list',
+    name: 'mail',
+    message: 'Choose an email handling approach:',
+    choices: function(answers) {
+      var options = docker.imageOptions(answers.hosting, 'mail');
+      options.push('none');
+      return options;
+    },
+    when: function (answers) {
+      return docker.hasService(answers.hosting, 'mail');
+    },
+    default: 'none'
   },
   {
     type: 'checkbox',
@@ -116,7 +146,8 @@ var prompts = [
     name: 'gitRepoUrl',
     message: 'URL to the Git Repo for checkout by Jenkins and other tools:',
     default: function(answers) {
-      return 'git@bitbucket.org:phase2tech/' + answers.projectName + '.git';
+      var gitBaseUrl = platforms.load()[answers.hosting].tools.git.baseUrl;
+      return gitBaseUrl + answers.projectName + '.git';
     }
   },
   {
