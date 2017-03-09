@@ -143,7 +143,7 @@ if [ "$UPDATE" == 0 ]; then
   # Dev triggers a development build of Open Atrium
   cmd "docker-compose run --rm cli \"grunt install --no-db-load --force\""
 else
-  echoInfo "`grunt update` is defined in Gruntconfig.json"
+  echoInfo "'grunt update' is defined in Gruntconfig.json"
   cmd "docker-compose run --rm cli grunt update"
 fi
 
