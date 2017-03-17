@@ -127,8 +127,10 @@ export DOCKER_ENV
 cmd "docker-compose -f docker-compose$COMPOSE_EXT.yml up -d <% if(cache.external) { %>cache <% } %>db"
 
 # Install dependencies and run main application build.
-# Run grunt with --force to ignore errors.
+# Run grunt with --force to ignore errors. This won't help if the errors bail the build.
 # --unsafe-perm ensures dispatch to theme-related operations can still run as root for Docker.
+echoInfo "When grunt commands fail they suggest running with '--force'."
+echoInfo "This just suppresses errors and is unlikely to fix issues causing your build process to fail."
 cmd "docker-compose run --rm cli \"npm install --unsafe-perm && grunt --timer --quiet ${NO_VALIDATE}\""
 
 # Now safe to activate web container to support end-to-end testing.
@@ -155,3 +157,4 @@ echoSuccess "Application Setup Complete: "
 URL=$(docker-compose -f build$COMPOSE_EXT.yml run --rm drush sa @<%= projectName %> --format=list --fields=uri)
 echo "$URL"
 echo
+
