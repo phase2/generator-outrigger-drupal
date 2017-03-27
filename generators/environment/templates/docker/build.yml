@@ -34,6 +34,19 @@ services:
     entrypoint: [ "/init", "/var/www/vendor/bin/drupal --ansi" ]
     working_dir: /var/www/build/html
 
+
+   <% if (pl) {   
+  # Container for starting a cli to run PL in the theme
+  # Usage: docker-compose -f build.yml run --rm pl
+  pl:
+    extends:
+      service: operational
+    labels:
+      com.dnsdock.name: pl
+      com.dnsdock.image:  <%= buildImage %>
+    working_dir: /var/www/src/themes/ <%= buildImage %>
+    command: npm run start } %>
+
   # Container for running grunt in the docroot.
   # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm grunt <command>
   grunt:
@@ -106,6 +119,10 @@ services:
       GDT_DOMAIN: <%= host.local %>
       # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
       NODE_VERSION: 4
+      <% if (pl) { 
+      # Allow for pattern lab compilation need detection with reasonable performance from
+      # within the build container
+      CHOKIDAR_USEPOLLING: 1 } %>
       # Set to "true" to load xdebug configuration. Note this will cause significant composer
       # performance degradation.
       PHP_XDEBUG: "false"
