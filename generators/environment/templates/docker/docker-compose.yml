@@ -12,7 +12,7 @@ services:
   # Database service
   db:
     container_name: <%= machineName %>_${DOCKER_ENV:-local}_db
-    image: phase2/mariadb
+    image: <%= db.image %>
     environment:
       MYSQL_DATABASE: <%= machineName %>_drupal
     volumes:
@@ -34,7 +34,7 @@ services:
   # Reverse-proxy Cache service
   proxy:
     container_name: <%= machineName %>_${DOCKER_ENV:-local}_proxy
-    image: phase2/varnish:4.0
+    image: <%= proxy.image %>
     network_mode: "bridge"
     environment:
       VARNISH_BACKEND_HOST: www
@@ -47,7 +47,7 @@ services:
   # MailHog SMTP and UI service.
   mail:
     container_name: <%= machineName %>_${DOCKER_ENV:-local}_mail
-    image: mailhog/mailhog
+    image: <%= mail.image %>
     network_mode: "bridge"
     labels:
       com.dnsdock.name: mail
