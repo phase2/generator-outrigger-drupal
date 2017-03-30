@@ -5,11 +5,11 @@
       "short": "Apache 2.4",
       "options": {
         "drupal": {
-          "^8.3": "phase2/apache-php:php71",
-          "^8": "phase2/apache-php:php70",
-          "*": "phase2/apache-php:php56"
+          "^8.3": "outrigger/apache-php:php71",
+          "^8": "outrigger/apache-php:php70",
+          "*": "outrigger/apache-php:php56"
         },
-        "default": "phase2/apache-php:php71"
+        "default": "outrigger/apache-php:php71"
       }
     }
   },
@@ -18,11 +18,11 @@
       "label": "Default",
       "options": {
         "drupal": {
-          "^8.3.0-beta1": "phase2/devtools-build:php71",
-          "^8": "phase2/devtools-build:php70",
-          "*": "phase2/devtools-build:php56"
+          "^8.3.0-beta1": "outrigger/build:php71",
+          "^8": "outrigger/build:php70",
+          "*": "outrigger/build:php56"
         },
-        "default": "phase2/devtools-build:php71"
+        "default": "outrigger/build:php71"
       }
     }
   },
@@ -30,13 +30,13 @@
     "memcache": {
       "label": "Memcache",
       "options": {
-        "default": "phase2/memcache"
+        "default": "outrigger/memcache"
       }
     },
     "redis": {
       "label": "Redis",
       "options": {
-        "default": "phase2/redis"
+        "default": "outrigger/redis"
       }
     }
   },
@@ -44,7 +44,11 @@
     "mariadb": {
       "label": "MariaDB",
       "options": {
-        "default": "phase2/mariadb"
+        "drupal": {
+          "^8": "outrigger/mariadb:10.1",
+          "*": "outrigger/mariadb:5.5"
+        },
+        "default": "outrigger/mariadb:10.1"
       }
     }
   },
@@ -52,7 +56,7 @@
     "varnish": {
       "label": "Varnish",
       "options": {
-        "default": "phase2/varnish:4.0"
+        "default": "outrigger/varnish:4.0"
       }
     }
   },
