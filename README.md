@@ -13,6 +13,13 @@ best practices.
 
 Look up the latest tagged version of the generator and replace `{version}` below.
 
+Look up the latest tagged version by doing:
+```
+git clone git@bitbucket.org:phase2tech/generator-p2.git
+cd generator-p2.git
+git describe HEAD 
+```
+
 ```bash
 npm install --global git+ssh://bitbucket.org/phase2tech/generator-p2.git#{version}
 ```
