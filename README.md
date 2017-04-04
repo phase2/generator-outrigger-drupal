@@ -12,16 +12,11 @@ best practices.
 ## Installation
 
 
-Look up the latest tagged version by doing:
-```
+Install the latest tagged version by doing:
+```bash
 git clone git@bitbucket.org:phase2tech/generator-p2.git
 cd generator-p2.git
-git describe HEAD 
-```
-
-Install the npm module and replace `{version}` below with the tag
-```bash
-npm install --global git+ssh://bitbucket.org/phase2tech/generator-p2.git#{version}
+npm install --global git+ssh://bitbucket.org/phase2tech/generator-p2.git#$(git describe HEAD)
 ```
 
 ## Run the Generator
