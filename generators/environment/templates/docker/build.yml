@@ -36,15 +36,16 @@ services:
 
 
    <% if (usePLS) { %>
-  # Container for starting a cli to run PL in the theme
+  # Container to get Pattern Lab compiled, running, and watched from inside the theme folder in one step.
   # Usage: docker-compose -f build.yml run --rm pl
+  # Note: For faster file-watching, run: rig watch src/themes/themeName after Pattern Lab builds.
   pl:
     extends:
       service: operational
     labels:
       com.dnsdock.name: pl
       com.dnsdock.image:  <%= buildImage %>
-    working_dir: /var/www/src/themes/ <%= buildImage %>
+    working_dir: /var/www/src/themes/ <%= themeName %>
     command: npm run start
   <% } %>
 
