@@ -76,12 +76,6 @@ var prompts = [
     default: false
   },
   {
-    type: 'confirm',
-    name: 'pl',
-    message: 'Use Pattern Lab for the theme?',
-    default: false
-  },
-  {
     type: 'checkbox',
     name: 'environments',
     message: 'Select default standing environments:',
