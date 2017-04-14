@@ -198,9 +198,7 @@ module.exports = Generator.extend({
 
       if (!pkg['scripts']['logs']) {
         // Logs do not output to stdout, so are only discoverable in this obscure location.
-        pkg.scripts.logs = 'docker exec -it '
-          + options.machineName
-          + '_local_www less +F /opt/rh/php55/root/var/log/php-fpm/error.log';
+        pkg.scripts.logs = 'docker-compose logs -ft --tail=10';
       }
 
       this.fs.writeJSON('package.json', pkg);
