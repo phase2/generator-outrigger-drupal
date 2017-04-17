@@ -106,7 +106,7 @@ services:
       APP_DOMAIN: <%= host.local %>
       GDT_DOMAIN: <%= host.local %>
       # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
-      NODE_VERSION: 4
+      NODE_VERSION: 6
       # Set to "true" to load xdebug configuration. Note this will cause significant composer
       # performance degradation.
       PHP_XDEBUG: "false"
