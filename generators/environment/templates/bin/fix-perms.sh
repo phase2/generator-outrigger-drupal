@@ -13,3 +13,4 @@ set -x
 mkdir -p /var/www/src/sites/default/files/private
 chown -R apache:apache /var/www/src/sites/default/files
 chmod 755 /var/www/src/sites/default/files
+chmod 755 /var/www/src/sites/default
