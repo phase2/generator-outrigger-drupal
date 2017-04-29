@@ -110,4 +110,6 @@ services:
       # Set to "true" to load xdebug configuration. Note this will cause significant composer
       # performance degradation.
       PHP_XDEBUG: "false"
+      # Include the DOCKER_ENV so Drupal settings can be aware of environment.
+      DOCKER_ENV: ${DOCKER_ENV:-local}
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: <%= host.local %><% } %>
