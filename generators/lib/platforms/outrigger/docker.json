@@ -1,0 +1,71 @@
+{
+  "www": {
+    "apache": {
+      "label": "Apache 2.4 mpm_prefork w/ PHP-FPM",
+      "short": "Apache 2.4",
+      "options": {
+        "drupal": {
+          "^8.3": "outrigger/apache-php:php71",
+          "^8": "outrigger/apache-php:php70",
+          "*": "outrigger/apache-php:php56"
+        },
+        "default": "outrigger/apache-php:php71"
+      }
+    }
+  },
+  "build": {
+    "default": {
+      "label": "Default",
+      "options": {
+        "drupal": {
+          "^8.3.0-beta1": "outrigger/build:php71",
+          "^8": "outrigger/build:php70",
+          "*": "outrigger/build:php56"
+        },
+        "default": "outrigger/build:php71"
+      }
+    }
+  },
+  "cache": {
+    "memcache": {
+      "label": "Memcache",
+      "options": {
+        "default": "outrigger/memcache"
+      }
+    },
+    "redis": {
+      "label": "Redis",
+      "options": {
+        "default": "outrigger/redis"
+      }
+    }
+  },
+  "db": {
+    "mariadb": {
+      "label": "MariaDB",
+      "options": {
+        "drupal": {
+          "^8": "outrigger/mariadb:10.1",
+          "*": "outrigger/mariadb:5.5"
+        },
+        "default": "outrigger/mariadb:10.1"
+      }
+    }
+  },
+  "proxy": {
+    "varnish": {
+      "label": "Varnish",
+      "options": {
+        "default": "outrigger/varnish:4.0"
+      }
+    }
+  },
+  "mail": {
+    "mailhog": {
+      "label": "MailHog",
+      "options": {
+        "default": "mailhog/mailhog"
+      }
+    }
+  }
+}

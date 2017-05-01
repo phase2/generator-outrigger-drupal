@@ -45,14 +45,17 @@ describe('p2:jenkins', function() {
       test.run(path.join(__dirname, '../generators/jenkins'))
         .inDir(appDir)
         .withPrompts({
-          cacheInternal: 'database',
-          drupalDistroVersion: '8.x',
-          // This could be excluded, but would get the temp base directory.
-          domain: 'drupal8',
-          environments: [],
           projectName: 'drupal8',
+          drupalDistroVersion: '8.x',
+          hosting: 'outrigger',
+          webserver: 'apache',
+          cacheInternal: 'database',
           proxyCache: 'none',
-          webserver: 'apache'
+          mail: 'none',
+          environments: [],
+          domain: 'drupal8',
+          gitRepoUrl: "git@bitbucket.org:phase2tech/drupal8.git",
+          flowdockApiKey: ""
         })
         .withOptions({
           'skip-install': true,
@@ -72,11 +75,17 @@ describe('p2:jenkins', function() {
       test.run(path.join(__dirname, '../generators/jenkins'))
         .inDir(appDir)
         .withPrompts({
-          drupalDistroVersion: '8.x',
-          // This could be excluded, but would get the temp base directory.
-          domain: 'drupal8',
-          environments: [ 'dev', 'qa', 'review' ],
           projectName: 'drupal8',
+          drupalDistroVersion: '8.x',
+          hosting: 'outrigger',
+          webserver: 'apache',
+          cacheInternal: 'memcache',
+          proxyCache: 'varnish',
+          mail: 'mailhog',
+          environments: [ 'dev', 'qa', 'review' ],
+          domain: 'drupal8',
+          gitRepoUrl: "git@bitbucket.org:phase2tech/drupal8.git",
+          flowdockApiKey: ""
         })
         .withOptions({
           'skip-install': true,

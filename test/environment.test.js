@@ -45,19 +45,23 @@ describe('p2:environment', function() {
       test.run(path.join(__dirname, '../generators/environment'))
         .inDir(appDir)
         .withPrompts({
-          cacheInternal: 'database',
-          drupalDistroVersion: '8.x',
-          // This could be excluded, but would get the temp base directory.
-          domain: 'drupal8',
-          environments: [],
           projectName: 'drupal8',
+          drupalDistroVersion: '8.x',
+          hosting: 'outrigger',
+          webserver: 'apache',
+          cacheInternal: 'database',
           proxyCache: 'none',
-          webserver: 'apache'
+          mail: 'none',
+          environments: [],
+          domain: 'drupal8',
+          gitRepoUrl: "git@bitbucket.org:phase2tech/drupal8.git",
+          flowdockApiKey: ""
         })
         .withOptions({
           'skip-install': true,
           force: true
         })
+        .on('error', function(err) { console.error(err); })
         .on('end', done);
     });
 
@@ -89,7 +93,10 @@ describe('p2:environment', function() {
           assert.ok(manifest['services']['www'] && manifest['services']['www']['image']);
         });
         it('should use apache-php:php70 with Drupal 8', function() {
-          assert.ok(manifest['services']['www']['image'] == 'phase2/apache-php:php70');
+          assert.ok(manifest['services']['www']['image'] == 'outrigger/apache-php:php70');
+        });
+        it('should use mariadb:10.1 with Drupal 8', function() {
+          assert.ok(manifest['services']['db']['image'] == 'outrigger/mariadb:10.1');
         });
         it('should not have a cache service', function() {
           assert.ok(!manifest['services']['cache']);
@@ -109,15 +116,17 @@ describe('p2:environment', function() {
       test.run(path.join(__dirname, '../generators/environment'))
         .inDir(appDir)
         .withPrompts({
-          cacheInternal: 'memcache',
-          drupalDistroVersion: '8.x',
-          // This could be excluded, but would get the temp base directory.
-          domain: 'drupal8',
-          environments: [ 'dev', 'qa', 'review' ],
-          mailhog: true,
           projectName: 'drupal8',
+          drupalDistroVersion: '8.x',
+          hosting: 'outrigger',
+          webserver: 'apache',
+          cacheInternal: 'memcache',
           proxyCache: 'varnish',
-          webserver: 'apache'
+          mail: 'mailhog',
+          environments: [ 'dev', 'qa', 'review' ],
+          domain: 'drupal8',
+          gitRepoUrl: "git@bitbucket.org:phase2tech/drupal8.git",
+          flowdockApiKey: ""
         })
         .withOptions({
           'skip-install': true,
@@ -150,7 +159,7 @@ describe('p2:environment', function() {
         });
 
         it('should use the PHP7 build container with Drupal 8', function() {
-          assert.ok(manifest['services']['base']['image'] == 'phase2/devtools-build:php70');
+          assert.ok(manifest['services']['base']['image'] == 'outrigger/build:php70');
         });
 
       });
@@ -180,13 +189,16 @@ describe('p2:environment', function() {
         });
         describe('Docker Images', function() {
           it('should use apache-php with Drupal 8', function() {
-            assert.ok(manifest['services']['www']['image'] == 'phase2/apache-php:php70');
+            assert.ok(manifest['services']['www']['image'] == 'outrigger/apache-php:php70');
+          });
+          it('should use mariadb with Drupal 8', function() {
+            assert.ok(manifest['services']['db']['image'] == 'outrigger/mariadb:10.1');
           });
           it('should use memcache for internal caching', function() {
-            assert.ok(manifest['services']['cache'] && manifest['services']['cache']['image'] == 'phase2/memcache');
+            assert.ok(manifest['services']['cache'] && manifest['services']['cache']['image'] == 'outrigger/memcache');
           });
           it('should use Varnish for reverse-proxy caching', function() {
-            assert.ok(manifest['services']['proxy'] && manifest['services']['proxy']['image'] == 'phase2/varnish:4.0');
+            assert.ok(manifest['services']['proxy'] && manifest['services']['proxy']['image'] == 'outrigger/varnish:4.0');
           });
         });
       });
@@ -231,6 +243,36 @@ describe('p2:environment', function() {
           });
         });
       });
+    });
+  });
+
+  describe('minimal configuration - Acquia', function() {
+    before(function(done) {
+      test.run(path.join(__dirname, '../generators/environment'))
+        .inDir(appDir)
+        .withPrompts({
+          projectName: 'drupal8',
+          drupalDistroVersion: '8.x',
+          hosting: 'acquia',
+          webserver: 'apache',
+          cacheInternal: 'database',
+          proxyCache: 'none',
+          mail: 'none',
+          environments: [],
+          domain: 'drupal8',
+          gitRepoUrl: "git@bitbucket.org:phase2tech/drupal8.git",
+          flowdockApiKey: ""
+        })
+        .withOptions({
+          'skip-install': true,
+          force: true
+        })
+        .on('end', done);
+    });
+
+    it('should have a minimal set of files', function() {
+      assert.file(files.minimum);
+      assert.file(files.minimumJenkins);
     });
   });
 });

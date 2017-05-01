@@ -1,0 +1,57 @@
+{
+  "www": {
+    "apache": {
+      "label": "Apache 2.4 mpm_prefork w/ PHP-FPM",
+      "short": "Apache 2.4",
+      "options": {
+        "default": "outrigger/apache-php:php56"
+      }
+    }
+  },
+  "build": {
+    "default": {
+      "label": "Default",
+      "options": {
+        "default": "outrigger/build:php56"
+      }
+    }
+  },
+  "cache": {
+    "memcache": {
+      "label": "Memcache",
+      "options": {
+        "default": "outrigger/memcache"
+      }
+    },
+    "redis": {
+      "label": "Redis",
+      "options": {
+        "default": "outrigger/redis"
+      }
+    }
+  },
+  "db": {
+    "mariadb": {
+      "label": "MariaDB",
+      "options": {
+        "default": "outrigger/mariadb:5.5"
+      }
+    }
+  },
+  "proxy": {
+    "varnish": {
+      "label": "Varnish",
+      "options": {
+        "default": "outrigger/varnish:4.0"
+      }
+    }
+  },
+  "mail": {
+    "mailhog": {
+      "label": "MailHog",
+      "options": {
+        "default": "mailhog/mailhog"
+      }
+    }
+  }
+}

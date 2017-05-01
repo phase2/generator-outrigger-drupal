@@ -23,12 +23,15 @@ module.exports = Generator.extend({
   prompting: function () {
     if (options['replay']) {
       options = _.assign(options, this.config.getAll());
-      // Ensure the drupalDistro plugin is loaded for this value when sidestepping
-      // the prompt filter.
-      if (options.hasOwnProperty('drupalDistro') && typeof options.drupalDistro === 'string') {
-        var distros = require('generator-gadget/app/distros');
-        options.drupalDistro = distros[options.drupalDistro];
-      }
+      // Backwards compatibility for mail handling prompt config.
+      options.mail = options.mailhog ? 'mailhog' : 'none';
+    }
+
+    // Ensure the drupalDistro plugin is loaded for this value when sidestepping
+    // the prompt filter.
+    if (options.hasOwnProperty('drupalDistro') && typeof options.drupalDistro === 'string') {
+      var distros = require('generator-gadget/app/distros');
+      options.drupalDistro = distros[options.drupalDistro];
     }
 
     var prompts = [];
@@ -126,7 +129,6 @@ module.exports = Generator.extend({
           "validate": "npm run test --unsafe-perm"
         };
       }
-
       this.composeWith(require.resolve('generator-gadget'), _.assign(options, gadgetOptions));
     },
 
@@ -143,19 +145,15 @@ module.exports = Generator.extend({
     },
 
     readme: function() {
-      var tokens = require('generator-gadget/lib/util').tokens(options);
-      tokens = _.merge(options, tokens);
+      var tokens = require('../lib/tokens')(options);
       tokens.useENV = options['useENV'];
-      // Yeoman's dependencies cannot handle dynamic partial includes.
-      // This is not currently used.
-      tokens.gadgetPath = path.resolve(require.resolve('generator-gadget'), 'app/templates/README.md');
-
       this.fs.copyTpl(
         this.templatePath('README.md'),
         this.destinationPath('README.md'),
         tokens
       );
     }
+
   },
 
   install: function () {

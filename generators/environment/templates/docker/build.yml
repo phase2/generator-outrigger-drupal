@@ -106,21 +106,22 @@ services:
       # Local backups are managed within the project directory. This varies by
       # platform.
       - ./build/backups:/opt/backups
-      # Persist the cache directories associated with various build tools.
+      # Persist the cache directories associated with various tools.
       - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/drush:/root/.drush/cache
       - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/composer:/root/.composer/cache
       - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/npm:/root/.npm
       - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/bower:/root/.cache/bower
       - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/fontconfig:/root/.cache/fontconfig
+      - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/behat_gherkin:/tmp/behat_gherkin_cache
       # SSH key grants read access to private Git repositories.
-      - ~/.ssh/${DEVTOOLS_SSH_KEY:-id_rsa}:/root/.ssh/id_rsa
+      - ~/.ssh/${OUTRIGGER_SSH_KEY:-id_rsa}:/root/.ssh/outrigger.key
       # Preserve BASH history across build container runs.
       - /data/<%= projectName %>_${DOCKER_ENV:-local}/bash:/root/bash
     environment:
       APP_DOMAIN: <%= host.local %>
       GDT_DOMAIN: <%= host.local %>
       # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
-      NODE_VERSION: 4
+      NODE_VERSION: 6
       <% if (usePLS) { %>
       # Allow for pattern lab compilation need detection with reasonable performance from
       # within the build container.
@@ -130,4 +131,8 @@ services:
       # Set to "true" to load xdebug configuration. Note this will cause significant composer
       # performance degradation.
       PHP_XDEBUG: "false"
+      # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
+      GDT_QUIET: 1
+      # Include the DOCKER_ENV so Drupal settings can be aware of environment.
+      DOCKER_ENV: ${DOCKER_ENV:-local}
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: <%= host.local %><% } %>

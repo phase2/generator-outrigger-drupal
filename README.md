@@ -1,4 +1,4 @@
-# Yo P2! â€“ the Phase2 Site Generator
+# Yo P2! – the Phase2 Site Generator
 
 > Yeoman generator that weaves together multiple generators, tools, and Phase2
 best practices to kick off Drupal projects in style.
@@ -11,7 +11,8 @@ best practices.
 
 ## Installation
 
-Look up the latest tagged version of the generator and replace `{version}` below.
+1. Identify the latest release by checking the latest tag in this repo.
+2. Run the following command, replacing {version} with the tag name you wish to install.
 
 ```bash
 npm install --global git+ssh://bitbucket.org/phase2tech/generator-p2.git#{version}

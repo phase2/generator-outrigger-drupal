@@ -4,7 +4,11 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
 
-var util;
+var dockerComposeLink = require('../lib/util').dockerComposeLink;
+var drupalStableRelease = require('generator-gadget/generators/lib/drupalProjectVersion').latestReleaseStable;
+var createVersionFromRange = require('../lib/util').createVersionFromRange;
+
+var env;
 var options = {},
   tokens = {};
 
@@ -23,7 +27,7 @@ module.exports = Generator.extend({
     }, this.options);
 
     options['ciHost'] = options['ciHost'] || 'ci2.p2devcloud.com';
-    util = require('../lib/util')(options);
+    env = require('../lib/env')(options);
   },
 
   prompting: function() {
@@ -32,24 +36,71 @@ module.exports = Generator.extend({
       return _.isUndefined(options[item.name]);
     });
     return this.prompt(prompts).then(function (props) {
+      // Maintain backwards compatbility on --replay for projects that do not
+      // have a hosting prompt saved.
+      if (!props.hosting) {
+        props.hosting = 'outrigger';
+      }
       options = _.assign(options, props);
       options.machineName = options.projectName.replace(/\-/g, '_');
-      tokens = require('../lib/tokens')(options);
     }.bind(this));
 
+  },
+
+  // The default priority fires after configuring, which means we can now rely
+  // on the presence of other composed generators to have completed configuring
+  // steps.
+  default: {
+    tokenSetup: function() {
+      var composer = this.fs.readJSON('composer.json');
+      // Fake a default core version range as a fallback if we do not have
+      // composer data that has a core version. Or if the environment generator
+      // is run in a project directory that lacks a composer.json.
+      var coreVersionRange = '^' + options.drupalDistroVersion;
+      if (composer && composer.require && composer.require['drupal/core']) {
+        coreVersionRange = composer.require['drupal/core'];
+      }
+
+      // Fallback version if we are stymied from computing a better version number.
+      options.drupalCoreRelease = '0.0.0';
+      // At this point we have a complete composer.json. If a distro has specific
+      // changes to make to the drupal/core version, they will be in place and
+      // can be relied on as a data source.
+      if (_.isString(coreVersionRange)) {
+        options.drupalCoreRelease = createVersionFromRange(coreVersionRange);
+      }
+      // If the composer.json did not have a version string and we are "online",
+      // we can pull the latest stable Drupal release for our major version.
+      else if (!options.offline) {
+        var done = this.async();
+        drupalStableRelease('drupal', options.drupalDistroVersion, done,
+          function(err, version, done) {
+            if (err) {
+              this.log.error(err);
+              return done(err);
+            }
+            options.drupalCoreRelease = version;
+            done();
+          }.bind(this)
+        );
+      }
+
+      tokens = require('../lib/tokens')(options);
+    }
   },
 
   writing: {
     dockerComposeLocal: function() {
       tokens.dockerComposeExt = '';
-      tokens.cache.docker.extLink = "\n      - " + options.machineName + "_local_cache:cache";
-      tokens.db.docker.extLink = options.machineName + "_local_db:db";
+      tokens.cache.docker.extLink = dockerComposeLink(options.machineName + '_${DOCKER_ENV:-local}_cache:cache');
+      tokens.db.docker.extLink = options.machineName + '_${DOCKER_ENV:-local}_db:db';
 
       this.fs.copyTpl(
         this.templatePath('docker/docker-compose.yml'),
         this.destinationPath('docker-compose.yml'),
         tokens
       );
+
       this.fs.copyTpl(
         this.templatePath('docker/build.yml'),
         this.destinationPath('build.yml'),
@@ -59,7 +110,7 @@ module.exports = Generator.extend({
 
     dockerComposeDevcloud: function() {
       tokens.dockerComposeExt = 'devcloud.';
-      tokens.cache.docker.extLink = "\n      - " + options.machineName + "_${DOCKER_ENV}_cache:cache";
+      tokens.cache.docker.extLink = dockerComposeLink(options.machineName + "_${DOCKER_ENV}_cache:cache");
       tokens.db.docker.extLink = options.machineName + "_${DOCKER_ENV}_db:db";
 
       this.fs.copyTpl(
@@ -147,9 +198,7 @@ module.exports = Generator.extend({
 
       if (!pkg['scripts']['logs']) {
         // Logs do not output to stdout, so are only discoverable in this obscure location.
-        pkg.scripts.logs = 'docker exec -it '
-          + options.machineName
-          + '_local_www less +F /opt/rh/php55/root/var/log/php-fpm/error.log';
+        pkg.scripts.logs = 'docker-compose logs -ft --tail=10';
       }
 
       this.fs.writeJSON('package.json', pkg);
@@ -176,7 +225,7 @@ module.exports = Generator.extend({
 
       // Backups configuration is introduced by p2-env.
       gcfg.project.backups = {
-        url: 'http://' + util.virtualHost(false, 'backups') + '/' + options.projectName,
+        url: 'http://' + env.virtualHost(false, 'backups') + '/' + options.projectName,
         env: 'int'
       };
 
