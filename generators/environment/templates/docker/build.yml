@@ -42,12 +42,12 @@ services:
   # You can also pass any argument the gulp command within the theme accepts as an argument here.
   theme:
     extends:
-      service: operational
+      service: base
     labels:
       com.dnsdock.name: theme
       com.dnsdock.image:  <%= host.local %>
     working_dir: /var/www/src/themes/<%= themeName %>
-    command: ./node_modules/.bin/gulp
+    entrypoint: [ "/init", "./node_modules/.bin/gulp" ]
   <% } -%>
 
   # Container for running grunt in the docroot.
