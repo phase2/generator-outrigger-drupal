@@ -34,7 +34,7 @@ services:
     entrypoint: [ "/init", "/var/www/vendor/bin/drupal --ansi" ]
     working_dir: /var/www/build/html
 
-   <% if (usePLS) { %>
+  <% if (usePLS) { %>
   # Container to get Pattern Lab compiled, running, and watched from inside the theme folder in one step.
   # Usage: docker-compose -f build.yml run --rm theme
   # Note: For faster file-watching, run: rig watch src/themes/themeName after Pattern Lab builds.
