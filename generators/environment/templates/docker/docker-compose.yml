@@ -16,7 +16,7 @@ services:
     environment:
       MYSQL_DATABASE: <%= machineName %>_drupal
     volumes:
-      - /data/<%= projectName %>_${DOCKER_ENV:-local}/mysql:/var/lib/mysql
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/mysql:/var/lib/mysql
     network_mode: "bridge"
     labels:
       com.dnsdock.name: db
@@ -70,7 +70,7 @@ services:
     volumes:
       - .:/var/www/
       # /var/www/src is used for consistency with the build container.
-      - /data/<%= projectName %>_${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
     labels:
       com.dnsdock.name: <% if (proxy.exists) { %>app<% } else { %>www<% } %>
       com.dnsdock.image: <%= domain %>
