@@ -48,7 +48,7 @@ services:
       com.dnsdock.image:  <%= host.local %>
     working_dir: /var/www/src/themes/<%= themeName %>
     command: ./node_modules/.bin/gulp
-  <% } %>
+  <% } -%>
 
   # Container for running grunt in the docroot.
   # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm grunt <command>
@@ -128,7 +128,7 @@ services:
       # within the build container.
       # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
       CHOKIDAR_USEPOLLING: 1
-      <% } %>
+      <% } -%>
       # Set to "true" to load xdebug configuration. Note this will cause significant composer
       # performance degradation.
       PHP_XDEBUG: "false"
