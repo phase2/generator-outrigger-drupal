@@ -111,7 +111,7 @@ services:
       # performance degradation.
       PHP_XDEBUG: "false"
       # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
-      GDT_QUIET=1
+      GDT_QUIET: 1
       # Include the DOCKER_ENV so Drupal settings can be aware of environment.
       DOCKER_ENV: ${DOCKER_ENV:-local}
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: <%= host.local %><% } %>
