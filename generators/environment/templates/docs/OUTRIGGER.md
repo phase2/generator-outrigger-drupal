@@ -1,20 +1,20 @@
-# DevTools and Docker
+# Outrigger and Docker
 
-> Set up and work with your project via DevTools, our local Docker implementation.
+> Set up and work with your project via Outrigger, our local Docker implementation.
 
 Running this project on Docker streamlines the installation steps.
 The Docker configuration in this repository handles all necessary environment
 setup for local development or testing environments.
 
-Local environments assume the use of Phase2's "DevTools" utility to manage the
+Local environments assume the use of Phase2's "Outrigger" system to manage the
 filesystem, DNS, and any necessary virtualization. Read more about this in the
-[Phase2 DevTools documentation](http://phase2.github.io/devtools/). (Linux users
-should follow the [Linux instructions](http://phase2.github.io/devtools/getting-started/linux-installation/)
+[Phase2 Outrigger documentation](http://docs.outrigger.sh). (Linux users
+should follow the [Linux instructions](http://docs.outrigger.sh/getting-started/linux-installation/)
 for simple things like DNS consistency with macOS users.)
 
 ## First-time Application Setup
 
-Once you have a working DevTools + Docker environment, you can have a
+Once you have a working Outrigger + Docker environment, you can have a
 locally-hosted, web-browsable site instance in just a few minutes with two
 commands.
 
@@ -33,14 +33,14 @@ This command has a number of options, run `bin/start.sh --help` to see available
 
 ## Daily Routine
 
-* `devtools start`
-* eval "$(devtools config)"
+* `rig start`
+* eval "$(rig config)"
 * `cd path/to/project`
 * `docker-compose up -d`
 * [PRODUCTIVE!]
-* `devtools stop`
+* `rig stop`
 
-You can leave devtools running day to day, but performance of the environment tends to degrade, so a clean stop, or morning `devtools restart` will help.
+You can leave rig running day to day, but performance of the environment tends to degrade, so a clean stop, or morning `rig restart` will help.
 
 ## Running Commands in the Build Container
 
@@ -86,6 +86,7 @@ These operations are for local development.
 * **Website:** [http://www.<%= domain %>.vm](http://www.<%= domain %>.vm)
 <% if (proxy.exists) { %>* **Website w/out Varnish:** [http://app.<%= domain %>.vm](http://app.<%= domain %>.vm)<% } %>
 <% if (mail.exists) { %>* **MailHog Service:** http://mail.<%= domain %>.vm](http://mail.<%= domain %>.vm)<% } %>
+<% if (usePLS) { %>* **Patternlab:** http://theme.<%= domain %>.vm/pattern-lab/public](http://theme.<%= domain %>.vm/pattern-lab/public)<% } %>
 * **Database:** `db.<%= domain %>.vm`
     * **User**: `admin`
     * **Password**: `admin`
