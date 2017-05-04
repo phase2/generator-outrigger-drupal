@@ -34,6 +34,22 @@ services:
     entrypoint: [ "/init", "/var/www/vendor/bin/drupal --ansi" ]
     working_dir: /var/www/build/html
 
+  <% if (usePLS) { %>
+  # Container to get Pattern Lab compiled, running, and watched from inside the theme folder in one step.
+  # Usage: docker-compose -f build.yml run --rm theme
+  # Note: For faster file-watching, run: rig watch src/themes/themeName after Pattern Lab builds.
+  # You can also pass any argument the gulp command within the theme accepts as an argument here.
+  theme:
+    extends:
+      service: base
+    labels:
+      com.dnsdock.name: theme
+      com.dnsdock.image:  <%= host.local %>
+    working_dir: /var/www/src/themes/<%= themeName %>
+    entrypoint: [ "/init", "./node_modules/.bin/gulp" ]
+    command: ""
+  <% } -%>
+
   # Container for running grunt in the docroot.
   # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm grunt <command>
   grunt:
@@ -107,6 +123,12 @@ services:
       GDT_DOMAIN: <%= host.local %>
       # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
       NODE_VERSION: 6
+      <% if (usePLS) { %>
+      # Allow for pattern lab compilation need detection with reasonable performance from
+      # within the build container.
+      # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
+      CHOKIDAR_USEPOLLING: 1
+      <% } -%>
       # Set to "true" to load xdebug configuration. Note this will cause significant composer
       # performance degradation.
       PHP_XDEBUG: "false"
