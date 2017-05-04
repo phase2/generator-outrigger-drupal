@@ -82,7 +82,7 @@ services:
       # successfully cleaned without then needing to touch the files
       # directory. This mount is present so that drush and other build
       # container operations can operate on the files for a site.
-      - /data/<%= projectName %>_${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
       # By volume mounting project Drush configuration to the user profile the
       # Docker image can carry Drush configuration and commands itself.
       # Would be more clean if this volume mount placed the Drush configuration
@@ -92,16 +92,16 @@ services:
       # platform.
       - ./build/backups:/opt/backups
       # Persist the cache directories associated with various tools.
-      - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/drush:/root/.drush/cache
-      - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/composer:/root/.composer/cache
-      - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/npm:/root/.npm
-      - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/bower:/root/.cache/bower
-      - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/fontconfig:/root/.cache/fontconfig
-      - /data/<%= projectName %>_${DOCKER_ENV:-local}/cache/behat_gherkin:/tmp/behat_gherkin_cache
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/cache/drush:/root/.drush/cache
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/cache/composer:/root/.composer/cache
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/cache/npm:/root/.npm
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/cache/bower:/root/.cache/bower
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/cache/fontconfig:/root/.cache/fontconfig
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/cache/behat_gherkin:/tmp/behat_gherkin_cache
       # SSH key grants read access to private Git repositories.
       - ~/.ssh/${OUTRIGGER_SSH_KEY:-id_rsa}:/root/.ssh/outrigger.key
       # Preserve BASH history across build container runs.
-      - /data/<%= projectName %>_${DOCKER_ENV:-local}/bash:/root/bash
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/bash:/root/bash
     environment:
       APP_DOMAIN: <%= host.local %>
       GDT_DOMAIN: <%= host.local %>
