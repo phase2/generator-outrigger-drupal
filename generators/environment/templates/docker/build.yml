@@ -44,7 +44,7 @@ services:
       service: base
     labels:
       com.dnsdock.name: theme
-      com.dnsdock.image:  <%= host.local %>
+      com.dnsdock.image: <%= domain %>
     working_dir: /var/www/src/themes/<%= themeName %>
     entrypoint: [ "/init", "./node_modules/.bin/gulp" ]
     command: ""
