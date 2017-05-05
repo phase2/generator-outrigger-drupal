@@ -48,6 +48,7 @@ services:
       com.dnsdock.image:  <%= host.local %>
     working_dir: /var/www/src/themes/<%= themeName %>
     entrypoint: [ "/init", "./node_modules/.bin/gulp" ]
+    command: ""
   <% } -%>
 
   # Container for running grunt in the docroot.
