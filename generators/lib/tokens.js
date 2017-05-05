@@ -113,5 +113,9 @@ module.exports = function(options) {
     tokens.host.review = env.virtualHost('review', options.projectName);
   }
 
+  // Ensure there is an explicit true/false value for Pattern Lab usage.
+  // This is mostly to handle the sparse option usage in the automated tests.
+  tokens.usePLS = options.usePLS || false;
+
   return tokens;
 };
