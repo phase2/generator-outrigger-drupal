@@ -1,6 +1,6 @@
 # Outrigger and Docker
 
-> Set up and work with your project via Outrigger, our local Docker implementation.
+> Set up and work with your project via [Outrigger](http://outrigger.sh) our local Docker management system.
 
 Running this project on Docker streamlines the installation steps.
 The Docker configuration in this repository handles all necessary environment
@@ -86,7 +86,7 @@ These operations are for local development.
 * **Website:** [http://www.<%= domain %>.vm](http://www.<%= domain %>.vm)
 <% if (proxy.exists) { %>* **Website w/out Varnish:** [http://app.<%= domain %>.vm](http://app.<%= domain %>.vm)<% } %>
 <% if (mail.exists) { %>* **MailHog Service:** http://mail.<%= domain %>.vm](http://mail.<%= domain %>.vm)<% } %>
-<% if (usePLS) { %>* **Patternlab:** http://theme.<%= domain %>.vm/pattern-lab/public](http://theme.<%= domain %>.vm/pattern-lab/public)<% } %>
+<% if (usePLS) { %>* **Patternlab:** http://theme.<%= domain %>.vm:3050/pattern-lab/public](http://theme.<%= domain %>.vm:3050/pattern-lab/public)<% } %>
 * **Database:** `db.<%= domain %>.vm`
     * **User**: `admin`
     * **Password**: `admin`
