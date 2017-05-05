@@ -14,6 +14,7 @@ services:
   cli:
     extends:
       service: operational
+    command: /bin/bash
 
   # Container for running drush in the docroot.
   # Usage: docker-compose -f build.yml run --rm drush <command>
@@ -68,6 +69,8 @@ services:
       service: base
     external_links:
       - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
+    # Unset the bin/bash command used by base and cli.
+    command: ""
 
   # Base service definition for Local environment.
   #
