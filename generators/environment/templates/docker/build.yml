@@ -111,12 +111,10 @@ services:
       # platform.
       - ./build/backups:/opt/backups
       # Persist the cache directories associated with various tools.
-      - /data/<%= projectName %>/${DOCKER_ENV:-local}/cache/drush:/root/.drush/cache
-      - /data/<%= projectName %>/${DOCKER_ENV:-local}/cache/composer:/root/.composer/cache
-      - /data/<%= projectName %>/${DOCKER_ENV:-local}/cache/npm:/root/.npm
-      - /data/<%= projectName %>/${DOCKER_ENV:-local}/cache/bower:/root/.cache/bower
-      - /data/<%= projectName %>/${DOCKER_ENV:-local}/cache/fontconfig:/root/.cache/fontconfig
-      - /data/<%= projectName %>/${DOCKER_ENV:-local}/cache/behat_gherkin:/tmp/behat_gherkin_cache
+      # The first volume mount covers: npm, composer, bower, fontconfig, & yarn
+      - /data/<%= projectName %>/cache:/root/.cache
+      - /data/<%= projectName %>/cache/drush:/root/.drush/cache
+      - /data/<%= projectName %>/cache/behat_gherkin:/tmp/behat_gherkin_cache
       # SSH key grants read access to private Git repositories.
       - ~/.ssh/${OUTRIGGER_SSH_KEY:-id_rsa}:/root/.ssh/outrigger.key
       # Preserve BASH history across build container runs.
@@ -139,4 +137,8 @@ services:
       GDT_QUIET: 1
       # Include the DOCKER_ENV so Drupal settings can be aware of environment.
       DOCKER_ENV: ${DOCKER_ENV:-local}
+      # Centralized build cache configuration.
+      # This might move to the Docker build image.
+      NPM_CONFIG_CACHE: /root/.cache/npm
+      COMPOSER_CACHE_DIR: /root/.cache/composer
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: <%= host.local %><% } %>
