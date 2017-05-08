@@ -119,7 +119,7 @@ trap 'complete $?' EXIT
 ##
 # Bring up the site.
 ##
-echoInfo "Preparing site for environment '$DOCKER_ENV' using start.sh (v${START_VERSION})"
+echoInfo "Preparing site for environment '$DOCKER_ENV' using start.sh (v${START_VERSION})\n"
 export DOCKER_ENV
 
 # Spin up cache and db services to support build container.
@@ -129,8 +129,8 @@ cmd "docker-compose -f docker-compose$COMPOSE_EXT.yml up -d <% if(cache.external
 # Install dependencies and run main application build.
 # Run grunt with --force to ignore errors. This won't help if the errors bail the build.
 # --unsafe-perm ensures dispatch to theme-related operations can still run as root for Docker.
-echoInfo "When grunt commands fail they suggest running with '--force'."
-echoInfo "This just suppresses errors and is unlikely to fix issues causing your build process to fail."
+echoInfo "When grunt commands fail they suggest running with '--force'.\n"
+echoInfo "This just suppresses errors and is unlikely to fix issues causing your build process to fail.\n"
 cmd "docker-compose run --rm cli \"npm install --unsafe-perm && grunt --timer --quiet ${NO_VALIDATE}\""
 
 # Now safe to activate web container to support end-to-end testing.
@@ -145,7 +145,7 @@ if [ "$UPDATE" == 0 ]; then
   # Dev triggers a development build of Open Atrium
   cmd "docker-compose run --rm cli \"grunt install --no-db-load --force\""
 else
-  echoInfo "'grunt update' is defined in Gruntconfig.json"
+  echoInfo "'grunt update' is defined in Gruntconfig.json\n"
   cmd "docker-compose run --rm cli grunt update"
 fi
 
@@ -157,4 +157,3 @@ echoSuccess "Application Setup Complete: "
 URL=$(docker-compose -f build$COMPOSE_EXT.yml run --rm drush sa @<%= projectName %> --format=list --fields=uri)
 echo "$URL"
 echo
-
