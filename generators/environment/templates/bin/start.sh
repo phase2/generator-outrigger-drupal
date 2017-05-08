@@ -131,7 +131,7 @@ cmd "docker-compose -f docker-compose$COMPOSE_EXT.yml up -d <% if(cache.external
 # --unsafe-perm ensures dispatch to theme-related operations can still run as root for Docker.
 echoInfo "When grunt commands fail they suggest running with '--force'.\n"
 echoInfo "This just suppresses errors and is unlikely to fix issues causing your build process to fail.\n"
-cmd "docker-compose run --rm cli \"npm install --unsafe-perm && grunt --timer --quiet ${NO_VALIDATE}\""
+cmd "docker-compose run --rm -e NPM_CONFIG_LOGLEVEL=error cli \"npm install --unsafe-perm && grunt --timer --quiet ${NO_VALIDATE}\""
 
 # Now safe to activate web container to support end-to-end testing.
 cmd "docker-compose -f docker-compose$COMPOSE_EXT.yml up -d <% if(proxy.exists) { %>proxy <% } %>www"
