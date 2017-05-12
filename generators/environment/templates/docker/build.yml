@@ -119,6 +119,8 @@ services:
       - ~/.ssh/${OUTRIGGER_SSH_KEY:-id_rsa}:/root/.ssh/outrigger.key
       # Preserve BASH history across build container runs.
       - /data/<%= projectName %>/${DOCKER_ENV:-local}/bash:/root/bash
+    labels:
+      sh.outrigger.project: <%= projectName %>
     environment:
       APP_DOMAIN: <%= host.local %>
       GDT_DOMAIN: <%= host.local %>
