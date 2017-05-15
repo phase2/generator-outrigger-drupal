@@ -21,7 +21,7 @@ services:
     labels:
       com.dnsdock.name: db
       com.dnsdock.image: <%= domain %>
-      sh.outrigger.project: <%= projectName %>
+      outrigger.project: <%= projectName %>
   <% if (cache.external) { %>
   # Application Cache service
   cache:
@@ -31,7 +31,7 @@ services:
     labels:
       com.dnsdock.name: cache
       com.dnsdock.image: <%= domain %>
-      sh.outrigger.project: <%= projectName %>
+      outrigger.project: <%= projectName %>
   <% } if (proxy.exists) { %>
   # Reverse-proxy Cache service
   proxy:
@@ -45,7 +45,7 @@ services:
     labels:
       com.dnsdock.name: www
       com.dnsdock.image: <%= domain %>
-      sh.outrigger.project: <%= projectName %>
+      outrigger.project: <%= projectName %>
   <% } if (mail.exists) { %>
   # MailHog SMTP and UI service.
   mail:
@@ -55,7 +55,7 @@ services:
     labels:
       com.dnsdock.name: mail
       com.dnsdock.image: <%= domain %>
-      sh.outrigger.project: <%= projectName %>
+      outrigger.project: <%= projectName %>
   <% } %>
   # Main Application service.
   www:
@@ -78,4 +78,4 @@ services:
     labels:
       com.dnsdock.name: <% if (proxy.exists) { %>app<% } else { %>www<% } %>
       com.dnsdock.image: <%= domain %>
-      sh.outrigger.project: <%= projectName %>
+      outrigger.project: <%= projectName %>
