@@ -63,8 +63,8 @@ export COMPOSE_FILE=build.<%= dockerComposeExt %>yml
 
 # Break down the Docker environment and remove generated files.
 teardown() {
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop || true
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f || true
+  docker-compose -f docker-compose.yml stop || true
+  docker-compose -f docker-compose.yml rm -f || true
   # Now that www container is stopped it&apos;s safe to clean up.
   # For speed, CI job does not do this, and relies on build process to perform
   # steps on an as-needed basis.

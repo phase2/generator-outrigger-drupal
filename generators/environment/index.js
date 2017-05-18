@@ -114,11 +114,6 @@ module.exports = Generator.extend({
       tokens.db.docker.extLink = options.machineName + "_${DOCKER_ENV}_db:db";
 
       this.fs.copyTpl(
-        this.templatePath('docker/docker-compose.devcloud.yml'),
-        this.destinationPath('docker-compose.devcloud.yml'),
-        tokens
-      );
-      this.fs.copyTpl(
         this.templatePath('docker/build.devcloud.yml'),
         this.destinationPath('build.devcloud.yml'),
         tokens

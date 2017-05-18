@@ -1,10 +1,21 @@
 ##
-# Operational services to run the application in your local environment.
+# Operational services to run the application in your local or Outrigger Cloud environment.
 #
-# By setting your local DOCKER_ENV environment variable you can spin up
-# multiple environments. Keep in mind you should also vary the docker-compose
-# --project-name as needed. The `bin/start.sh` script sets a project name of
-# <%= machineName %>_${DOCKER_ENV:-local}.
+# To ensure this works as expected for multiple environments, both environment
+# settings must be carefully respected in *every* command invocation:
+#
+# * The `DOCKER_ENV` environment variable which is used as a template parameter for
+#   how this configuration is used.
+# * The -p|--project-name option for Docker Compose, which used the provided name
+#   in lieu of deriving key Docker namespacing from whatever the current directory
+#   happens to be named.
+#
+# When bin/start.sh is used to start up services, it uses the docker-compose
+# project of project <%= machineName %>_${DOCKER_ENV:-local} and a default
+# DOCKER_ENV of local.
+#
+# Warning: Multiple environments for local use require customizing the DNSDock
+# Configuration. A generic approach for this has not yet been determined.
 ##
 version: '2.1'
 
@@ -40,6 +51,9 @@ services:
     network_mode: "bridge"
     environment:
       VARNISH_BACKEND_HOST: www
+      # This is used by the nginx-proxy service which is part of Phase2's Outrigger hosting platform.
+      # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
+      VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %>
     links:
       - www
     labels:
@@ -56,6 +70,11 @@ services:
       com.dnsdock.name: mail
       com.dnsdock.image: <%= domain %>
       outrigger.project: <%= projectName %>
+    environment:
+      # These are used by the nginx-proxy service which is part of Phase2's Outrigger Cloud hosting.
+      # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
+      VIRTUAL_HOST: mail-${DOCKER_ENV}-<%= host.devcloud %>
+      VIRTUAL_PORT: '8025'
   <% } %>
   # Main Application service.
   www:
@@ -69,6 +88,9 @@ services:
       PHP_XHPROF: "<%= debugMode %>"
       # Include the DOCKER_ENV so Drupal settings can be aware of environment.
       DOCKER_ENV: ${DOCKER_ENV:-local}
+      # This is used by the nginx-proxy service which is part of Phase2's Outrigger Cloud hosting.
+      # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
+      <% if (!proxy.exists) { %>VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
     links:
       - db<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (mail.exists) { %><%= mail.docker.link %><% } %>
     volumes:

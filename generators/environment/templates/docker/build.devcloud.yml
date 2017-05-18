@@ -1,5 +1,5 @@
 ##
-# Build and command-line operations containers for DevCloud-hosted Docker environments.
+# Build and command-line operations containers for Outrigger Cloud hosted Docker environments.
 #
 # In-line documentation assumes the "Integration" or 'int' environment, in practice
 # any environment name can be used. Standard names also include: Development (dev),
