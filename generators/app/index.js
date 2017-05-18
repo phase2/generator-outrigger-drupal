@@ -70,7 +70,7 @@ module.exports = Generator.extend({
         message: 'Use Pattern Lab Starter?'
       });
     }
-    var plPrompts = require('generator-pattern-lab-starter/app/prompts.js');
+    var plPrompts = require('generator-pattern-lab-starter/generators/app/prompts.js');
     plPrompts.forEach(function (item) {
       if (_.isUndefined(options[item.name])) {
         var validate = item.when;
