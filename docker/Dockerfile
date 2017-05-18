@@ -1,12 +1,12 @@
 FROM node:6-alpine
 
 ENV YO_P2_VERSION 2.2.0
-ENV PATTERN_LAB_STARTER_VERSION 2.0.0
+ENV PATTERN_LAB_STARTER_VERSION 3.0.2
 ENV GADGET_VERSION 1.0.0
 ENV P2_ENV_VERSION 1.2.0
 
 RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh
+    apk add --no-cache bash git openssh curl
 
 RUN node -v
 RUN npm -v
