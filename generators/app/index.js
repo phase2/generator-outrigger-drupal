@@ -70,6 +70,8 @@ module.exports = Generator.extend({
         message: 'Use Pattern Lab Starter?'
       });
     }
+    options['themePath'] = 'src/theme';  // Answer PLS question for theme location
+    options['themeName'] = 'patternlab';  // This theme name is currently hardcoded in PLS
     var plPrompts = require('generator-pattern-lab-starter/generators/app/prompts.js');
     plPrompts.forEach(function (item) {
       if (_.isUndefined(options[item.name])) {
