@@ -70,8 +70,7 @@ module.exports = Generator.extend({
         message: 'Use Pattern Lab Starter?'
       });
     }
-    options['themePath'] = 'src/theme';  // Answer PLS question for theme location
-    options['themeName'] = 'patternlab';  // This theme name is currently hardcoded in PLS
+
     var plPrompts = require('generator-pattern-lab-starter/generators/app/prompts.js');
     plPrompts.forEach(function (item) {
       if (_.isUndefined(options[item.name])) {
@@ -80,6 +79,12 @@ module.exports = Generator.extend({
           return answers['usePLS'] && (!_.isFunction(validate) || validate(answers));
         };
         item.default = this.config.get(item.name) || item.default;
+
+        // These two need special-case defaulting.
+        // @todo themePath emergent from generator-gadget usage.
+        if (item.name == 'themePath') {
+          item.default = 'src/theme';
+        }
 
         prompts.push(item);
       }
@@ -115,9 +120,17 @@ module.exports = Generator.extend({
       options['skip-readme'] = true;
       // If using Docker-based environment defer running install locally.
       if (options['useENV']) {
+        // Suppress dependency install as part of dependency run.
+        // --skip-install is used by this project and gadget.
+        // --installDeps is the reverse and used by generator-pattern-lab-starter.
         options['skip-install'] = true;
-        // The prompt key for the PLS npm install toggle.
-        options['installDeps'] = true;
+        options['installDeps'] = false;
+      }
+      if (options['usePLS']) {
+        // @todo remove when theme name prompting is explicitly in
+        // generator-pattern-lab-starter. We need it here so the environment
+        // generator can set up theme wiring. This is the hard-coded name.
+        options['themeName'] = 'patternlab';
       }
     }.bind(this));
   },
