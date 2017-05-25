@@ -1,0 +1,59 @@
+##
+# This is an Outrigger configuration file used by rig project commands.
+##
+
+version: 1.0
+
+# This is prepended to the $PATH for any commands referenced in the scripts section.
+bin: ./bin:./node_modules/.bin:./vendor/bin
+
+# This is not currently used but we include it for completeness.
+project: <%= projectName %>
+
+# Project Scripts
+# These can be run via 'rig project run:<key>'
+# If you specify an alias, you can run 'rig project <alias>'
+scripts:
+
+  run:
+    description: Run one of the build container services such as 'cli' or 'drush'.
+    run:
+      - COMPOSE_FILE=$CWD/build.yml docker-compose run --rm
+
+  start:
+    alias: setup
+    description: Run the end-to-end repository initialization and site install script.
+    run:
+      - rig project run:welcome
+      - start.sh
+
+  ls:
+    alias: containers
+    description: Get a list of all containers associated with this project. Unlike docker-compose ps, this will include all containers even for different configuration files.
+    run:
+      - docker ps -a --filter "label=outrigger.project=<%= projectName %>"
+
+  stop:
+    description: Halt all containers associated with this project.
+    run:
+      - rig project run:ls -q | xargs docker stop
+
+  logs:
+    alias: logs
+    description: Stream the logs produced by your Docker project containers.
+    run:
+      - docker-compose logs -ft --tail=10
+
+  welcome:
+    alias: tour
+    description: Codebase orientation.
+    run:
+      - echo 'Welcome to the Project!'
+      - echo 'Please review the README.md, CONTRIBUTING.md, TODOS.md, and the docs/ folder.'
+      - echo 'All custom code is under src/'
+      - echo 'To get started, run "rig project setup"
+
+# This controls configuration for the `project sync:start` command.
+sync:
+  # This is the name of the external volume to use.
+  volume: project-sync
