@@ -25,6 +25,13 @@ services:
     extends:
       service: operational
 
+  # Container for running composer in the repo root.
+  # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm composer <command>
+  composer:
+    extends:
+      service: operational
+    entrypoint: [ "/init", "composer", "--ansi" ]
+
   # Container for running drush in the docroot.
   # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm drush <command>
   # Where <command> is a direct drush command like cache-rebuild
@@ -41,7 +48,7 @@ services:
   drupal:
     extends:
       service: operational
-    entrypoint: [ "/init", "/var/www/vendor/bin/drupal --ansi" ]
+    entrypoint: [ "/init", "/var/www/vendor/bin/drupal", "--ansi" ]
     working_dir: /var/www/build/html
 
   # Container for running grunt in the docroot.
@@ -62,6 +69,8 @@ services:
       service: base
     external_links:
       - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
+    # Unset the bin/bash command used by base and cli.
+    command: ""
 
   # Base service definition for Phase2 Dev Cloud environment.
   #
