@@ -20,8 +20,9 @@ services:
   # Usage: docker-compose -f build.yml run --rm composer <command>
   composer:
     extends:
-      service: operational
+      service: base
     entrypoint: [ "/init", "composer", "--ansi" ]
+    command: ""
 
   # Container for running drush in the docroot.
   # Usage: docker-compose -f build.yml run --rm drush <command>
