@@ -32,8 +32,9 @@ services:
   # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm composer <command>
   composer:
     extends:
-      service: operational
+      service: base
     entrypoint: [ "/init", "composer", "--ansi" ]
+    command: ""
 
   # Container for running drush in the docroot.
   # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm drush <command>
