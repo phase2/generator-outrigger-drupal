@@ -19,6 +19,13 @@ services:
       service: operational
     command: /bin/bash
 
+  # Container for running composer in the repo root.
+  # Usage: docker-compose -f build.yml run --rm composer <command>
+  composer:
+    extends:
+      service: operational
+    entrypoint: [ "/init", "composer", "--ansi" ]
+
   # Container for running drush in the docroot.
   # Usage: docker-compose -f build.yml run --rm drush <command>
   # Where <command> is a direct drush command like cache-rebuild
@@ -35,7 +42,7 @@ services:
   drupal:
     extends:
       service: operational
-    entrypoint: [ "/init", "/var/www/vendor/bin/drupal --ansi" ]
+    entrypoint: [ "/init", "/var/www/vendor/bin/drupal", "--ansi" ]
     working_dir: /var/www/build/html
 
   <% if (usePLS) { %>
@@ -54,8 +61,8 @@ services:
     command: ""
   <% } -%>
 
-  # Container for running grunt in the docroot.
-  # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm grunt <command>
+  # Container for running grunt in the repo root.
+  # Usage: docker-compose -f build.yml run --rm grunt <command>
   grunt:
     extends:
       service: operational
