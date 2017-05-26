@@ -35,7 +35,7 @@ module.exports = Generator.extend({
     }
 
     var prompts = [];
-    var gadgetPrompts = require('generator-gadget/lib/prompts');
+    var gadgetPrompts = require('generator-gadget/generators/lib/prompts');
     gadgetPrompts.forEach(function (item) {
       if (_.isUndefined(options[item.name])) {
         item.default = this.config.get(item.name) || item.default;
