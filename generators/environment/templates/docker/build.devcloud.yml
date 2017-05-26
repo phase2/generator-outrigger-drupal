@@ -1,5 +1,5 @@
 ##
-# Build and command-line operations containers for DevCloud-hosted Docker environments.
+# Build and command-line operations containers for Outrigger Cloud hosted Docker environments.
 #
 # In-line documentation assumes the "Integration" or 'int' environment, in practice
 # any environment name can be used. Standard names also include: Development (dev),
@@ -12,9 +12,12 @@
 #
 # * The `DOCKER_ENV` environment variable which is used as a template parameter for
 #   how this configuration is used.
-# * The -p|--project-name option for Docker Compose, which used the provided name
+# * The -p|--project-name option for Docker Compose, which uses the provided name
 #   in lieu of deriving key Docker namespacing from whatever the current directory
 #   happens to be named.
+#
+# @see https://docs.docker.com/compose/reference/overview/
+# @see https://docs.docker.com/compose/compose-file/compose-file-v2/
 ##
 version: '2.1'
 

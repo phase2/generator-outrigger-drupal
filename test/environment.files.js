@@ -15,7 +15,6 @@ module.exports = {
     'CONTRIBUTING.md',
     'DOCKER.md',
     'docker-compose.yml',
-    'docker-compose.devcloud.yml',
     'env/build/etc/drush/drushrc.php',
     'env/build/etc/drush/aliases.drushrc.php',
     'Gruntconfig.json',
@@ -32,7 +31,6 @@ module.exports = {
   },
   yaml: {
     'docker-compose.yml': 'docker-compose.yml',
-    'docker-compose.devcloud.yml': 'docker-compose.devcloud.yml',
     'build.yml': 'build.yml',
     'build.devcloud.yml': 'build.devcloud.yml'
   }

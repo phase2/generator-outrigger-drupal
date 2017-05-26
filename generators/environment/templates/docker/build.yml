@@ -5,6 +5,9 @@
 # multiple environments. Keep in mind you should also vary the docker-compose
 # --project-name as needed. The `bin/start.sh` script sets a project name of
 # <%= machineName %>_${DOCKER_ENV:-local}.
+#
+# @see https://docs.docker.com/compose/reference/overview/
+# @see https://docs.docker.com/compose/compose-file/compose-file-v2/
 ##
 version: '2.1'
 
