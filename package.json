@@ -27,7 +27,7 @@
   ],
   "dependencies": {
     "chalk": "^1.0.0",
-    "generator-gadget": "git+https://git@github.com/phase2/generator-gadget.git#0e019e7aa74f96ea36a8bb6dfda916362f9e12d4",
+    "generator-gadget": "git+https://git@github.com/phase2/generator-gadget.git#c4fe9221121e3d004013cd773b9bb9e6df24a108",
     "generator-pattern-lab-starter": "^3.0.2",
     "lodash": "^4.17.4",
     "semver": "^5.3.0",
