@@ -83,7 +83,7 @@ module.exports = Generator.extend({
         // These two need special-case defaulting.
         // @todo themePath emergent from generator-gadget usage.
         if (item.name == 'themePath') {
-          item.default = 'src/theme';
+          item.default = 'src/themes';
         }
 
         prompts.push(item);
