@@ -30,7 +30,7 @@ module.exports = Generator.extend({
     // Ensure the drupalDistro plugin is loaded for this value when sidestepping
     // the prompt filter.
     if (options.hasOwnProperty('drupalDistro') && typeof options.drupalDistro === 'string') {
-      var distros = require('generator-gadget/app/distros');
+      var distros = require('generator-gadget/generators/lib/distros');
       options.drupalDistro = distros[options.drupalDistro];
     }
 
