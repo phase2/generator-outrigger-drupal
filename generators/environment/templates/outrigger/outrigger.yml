@@ -18,31 +18,62 @@ scripts:
   run:
     description: Run one of the build container services such as 'cli' or 'drush'.
     run:
-      - COMPOSE_FILE=$CWD/build.yml docker-compose run --rm
+      - docker-compose -f $CWD/build.yml run --rm
 
-  start:
+  setup:
     alias: setup
     description: Run the end-to-end repository initialization and site install script.
     run:
       - rig project run:welcome
       - start.sh
 
-  ls:
-    alias: containers
+  up:
+    alias: up
+    description: Start up operational docker containers and filesystem sync.
+    run:
+      - rig project sync:start
+      - docker-compose up -d
+
+  stop:
+    alias: stop
+    description: Halt operational containers and filesystem sync.
+    run:
+      - docker-compose stop
+      - rig project sync:stop
+
+  build:
+    alias: build
+    description: Run the end-to-end build process.
+    run:
+      - docker-compose -f build.yml run --rm grunt
+
+  theme:
+    alias: theme
+    description: Compile all theme assets, activate watch, and start up pattern-lab.
+    run:
+      - docker-compose -f build.yml run --rm theme
+
+  install:
+    alias: install
+    description: Install the Drupal site.
+    run:
+      - docker-compose -f build.yml run --rm grunt install
+
+  ps:
     description: Get a list of all containers associated with this project. Unlike docker-compose ps, this will include all containers even for different configuration files.
     run:
       - docker ps -a --filter "label=outrigger.project=<%= projectName %>"
 
-  stop:
+  all-stop:
     description: Halt all containers associated with this project.
     run:
       - rig project run:ls -q | xargs docker stop
 
   logs:
     alias: logs
-    description: Stream the logs produced by your Docker project containers.
+    description: Stream the logs produced by your Docker project containers. To limit output add '--tail=20'.
     run:
-      - docker-compose logs -ft --tail=10
+      - docker-compose logs -ft
 
   welcome:
     alias: tour
