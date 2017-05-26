@@ -30,12 +30,12 @@ module.exports = Generator.extend({
     // Ensure the drupalDistro plugin is loaded for this value when sidestepping
     // the prompt filter.
     if (options.hasOwnProperty('drupalDistro') && typeof options.drupalDistro === 'string') {
-      var distros = require('generator-gadget/app/distros');
+      var distros = require('generator-gadget/generators/lib/distros');
       options.drupalDistro = distros[options.drupalDistro];
     }
 
     var prompts = [];
-    var gadgetPrompts = require('generator-gadget/lib/prompts');
+    var gadgetPrompts = require('generator-gadget/generators/lib/prompts');
     gadgetPrompts.forEach(function (item) {
       if (_.isUndefined(options[item.name])) {
         item.default = this.config.get(item.name) || item.default;
@@ -83,7 +83,7 @@ module.exports = Generator.extend({
         // These two need special-case defaulting.
         // @todo themePath emergent from generator-gadget usage.
         if (item.name == 'themePath') {
-          item.default = 'src/theme';
+          item.default = 'src/themes';
         }
 
         prompts.push(item);
