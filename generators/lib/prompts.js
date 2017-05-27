@@ -66,7 +66,7 @@ var prompts = [
     message: 'Choose a cache backend:',
     choices: function(answers) {
       var options = docker.imageOptions(answers.hosting, 'cache');
-      options.push('database');
+      options.push({value: 'database', name: 'Database'});
       return options;
     },
     default: function (answers) {
@@ -136,7 +136,9 @@ var prompts = [
     type: 'input',
     name: 'domain',
     message: 'Domain for local development (www.<domain>.vm):',
-    default: _.last(process.cwd().split('/')).replace(/_|\s/, '-'),
+    default: function(answers) {
+      return answers['projectName'].replace(/_|\s/, '-')
+    },
     validate: function (input) {
       return input.match(/_|\s/) == undefined ? true : 'Please use a value qualified for use as a domain name. No spaces or underscores allowed.';
     }
