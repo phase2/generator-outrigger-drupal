@@ -8,12 +8,13 @@ module.exports = function(options) {
 
   function ciHost() {
     if (!host) {
-      var defaultHost = 'ci.p2devcloud.com';
-      if (Math.random() <= 0.5) {
-        defaultHost = 'ci2.p2devcloud.com'
+      host = options['ciHost'];
+      if (!options['ciHost']) {
+        var host = 'ci.p2devcloud.com';
+        if (Math.random() <= 0.5) {
+          host = 'ci2.p2devcloud.com'
+        }
       }
-
-      host = options['ciHost'] || defaultHost;
     }
 
     return host;
