@@ -25,9 +25,6 @@ module.exports = Generator.extend({
     options = _.assign({
       skipWelcome: true
     }, this.options);
-
-    options['ciHost'] = options['ciHost'] || 'ci2.p2devcloud.com';
-    env = require('../lib/env')(options);
   },
 
   prompting: function() {
@@ -51,7 +48,7 @@ module.exports = Generator.extend({
   // on the presence of other composed generators to have completed configuring
   // steps.
   default: {
-    tokenSetup: function() {
+    optionSetup: function() {
       var composer = this.fs.readJSON('composer.json');
       // Fake a default core version range as a fallback if we do not have
       // composer data that has a core version. Or if the environment generator
@@ -84,9 +81,13 @@ module.exports = Generator.extend({
           }.bind(this)
         );
       }
+    },
 
+    tokenSetup: function() {
       tokens = require('../lib/tokens')(options);
+      env = require('../lib/env')(options);
     }
+
   },
 
   writing: {

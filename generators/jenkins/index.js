@@ -22,8 +22,6 @@ module.exports = Generator.extend({
       skipWelcome: true,
       skipGoodbye: true
     }, this.options);
-
-    options['ciHost'] = options['ciHost'] || 'ci2.p2devcloud.com';
   },
 
   prompting: function() {
@@ -34,11 +32,16 @@ module.exports = Generator.extend({
 
     return this.prompt(prompts).then(function (props) {
       options = _.assign(options, props);
-      options.machineName = options.projectName.replace(/\-/g, '_');
-      tokens = require('../lib/tokens')(options);
     }.bind(this));
+  },
 
-    tokens = tokens || require('../lib/tokens')(options);
+  configuring: {
+    optionSetup: function() {
+      options.machineName = options.projectName.replace(/\-/g, '_');
+    },
+    tokenSetup: function() {
+      tokens = require('../lib/tokens')(options);
+    }
   },
 
   writing: {
@@ -74,6 +77,7 @@ module.exports = Generator.extend({
       delete hosts['master'];
       // devcloud is the base domain from which more complete devcloud VIRTUAL
       // HOST URLs are constructed.
+      tokens.ci = {host: hosts['devcloud']};
       delete hosts['devcloud'];
 
       _.forEach(hosts, function(value, key) {
