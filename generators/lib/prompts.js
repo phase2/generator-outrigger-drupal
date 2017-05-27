@@ -48,7 +48,7 @@ var prompts = [
   {
     name: 'webImage',
     message: 'Specify an override of the webserver Docker image (default is an example, not necessarily the image used.):',
-    default: 'phase2/apache-php:php70',
+    default: 'outrigger/apache-php:php70',
     when: function(answers) {
       return answers.webserver == 'custom';
     },
@@ -66,7 +66,7 @@ var prompts = [
     message: 'Choose a cache backend:',
     choices: function(answers) {
       var options = docker.imageOptions(answers.hosting, 'cache');
-      options.push('database');
+      options.push({value: 'database', name: 'Database'});
       return options;
     },
     default: function (answers) {
@@ -122,7 +122,7 @@ var prompts = [
       },
       {
         value: 'qa',
-        name: 'QA - Regularly scheduled deployments for manual Phase2 testing.',
+        name: 'QA - Regularly scheduled deployments for manual testing.',
         short: 'QA'
       },
       {
@@ -136,7 +136,9 @@ var prompts = [
     type: 'input',
     name: 'domain',
     message: 'Domain for local development (www.<domain>.vm):',
-    default: _.last(process.cwd().split('/')).replace(/_|\s/, '-'),
+    default: function(answers) {
+      return answers['projectName'].replace(/_|\s/, '-')
+    },
     validate: function (input) {
       return input.match(/_|\s/) == undefined ? true : 'Please use a value qualified for use as a domain name. No spaces or underscores allowed.';
     }
