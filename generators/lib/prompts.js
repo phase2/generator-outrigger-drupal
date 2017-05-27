@@ -48,7 +48,7 @@ var prompts = [
   {
     name: 'webImage',
     message: 'Specify an override of the webserver Docker image (default is an example, not necessarily the image used.):',
-    default: 'phase2/apache-php:php70',
+    default: 'outrigger/apache-php:php70',
     when: function(answers) {
       return answers.webserver == 'custom';
     },
@@ -122,7 +122,7 @@ var prompts = [
       },
       {
         value: 'qa',
-        name: 'QA - Regularly scheduled deployments for manual Phase2 testing.',
+        name: 'QA - Regularly scheduled deployments for manual testing.',
         short: 'QA'
       },
       {
