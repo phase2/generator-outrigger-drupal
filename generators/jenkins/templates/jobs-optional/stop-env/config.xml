@@ -27,8 +27,8 @@ export SITE_DOMAIN=<% if (environment == 'local') { %><%= host.local %><% } else
 
 # Break down the Docker environment
 teardown() {
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f
+  docker-compose -f docker-compose.yml stop
+  docker-compose -f docker-compose.yml rm -f
 }
 
 # Handler for errors or other interruptions.
