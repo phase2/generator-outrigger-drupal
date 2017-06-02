@@ -24,7 +24,9 @@ module.exports = Generator.extend({
     if (options['replay']) {
       options = _.assign(options, this.config.getAll());
       // Backwards compatibility for mail handling prompt config.
-      options.mail = options.mailhog ? 'mailhog' : 'none';
+      if (!options.mail) {
+        options.mail = options.mailhog ? 'mailhog' : 'none';
+      }
     }
 
     // Ensure the drupalDistro plugin is loaded for this value when sidestepping
