@@ -7,7 +7,7 @@
     * Gruntconfig.json
     * `env/build/etc/drush/drushrc.php` for drush config and default options you may want to change for the sql-dump command.
 * [ ] Set up the Docker-based site.
-    * Read the [Phase2 DevTools](http://phase2.github.io/devtools/).
+    * Install and start [Outrigger](http://docs.outrigger.sh/).
     * Run  `docker-compose pull && docker-compose -f build.yml pull` to ensure you have the latest Docker images for local development.
     * Run `bash bin/start.sh` to confirm the code works.
     * `npm install` and other tools should only be run inside containers.
