@@ -57,7 +57,7 @@ services:
     labels:
       com.dnsdock.name: theme
       com.dnsdock.image: <%= domain %>
-    working_dir: /var/www/<%= themePath %>/patternlab
+    working_dir: /var/www/<%= themePath %>/<%= themeName %>
     entrypoint: [ "/init", "./node_modules/.bin/gulp" ]
     command: ""
   <% } -%>

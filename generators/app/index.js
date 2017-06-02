@@ -108,8 +108,10 @@ module.exports = Generator.extend({
       options = _.assign(options, props);
       // The complete distro includes callbacks that break when serialized to a file.
       options.drupalDistro = options.drupalDistro.id;
-      if (options['themeName']) {
-        options.themePath = 'src/themes/' + options.themeName;
+      // use the default themeName generator-pattern-lab-starter will use since it
+      // is not currently prompting for one in favor of just a themePath
+      if (!options['themeName']) {
+        options.themeName = 'patternlab';
       }
 
       var store = options;
