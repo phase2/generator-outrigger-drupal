@@ -1,29 +1,18 @@
 # CONTRIBUTING
 
+## New Feature Ideas
+
+Reach out by creating a new issue to discuss features if your idea might best be
+solved in one of the other generator projects, or as part of a different project
+in the Outrigger suite.
+
 ## Run the Tests
 
 Before submitting a PR, please run the tests in this repository to confirm
 nothing has broken.
 
 ```bash
-npm test
-```
-
-or
-
-```bash
 docker-compose run --rm cli npm test
-```
-
-## Docker-based Development
-
-For development purposes, or sometimes ease of version management, this repo
-provides Docker integration. Clone git to the version you want and run from
-inside the repo:
-
-```bash
-docker-compose run --rm cli npm install
-YO_PROJECT_DIRECTORY=path/to/empty/directory docker-compose run --rm p2
 ```
 
 ## Testing Branches without Docker
