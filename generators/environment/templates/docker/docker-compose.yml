@@ -1,10 +1,24 @@
 ##
-# Operational services to run the application in your local environment.
+# Operational services to run the application in your local or Outrigger Cloud environment.
 #
-# By setting your local DOCKER_ENV environment variable you can spin up
-# multiple environments. Keep in mind you should also vary the docker-compose
-# --project-name as needed. The `bin/start.sh` script sets a project name of
-# <%= machineName %>_${DOCKER_ENV:-local}.
+# To ensure this works as expected for multiple environments, both environment
+# settings must be carefully respected in *every* command invocation:
+#
+# * The `DOCKER_ENV` environment variable which is used as a template parameter for
+#   how this configuration is used.
+# * The -p|--project-name option for Docker Compose, which uses the provided name
+#   in lieu of deriving key Docker namespacing from whatever the current directory
+#   happens to be named.
+#
+# When bin/start.sh is used to start up services, it configures a docker-compose
+# project of '<%= machineName %>_${DOCKER_ENV:-local}' and a default DOCKER_ENV of local.
+# (${VARNAME:-default} is some BASH variable magic.)
+#
+# Warning: Multiple environments for local use require customizing the DNSDock
+# Configuration. A generic approach for this has not yet been determined.
+#
+# @see https://docs.docker.com/compose/reference/overview/
+# @see https://docs.docker.com/compose/compose-file/compose-file-v2/
 ##
 version: '2.1'
 
@@ -15,6 +29,10 @@ services:
     image: <%= db.image %>
     environment:
       MYSQL_DATABASE: <%= machineName %>_drupal
+      # This is used by the nginx-proxy service which is part of Phase2's Outrigger hosting platform.
+      # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
+      # Add a VIRTUAL_PORT to access the service externally over port 80.
+      VIRTUAL_HOST: db-${DOCKER_ENV}-<%= host.devcloud %>
     volumes:
       - /data/<%= projectName %>/${DOCKER_ENV:-local}/mysql:/var/lib/mysql
     network_mode: "bridge"
@@ -28,6 +46,11 @@ services:
     container_name: <%= machineName %>_${DOCKER_ENV:-local}_cache
     image: <%= cache.image %>
     network_mode: "bridge"
+    environment:
+      # This is used by the nginx-proxy service which is part of Phase2's Outrigger hosting platform.
+      # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
+      # Add a VIRTUAL_PORT to access the service externally over port 80.
+      VIRTUAL_HOST: cache-${DOCKER_ENV}-<%= host.devcloud %>
     labels:
       com.dnsdock.name: cache
       com.dnsdock.image: <%= domain %>
@@ -40,6 +63,9 @@ services:
     network_mode: "bridge"
     environment:
       VARNISH_BACKEND_HOST: www
+      # This is used by the nginx-proxy service which is part of Phase2's Outrigger hosting platform.
+      # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
+      VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %>
     links:
       - www
     labels:
@@ -56,6 +82,11 @@ services:
       com.dnsdock.name: mail
       com.dnsdock.image: <%= domain %>
       outrigger.project: <%= projectName %>
+    environment:
+      # This is used by the nginx-proxy service which is part of Phase2's Outrigger Cloud hosting.
+      # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
+      VIRTUAL_HOST: mail-${DOCKER_ENV}-<%= host.devcloud %>
+      VIRTUAL_PORT: '8025'
   <% } %>
   # Main Application service.
   www:
@@ -69,6 +100,9 @@ services:
       PHP_XHPROF: "<%= debugMode %>"
       # Include the DOCKER_ENV so Drupal settings can be aware of environment.
       DOCKER_ENV: ${DOCKER_ENV:-local}
+      # This is used by the nginx-proxy service which is part of Phase2's Outrigger Cloud hosting.
+      # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
+      VIRTUAL_HOST: <% if (proxy.exists) { %>app-<% } %>${DOCKER_ENV}-<%= host.devcloud %>
     links:
       - db<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (mail.exists) { %><%= mail.docker.link %><% } %>
     volumes:

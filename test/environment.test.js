@@ -202,47 +202,6 @@ describe('p2:environment', function() {
           });
         });
       });
-
-      describe('Operational Services - Dev Cloud', function() {
-        var manifest;
-
-        before(function() {
-          manifest = yaml.safeLoad(fs.readFileSync('docker-compose.devcloud.yml', 'utf8'));
-        });
-
-        describe('Core Services', function() {
-          it('should include a database', function() {
-            assert.ok(manifest['services']['db']);
-          });
-          it('should include an application server', function() {
-            assert.ok(manifest['services']['www']);
-          });
-          it('should include an intenral caching service', function() {
-            assert.ok(manifest['services']['cache']);
-          });
-          it('should include a reverse-proxy cache', function() {
-            assert.ok(manifest['services']['proxy']);
-          });
-          it('should include a mail-handling services', function() {
-            assert.ok(manifest['services']['mail']);
-          });
-        });
-
-        describe('Docker Images', function() {
-          it('should extend from docker-compose.yml for cache container', function() {
-            assert.ok(manifest['services']['cache']['extends']['file'] === 'docker-compose.yml');
-          });
-          it('should extend from docker-compose.yml for db container', function() {
-            assert.ok(manifest['services']['db']['extends']['file'] === 'docker-compose.yml');
-          });
-          it('should extend from docker-compose.yml for www container', function() {
-            assert.ok(manifest['services']['www']['extends']['file'] === 'docker-compose.yml');
-          });
-          it('should extend from docker-compose.yml for reverse-proxy caching container', function() {
-            assert.ok(manifest['services']['proxy']['extends']['file'] === 'docker-compose.yml');
-          });
-        });
-      });
     });
   });
 

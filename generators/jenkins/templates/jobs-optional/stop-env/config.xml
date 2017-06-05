@@ -23,12 +23,12 @@
 export DOCKER_ENV=<% if (environment) { %><%= environment %><% } else { %>&apos;&apos;<% } %>
 export COMPOSE_PROJECT_NAME=<%= machineName %>_${DOCKER_ENV:--local}
 export COMPOSE_FILE=build.<%= dockerComposeExt %>yml
-export SITE_DOMAIN=<% if (environment == 'local') { %><%= host.local %><% } else { %>${DOCKER_ENV}-<%= host.devcloud %><% } %>
+export SITE_DOMAIN=<% if (environment == 'local') { %><%= host.local %><% } else { %>${DOCKER_ENV}-<%= ci.host %><% } %>
 
 # Break down the Docker environment
 teardown() {
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop
-  docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f
+  docker-compose -f docker-compose.yml stop
+  docker-compose -f docker-compose.yml rm -f
 }
 
 # Handler for errors or other interruptions.

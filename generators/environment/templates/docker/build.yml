@@ -5,6 +5,9 @@
 # multiple environments. Keep in mind you should also vary the docker-compose
 # --project-name as needed. The `bin/start.sh` script sets a project name of
 # <%= machineName %>_${DOCKER_ENV:-local}.
+#
+# @see https://docs.docker.com/compose/reference/overview/
+# @see https://docs.docker.com/compose/compose-file/compose-file-v2/
 ##
 version: '2.1'
 
@@ -15,6 +18,14 @@ services:
     extends:
       service: operational
     command: /bin/bash
+
+  # Container for running composer in the repo root.
+  # Usage: docker-compose -f build.yml run --rm composer <command>
+  composer:
+    extends:
+      service: base
+    entrypoint: [ "/init", "composer", "--ansi" ]
+    command: ""
 
   # Container for running drush in the docroot.
   # Usage: docker-compose -f build.yml run --rm drush <command>
@@ -32,7 +43,7 @@ services:
   drupal:
     extends:
       service: operational
-    entrypoint: [ "/init", "/var/www/vendor/bin/drupal --ansi" ]
+    entrypoint: [ "/init", "/var/www/vendor/bin/drupal", "--ansi" ]
     working_dir: /var/www/build/html
 
   <% if (usePLS) { %>
@@ -51,8 +62,8 @@ services:
     command: ""
   <% } -%>
 
-  # Container for running grunt in the docroot.
-  # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm grunt <command>
+  # Container for running grunt in the repo root.
+  # Usage: docker-compose -f build.yml run --rm grunt <command>
   grunt:
     extends:
       service: operational
