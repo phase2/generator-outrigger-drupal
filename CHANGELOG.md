@@ -1,3 +1,7 @@
+## v3.0.1 (June 2017)
+
+* Missed a couple minor bugfixes.
+
 ## v3.0.0 (June 2017) "The Unification"
 
 ### Major Changes
