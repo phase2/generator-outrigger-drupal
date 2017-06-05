@@ -24,7 +24,9 @@ module.exports = Generator.extend({
     if (options['replay']) {
       options = _.assign(options, this.config.getAll());
       // Backwards compatibility for mail handling prompt config.
-      options.mail = options.mailhog ? 'mailhog' : 'none';
+      if (!options.mail) {
+        options.mail = options.mailhog ? 'mailhog' : 'none';
+      }
     }
 
     // Ensure the drupalDistro plugin is loaded for this value when sidestepping
@@ -108,9 +110,6 @@ module.exports = Generator.extend({
       options = _.assign(options, props);
       // The complete distro includes callbacks that break when serialized to a file.
       options.drupalDistro = options.drupalDistro.id;
-      if (options['themeName']) {
-        options.themePath = 'src/themes/' + options.themeName;
-      }
 
       var store = options;
       delete store['env'];
