@@ -1,13 +1,10 @@
-# Yo P2! � the Phase2 Site Generator
+# Outrigger Drupal
 
-> Yeoman generator that weaves together multiple generators, tools, and Phase2
-best practices to kick off Drupal projects in style.
+> Yeoman generator that weaves together Outrigger with other best-in-class tools for your Drupal project.
 
 This is an umbrella [Yeoman](http://yeoman.io/) generator that asks questions,
 then passes the answers to multiple "child" generators that handle their own
-aspect of the scaffolding. As the name implies, this generator focuses on Phase2
-practices, where some of the other generators in use are focused on broader industry
-best practices.
+aspect of project scaffolding. As the name implies, this generator focuses on Outrigger practices, where some of the other generators in use are focused on broader industry best practices.
 
 ## Installation & Usage
 
@@ -17,21 +14,21 @@ Docker-based usage is available as of v3.0.0. It is the recommended approach as
 updates tend to be less prone to complication.
 
 ```bash
-git clone git@bitbucket.org:phase2tech/generator-p2.git
-cd generator-p2
+git clone git@github.com:phase2/generator-outrigger-drupal.git
+cd generator-outrigger-drupal
 git checkout v3.0.0
 docker-compose run --rm cli npm install
 mkdir ~/path/to/empty/directory
-YO_PROJECT_DIRECTORY=~/path/to/empty/directory docker-compose run --rm yo p2
+YO_PROJECT_DIRECTORY=~/path/to/empty/directory docker-compose run --rm yo outrigger-drupal
 ```
 
 ### Using npm
 
 ```bash
-npm install --global git+ssh://bitbucket.org/phase2tech/generator-p2.git#v3.0.0
+npm install --global git+ssh://github.com:phase2/generator-outrigger-drupal.git#v3.0.1
 mkdir ~/path/to/empty/directory
 cd ~/path/to/empty/directory
-yo p2
+yo outrigger-drupal
 ```
 
 ### Command-line Options
@@ -62,15 +59,15 @@ When you use this to generate a project, all your answers are recorded by Yeoman
 in a .yo-rc.json file at the root of your repository. As long as you commit this
 to the codebase, from then if you run the generator targeting that directory it
 will use the previous answers as the defaults to every prompt. For even faster
-usage, you can run `yo p2 --replay` and it will automatically run the generator
-without stopping to ask old questions.
+usage, you can run `yo outrigger-drupal --replay` and it will automatically run
+the generator without stopping to ask old questions.
 
 If you run the generator, it will overwrite files. That's the idea in this case,
 as your goal is to cherrypick good new stuff the generator provides into your
 project. Run `git add -p .` to view each change one chunk at a time, and decide
 if it makes sense to discard or keep. Feel free to ask for help.
 
-The extensive changelog notes are intended to help guide this process.
+The extensive [CHANGELOG](./CHANGELOG.md) notes are intended to help guide this process.
 
 ### Retrofitting an Existing Project
 
@@ -104,9 +101,9 @@ and your site will be built and a new site installed.
 development, continuous integration, and overall project tooling for the Drupal
 application.
 
-A best practice setup of GDT with a few extra goodies are provided by Yo P2's
-use of [Generator Gadget](https://github.com/phase2/generator-gadget) to produce
-the top-level Drupal application scaffolding.
+A best practice setup of GDT with a few extra goodies are provided by
+Yo Outrigger Drupal's use of [Generator Gadget](https://github.com/phase2/generator-gadget)
+to produce the top-level Drupal application scaffolding.
 
 ### Component-driven Frontend
 
@@ -126,8 +123,7 @@ consistent, container-based, local development environment that can also be used
 on Phase2's centralized Outrigger hosting to provide integration, testing, and
 other environments.
 
-This uses a sub-generator of generator-p2 which can be separately executed as
-`yo p2:environment`.
+This uses a sub-generator of generator-outrigger-drupal which can be separately executed as `yo outrigger-drupal:environment`.
 
 #### Feature Breakdown
 
@@ -157,8 +153,7 @@ If you liked the Docker-based environments, you can also use our Docker-based
 Jenkins instance to manage your central test environments, complete with default
 jobs so you can start continuous integration with zero further configuration.
 
-This uses a sub-generator of generator-p2 which can be separately executed as
-`yo p2:jenkins`.
+This uses a sub-generator of generator-outrigger-drupal which can be separately executed as `yo outrigger-drupal:jenkins`.
 
 ### Feature Breakdown
 

@@ -17,9 +17,9 @@ NAME=`basename "$0"`
 NO_VALIDATE=''
 NOOP=0
 # This version is used to facilitate troubleshooting, by indicating which
-# version of the generator-p2-env project produced this script. If you re-run
-# the generator please include the update. If you make significant changes
-# consider creating a compount version "number" indicating that.
+# version of the generator-outrigger-drupal project produced this script.
+# If you re-run the generator please include the update. If you make significant
+# changes consider creating a compound version "number" indicating that.
 START_VERSION=<%= pkg.version %>
 # By default we install a new Drupal site rather than update an existing Drupal site.
 UPDATE=0

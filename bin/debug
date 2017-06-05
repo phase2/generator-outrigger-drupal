@@ -5,7 +5,7 @@
 # Open your browser to http://debug.yo.vm:8080/debug?port=5858
 #
 # This script is currently triggered as part of
-# * `docker-compose run --rm p2-debug`
+# * `docker-compose run --rm debug`
 ##
 
 node-inspector --no-preload --web-host="0.0.0.0" &

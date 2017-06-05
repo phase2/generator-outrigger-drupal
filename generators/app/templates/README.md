@@ -35,11 +35,11 @@ and operational management of the application code. A build process downloads an
 
 ## Scaffolded with Generators
 
-Initial generation of this project's code structure was built with [Yo P2](https://bitbucket.org/phase2tech/generator-p2)
+Initial generation of this project's code structure was built with [Yo Outrigger Drupal](https://github.com/phase2/generator-outrigger-drupal)
 and related code-generation projects.
 
 To refresh your project with our latest practices, update your local copy of this
-tool, and run `yo p2 --replay --force`. Do not forgot to carefully inspect each
+tool, and run `yo outrigger-drupal --replay --force`. Do not forgot to carefully inspect each
 change for compatibility with your ongoing project before committing.
 
 The `--replay` option pulls configuration values for the generator from *.yo-rc.json*,

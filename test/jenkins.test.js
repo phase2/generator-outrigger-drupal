@@ -36,7 +36,7 @@ var describeXml = function(extended) {
   };
 }
 
-describe('p2:jenkins', function() {
+describe('outrigger-drupal:jenkins', function() {
   var appDir = path.join(os.tmpdir(), './temp-test-jenkins');
   console.log('Jenkins tests will be generated in "' + appDir + '"');
 
