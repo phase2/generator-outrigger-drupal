@@ -1,4 +1,4 @@
-## v3.0.0 (???) "The Unification"
+## v3.0.0 (June 2017) "The Unification"
 
 ### Major Changes
 
