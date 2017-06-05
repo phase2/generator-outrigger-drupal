@@ -287,6 +287,13 @@ module.exports = Generator.extend({
       );
     },
 
+    outrigger: function() {
+      this.fs.copyTpl(
+        this.templatePath('outrigger/outrigger.yml'),
+        this.destinationPath('./.outrigger.yml')
+      );
+    },
+
     jenkins: function() {
       this.composeWith(require.resolve('../jenkins'), options);
     }
