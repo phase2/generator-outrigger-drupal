@@ -7,16 +7,16 @@ services:
   cli:
     extends:
       service: yo
-    working_dir: /usr/local/lib/node_modules/generator-p2
+    working_dir: /usr/local/lib/node_modules/generator-outrigger-drupal
     entrypoint: ["/usr/bin/env"]
     command: "bash"
 
   # Runs the primary yo generator with node-inspector debugging activated.
-  # Usage: docker-compose run --rm debug 
+  # Usage: docker-compose run --rm debug
   debug:
     extends:
       service: yo
-    entrypoint: "/usr/local/lib/node_modules/generator-p2/bin/debug 'p2 --no-insight --skip-install'"
+    entrypoint: "/usr/local/lib/node_modules/generator-outrigger-drupal/bin/debug 'outrigger-drupal --no-insight --skip-install'"
     ports:
       - "8080"
     labels:
@@ -25,12 +25,12 @@ services:
 
   # Run 'yo' inside the container.
   # Usage: docker-compose run --rm yo
-  # docker-compose run --rm yo p2
-  # docker-compose run --rm yo p2:environment
-  # docker-compose run --rm yo p2:jenkins
+  # docker-compose run --rm yo outrigger-drupal
+  # docker-compose run --rm yo outrigger-drupal:environment
+  # docker-compose run --rm yo outrigger-drupal:jenkins
   yo:
     image: outrigger/yeoman
     network_mode: "bridge"
     volumes:
       - ${YO_PROJECT_DIRECTORY:-~/Projects/newproject}:/generated
-      - .:/usr/local/lib/node_modules/generator-p2
+      - .:/usr/local/lib/node_modules/generator-outrigger-drupal

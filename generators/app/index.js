@@ -179,15 +179,15 @@ module.exports = Generator.extend({
   end: function() {
     var version = {
       gadget: require('generator-gadget/package.json').version,
-      env: require('generator-p2/package.json').version,
+      env: require('generator-outrigger-drupal/package.json').version,
       pls: require('generator-pattern-lab-starter/package.json').version,
     }
 
-    this.log(yosay('Yo P2 has completed generation of your Drupal project.'));
+    this.log(yosay('Outrigger Drupal has completed generation of your Drupal project.'));
     this.log('Primary scaffolding created by ' + chalk.red('generator-gadget v' + version.gadget) + '.');
     this.log('Check out your new READMEs to get oriented.');
     if (options['useENV']) {
-      this.log('You have chosen a ' + chalk.bold('Docker-based development environment') + ' created by ' + chalk.red('generator-p2:environment v' + version.env) + '.');
+      this.log('You have chosen a ' + chalk.bold('Docker-based development environment') + ' created by ' + chalk.red('generator-outrigger-drupal:environment v' + version.env) + '.');
       this.log(chalk.yellow('All tools and application code should be run via the Docker containers.'));
       this.log(chalk.green('A handy TODOS.md checklist has been created for your next steps.'));
       this.log('Want to see a running Drupal site without opening a text editor? Run ' + chalk.bold('bash bin/start.sh') + ' now.');

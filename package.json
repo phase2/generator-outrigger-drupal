@@ -1,14 +1,13 @@
 {
-  "name": "generator-p2",
-  "version": "3.0.1",
-  "description": "Phase2 Yeoman generator",
+  "name": "generator-outrigger-drupal",
+  "version": "3.1.0-pre",
+  "description": "Yeoman Generator for Outrigger-based Drupal projects.",
   "license": "MIT",
   "main": "app/index.js",
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/phase2tech/generator-p2"
+    "url": "https://github.com/phase2/generator-outrigger-drupal"
   },
-  "private": true,
   "engines": {
     "node": ">=4"
   },
@@ -23,7 +22,8 @@
     "yeoman-generator",
     "drupal",
     "docker",
-    "jenkins"
+    "jenkins",
+    "outrigger"
   ],
   "dependencies": {
     "chalk": "^1.0.0",

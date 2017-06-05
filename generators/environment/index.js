@@ -173,10 +173,10 @@ module.exports = Generator.extend({
     npmConfig: function() {
       var pkg = this.fs.readJSON('package.json');
       if (!pkg) {
-        this.log(chalk.red('You must have a valid Grunt-Drupal-Tasks compatible codebase before running p2-env.'));
-        this.log(chalk.yellow('Try running `yo p2` or `yo gadget` first!'));
+        this.log(chalk.red('You must have a valid Grunt-Drupal-Tasks compatible codebase before running outrigger-drupal:environment.'));
+        this.log(chalk.yellow('Try running `yo outrigger-drupal` or `yo gadget` first!'));
         if (!options['force']) {
-          this.env.error('Project not ready for p2-env processing.');
+          this.env.error('Project not ready for outrigger-drupal:environment processing.');
         }
       }
       pkg = pkg || {};
@@ -203,10 +203,10 @@ module.exports = Generator.extend({
     gruntConfig: function() {
       var gcfg = this.fs.readJSON('Gruntconfig.json');
       if (!gcfg) {
-        this.log(chalk.red('You must have a valid Grunt-Drupal-Tasks compatible codebase before running p2-env.'));
-        this.log(chalk.yellow('Try running `yo p2` or `yo gadget` first!'));
+        this.log(chalk.red('You must have a valid Grunt-Drupal-Tasks compatible codebase before running outrigger-drupal:environment.'));
+        this.log(chalk.yellow('Try running `yo outrigger-drupal` or `yo gadget` first!'));
         if (!options['force']) {
-          this.env.error('Project not ready for p2-env processing.');
+          this.env.error('Project not ready for outrigger-drupal:environment processing.');
         }
       }
       gcfg = gcfg || {}
@@ -219,7 +219,7 @@ module.exports = Generator.extend({
       }
       gcfg.project.db = '/opt/backups/latest.sql.gz';
 
-      // Backups configuration is introduced by p2-env.
+      // Backups configuration is introduced by outrigger-drupal:environment
       gcfg.project.backups = {
         url: 'http://' + env.virtualHost(false, 'backups') + '/' + options.projectName,
         env: 'int'

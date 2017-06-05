@@ -104,7 +104,7 @@ if [ -z "$1" ] || [ "$1" == 'devtools' ]; then
 fi
 
 if [ -z "$1" ] || [ "$1" == 'generator' ]; then
-  heading 'Code Generated with Yo P2'
+  heading 'Code Generated with Yo Outrigger Drupal'
   assertDir 'src' $ERROR
   assertFile 'package.json' $ERROR
   assertFile 'composer.json' $ERROR
