@@ -18,7 +18,7 @@ and operational management of the application code. A build process downloads an
 
 ### Requirements
 
-* [Node.js](https://nodejs.com) v4 via a [package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager) or [standalone installer](http://nodejs.org/download/)
+* [Node.js](https://nodejs.com) v6 via a [package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager) or [standalone installer](http://nodejs.org/download/)
 * [Grunt](https://gruntjs.org) (`npm install -g grunt-cli`)
 * PHP 5.6
 * [Composer](https://getcomposer.org/download) (e.g. `brew install composer`)

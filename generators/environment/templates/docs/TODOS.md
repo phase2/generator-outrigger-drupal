@@ -7,13 +7,13 @@
     * Gruntconfig.json
     * `env/build/etc/drush/drushrc.php` for drush config and default options you may want to change for the sql-dump command.
 * [ ] Set up the Docker-based site.
-    * Read the [Phase2 DevTools](http://phase2.github.io/devtools/).
+    * Install and start [Outrigger](http://docs.outrigger.sh/).
     * Run  `docker-compose pull && docker-compose -f build.yml pull` to ensure you have the latest Docker images for local development.
     * Run `bash bin/start.sh` to confirm the code works.
     * `npm install` and other tools should only be run inside containers.
 * [ ] Set up Jenkins to manage your CI and build processes.
     * Ensure the Jenkins jobs have the correct Git URL.
-    * Visit the CI Server and [spin up your Jenkins instance](http://build.<%= host.master %>/job/ci-start/parambuild/?delay=0sec&NAME=<%= projectName %>&GIT_URL=git%40bitbucket.org%3Aphase2tech%2F<%= projectName %>.git&GIT_REF=develop).
+    * Visit the CI Server and [spin up your Jenkins instance](http://build.<%= host.devcloud %>/job/ci-start/parambuild/?delay=0sec&NAME=<%= projectName %>&GIT_URL=git%40bitbucket.org%3Aphase2tech%2F<%= projectName %>.git&GIT_REF=develop).
     * Confirm that you **do not need** a dedicated Dev Cloud instance.
 * [ ] Adjust the project to match your project's needs.
     * Do not forget to specify your profile in `Gruntconfig.json`!
