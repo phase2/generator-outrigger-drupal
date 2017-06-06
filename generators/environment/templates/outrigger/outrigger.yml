@@ -7,7 +7,7 @@ version: 1.0
 # This is prepended to the $PATH for any commands referenced in the scripts section.
 bin: ./bin:./node_modules/.bin:./vendor/bin
 
-# This is not currently used but we include it for completeness.
+# This is not currently used but we include it in anticipation of great things.
 project: <%= projectName %>
 
 # Project Scripts
@@ -67,7 +67,7 @@ scripts:
   all-stop:
     description: Halt all containers associated with this project.
     run:
-      - rig project run:ls -q | xargs docker stop
+      - rig project run:ps -q | xargs docker stop
 
   logs:
     alias: logs
@@ -82,9 +82,9 @@ scripts:
       - echo 'Welcome to the Project!'
       - echo 'Please review the README.md, CONTRIBUTING.md, TODOS.md, and the docs/ folder.'
       - echo 'All custom code is under src/'
-      - echo 'To get started, run "rig project setup"
+      - echo 'To get started, run "rig project setup"'
 
 # This controls configuration for the `project sync:start` command.
 sync:
   # This is the name of the external volume to use.
-  volume: project-sync
+  volume: <%= projectName %>-sync
