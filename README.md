@@ -39,7 +39,7 @@ entered answers.
 grunt-drupal-tasks.
 * **`--skip-install`**: Will skip running `npm install` at the end of the
 generation process. (Applied by default when you opt-in for the
-Docker-based Phase2 Environment.)
+Docker-based Outrigger Environment.)
 
 ## Answering Yeoman Prompts
 
