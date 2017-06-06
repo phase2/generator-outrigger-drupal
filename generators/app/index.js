@@ -49,7 +49,7 @@ module.exports = Generator.extend({
       prompts.push({
         name: 'useENV',
         type: 'confirm',
-        message: 'Use Phase2 DevTools/Docker Environment?'
+        message: 'Use Outrigger Environment?'
       });
     }
     var envPrompts = require('../lib/prompts.js');
