@@ -1,4 +1,4 @@
-# Phase2 Dev Cloud
+# Phase2 DevCloud
 
 > Learn how to work with and manage Phase2's Docker development hosting platform.
 

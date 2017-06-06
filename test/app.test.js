@@ -49,7 +49,7 @@ var gdtFiles = [
   'test/features/example.feature'
 ];
 
-describe('p2:app w/ Gadget', function () {
+describe('outrigger-drupal:app w/ Gadget', function () {
   before(function () {
     return test.run(path.join(__dirname, '../generators/app'))
       .inDir(appDir)
@@ -91,7 +91,7 @@ describe('p2:app w/ Gadget', function () {
 
 });
 
-describe('p2:app --replay', function () {
+describe('outrigger-drupal:app --replay', function () {
   var originalTestDirectory = test.testDirectory;
 
   before(function (done) {
@@ -131,17 +131,17 @@ describe('p2:app --replay', function () {
   it ('uses projectName based on previously stored option', function() {
     var pkg = require(path.resolve(appDir, 'package.json'));
     var yoRC = require(path.resolve(appDir, '.yo-rc.json'));
-    assert.equal(pkg.name, yoRC['generator-p2']['projectName']);
+    assert.equal(pkg.name, yoRC['generator-outrigger-drupal']['projectName']);
   });
 });
 
-describe('p2:app w/ Gadget + p2:environment', function () {
+describe('outrigger-drupal:app w/ Gadget + outrigger-drupal:environment', function () {
   before(function (done) {
     test.run(path.join(__dirname, '../generators/app'))
       .inDir(appDir)
       .withOptions({
         'skip-install': true,
-        projectName: 'drupal8-p2env',
+        projectName: 'drupal8-outrigger-env',
         projectDescription: 'test drupal8 project',
         drupalDistro: 'drupal',
         drupalDistroVersion: '8.x',
@@ -154,7 +154,7 @@ describe('p2:app w/ Gadget + p2:environment', function () {
         mail: 'none',
         environments: [],
         offline: true,
-	      domain: 'drupal8-p2env',
+	      domain: 'drupal8-outrigger-env',
         force: true
       })
       .on('end', done);

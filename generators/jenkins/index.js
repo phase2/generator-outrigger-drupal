@@ -14,7 +14,7 @@ module.exports = Generator.extend({
     // Have Yeoman greet the user.
     if (!this.options.skipWelcome) {
       this.log(yosay(
-        'Welcome to the phantastic ' + chalk.cyan('Phase2 Jenkins') + ' generator!'
+        'Welcome to the fantastic ' + chalk.cyan('Outrigger Jenkins') + ' generator!'
       ));
     }
 

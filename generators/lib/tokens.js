@@ -7,8 +7,9 @@ var gadgetTokens = require('generator-gadget/generators/lib/util').tokens;
 var dockerComposeLink = require('./util').dockerComposeLink;
 
 /**
- * Produces tokens based on flagged options and prompt answers for p2:app or
- * other sub-generators. These tokens are used by the templating process.
+ * Produces tokens based on flagged options and prompt answers for
+ * outrigger-drupal:app or other sub-generators. These tokens are used by
+ * the templating process.
  *
  * @todo move more of these pieces to the hosting platform sub-system.
  */
@@ -17,9 +18,10 @@ module.exports = function(options) {
 
   var tokens = options;
 
-  // This library is used by p2:environment and p2:jenkins directly, but those
-  // do not use or depend on prompts from generator-gadget which are needed to
-  // produce the gadget tokens.
+  // This library is used by outrigger-drupal:environment and
+  // outrigger-drupal:jenkins directly, but those do not use or depend
+  // on prompts from generator-gadget which are needed to produce
+  // the gadget tokens.
   //
   // These tokens are not needed either.
   //

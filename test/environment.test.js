@@ -36,7 +36,7 @@ var describeJson = function(appDir) {
 };
 
 
-describe('p2:environment', function() {
+describe('outrigger-drupal:environment', function() {
   var appDir = path.join(os.tmpdir(), './temp-test-environment');
   console.log('Environment tests will be generated in "' + appDir + '"');
 
