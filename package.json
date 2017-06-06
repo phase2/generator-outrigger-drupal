@@ -1,6 +1,6 @@
 {
   "name": "generator-outrigger-drupal",
-  "version": "3.1.0-pre",
+  "version": "3.1.0",
   "description": "Yeoman Generator for Outrigger-based Drupal projects.",
   "license": "MIT",
   "main": "app/index.js",

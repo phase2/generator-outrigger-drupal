@@ -12,7 +12,7 @@ module.exports = Generator.extend({
     this.pkg = require('../../package.json');
     // Have Yeoman greet the user.
     this.log(yosay(
-      'Welcome to the fantabulous ' + chalk.red('Phase2') + ' generator! ' + this.pkg.version
+      'Welcome to the fantabulous ' + chalk.red('Outrigger') + ' generator! ' + this.pkg.version
     ));
     options = _.assign({
       skipWelcome: true,
@@ -49,7 +49,7 @@ module.exports = Generator.extend({
       prompts.push({
         name: 'useENV',
         type: 'confirm',
-        message: 'Use Phase2 DevTools/Docker Environment?'
+        message: 'Use Outrigger Environment?'
       });
     }
     var envPrompts = require('../lib/prompts.js');

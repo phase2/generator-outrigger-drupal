@@ -1,13 +1,13 @@
-## v3.1.0 (June 2017)
+## v3.1.0 (June 5 2017)
 
 * Changed name to generator-outrigger-drupal
 * Relocated to Github: https://github.com/phase2/generator-outrigger-drupal
 
-## v3.0.1 (June 2017)
+## v3.0.1 (June 5 2017)
 
 * Missed a couple minor bugfixes.
 
-## v3.0.0 (June 2017) "The Unification"
+## v3.0.0 (June 5 2017) "The Unification"
 
 ### Major Changes
 

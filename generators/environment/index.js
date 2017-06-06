@@ -18,7 +18,7 @@ module.exports = Generator.extend({
     // Have Yeoman greet the user.
     if (!this.options.skipWelcome) {
       this.log(yosay(
-        'Welcome to the tubular ' + chalk.cyan('Phase2 Environment') + ' generator!'
+        'Welcome to the tubular ' + chalk.cyan('Outrigger Environment') + ' generator!'
       ));
     }
 

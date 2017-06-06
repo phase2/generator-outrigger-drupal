@@ -8,7 +8,7 @@ setup for local development or testing environments.
 
 Local environments assume the use of Phase2's "Outrigger" system to manage the
 filesystem, DNS, and any necessary virtualization. Read more about this in the
-[Phase2 Outrigger documentation](http://docs.outrigger.sh). (Linux users
+[Outrigger documentation](http://docs.outrigger.sh). (Linux users
 should follow the [Linux instructions](http://docs.outrigger.sh/getting-started/linux-installation/)
 for simple things like DNS consistency with macOS users.)
 
