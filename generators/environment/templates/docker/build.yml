@@ -104,7 +104,7 @@ services:
     volumes:
       # Use 'rig project sync' to leverage unison-based filesystem for app code.
       # @see <doc-url>
-      - project-sync:/var/www/
+      - <%= projectName %>-sync:/var/www/
       # /var/www/src is used here rather than /var/www/build/html to
       # prevent the grunt clean:default task from encountering an error
       # because docker won't let the files directory be removed as the
