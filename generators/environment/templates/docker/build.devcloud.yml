@@ -28,60 +28,248 @@ services:
   # Usage Example:
   # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm cli
   cli:
-    volumes:
-      # Code volume mount.
-      - .:/var/www
-      # DevCloud backups are homed in /data/backups directory.
-      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+    image: <%= buildImage %>
+    command: /bin/bash
+    entrypoint: [ "/init" ]
     environment:
       APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
       GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
+      NODE_VERSION: 6
+      <% if (usePLS) { %>
+      # Allow for pattern lab compilation need detection with reasonable performance from
+      # within the build container.
+      # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
+      CHOKIDAR_USEPOLLING: 1
+      <% } -%>
+      # Set to "true" to load xdebug configuration. Note this will cause significant composer
+      # performance degradation.
+      PHP_XDEBUG: "false"
+      # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
+      GDT_QUIET: 1
+      # Include the DOCKER_ENV so Drupal settings can be aware of environment.
+      DOCKER_ENV: ${DOCKER_ENV:-local}
+      # Centralized build cache configuration.
+      # This might move to the Docker build image.
+      NPM_CONFIG_CACHE: /root/.cache/npm
+      COMPOSER_CACHE_DIR: /root/.cache/composer
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+    external_links:
+      - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
+    labels:
+      outrigger.project: <%= projectName %>
+    network_mode: "bridge"
+    volumes:
+      # Code volume mount.
+      - .:/var/www
+      # /var/www/src is used here rather than /var/www/build/html to
+      # prevent the grunt clean:default task from encountering an error
+      # because docker won't let the files directory be removed as the
+      # container is using it in its filesystem magic. Since the
+      # /var/www/build/html/sites/default item is a symlink it can be
+      # successfully cleaned without then needing to touch the files
+      # directory. This mount is present so that drush and other build
+      # container operations can operate on the files for a site.
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
+      # By volume mounting project Drush configuration to the user profile the
+      # Docker image can carry Drush configuration and commands itself.
+      # Would be more clean if this volume mount placed the Drush configuration
+      # within the Drupal directory structure.
+      - ./env/build/etc/drush:/root/.drush
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+      # Persist the cache directories associated with various tools.
+      # The first volume mount covers: npm, composer, bower, fontconfig, & yarn
+      - /data/<%= projectName %>/cache:/root/.cache
+      - /data/<%= projectName %>/cache/drush:/root/.drush/cache
+      - /data/<%= projectName %>/cache/behat_gherkin:/tmp/behat_gherkin_cache
+      # SSH key grants read access to private Git repositories.
+      - ~/.ssh/${OUTRIGGER_SSH_KEY:-id_rsa}:/root/.ssh/outrigger.key
+      # Preserve BASH history across build container runs.
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/bash:/root/bash
+    working_dir: /var/www
 
   # Adjust the base service definition for devcloud.
   #
   # Usage Example:
   # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm composer install
   composer:
-    volumes:
-      # Code volume mount.
-      - .:/var/www
-      # DevCloud backups are homed in /data/backups directory.
-      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+    image: <%= buildImage %>
+    command: ""
+    entrypoint: [ "/init", "composer", "--ansi" ]
     environment:
       APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
       GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
+      NODE_VERSION: 6<% if (usePLS) { %>
+      # Allow for pattern lab compilation need detection with reasonable performance from
+      # within the build container.
+      # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
+      CHOKIDAR_USEPOLLING: 1
+      <% } -%># Set to "true" to load xdebug configuration. Note this will cause significant composer
+      # performance degradation.
+      PHP_XDEBUG: "false"
+      # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
+      GDT_QUIET: 1
+      # Include the DOCKER_ENV so Drupal settings can be aware of environment.
+      DOCKER_ENV: ${DOCKER_ENV:-local}
+      # Centralized build cache configuration.
+      # This might move to the Docker build image.
+      NPM_CONFIG_CACHE: /root/.cache/npm
+      COMPOSER_CACHE_DIR: /root/.cache/composer
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+    external_links:
+      - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
+    labels:
+      outrigger.project: <%= projectName %>
+    network_mode: "bridge"
+    volumes:
+      # Code volume mount.
+      - .:/var/www
+      # /var/www/src is used here rather than /var/www/build/html to
+      # prevent the grunt clean:default task from encountering an error
+      # because docker won't let the files directory be removed as the
+      # container is using it in its filesystem magic. Since the
+      # /var/www/build/html/sites/default item is a symlink it can be
+      # successfully cleaned without then needing to touch the files
+      # directory. This mount is present so that drush and other build
+      # container operations can operate on the files for a site.
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
+      # By volume mounting project Drush configuration to the user profile the
+      # Docker image can carry Drush configuration and commands itself.
+      # Would be more clean if this volume mount placed the Drush configuration
+      # within the Drupal directory structure.
+      - ./env/build/etc/drush:/root/.drush
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+      # Persist the cache directories associated with various tools.
+      # The first volume mount covers: npm, composer, bower, fontconfig, & yarn
+      - /data/<%= projectName %>/cache:/root/.cache
+      # SSH key grants read access to private Git repositories.
+      - ~/.ssh/${OUTRIGGER_SSH_KEY:-id_rsa}:/root/.ssh/outrigger.key
+    working_dir: /var/www
 
   # Adjust the base service definition for devcloud.
   #
   # Usage Example:
   # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm drush
   drush:
-    volumes:
-      # Code volume mount.
-      - .:/var/www
-      # DevCloud backups are homed in /data/backups directory.
-      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+    image: <%= buildImage %>
+    command: ""
+    entrypoint: [ "/init", "drush", "@<%= projectName %>" ]
     environment:
       APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
       GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
+      NODE_VERSION: 6<% if (usePLS) { %>
+      # Allow for pattern lab compilation need detection with reasonable performance from
+      # within the build container.
+      # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
+      CHOKIDAR_USEPOLLING: 1
+      <% } -%># Set to "true" to load xdebug configuration. Note this will cause significant composer
+      # performance degradation.
+      PHP_XDEBUG: "false"
+      # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
+      GDT_QUIET: 1
+      # Include the DOCKER_ENV so Drupal settings can be aware of environment.
+      DOCKER_ENV: ${DOCKER_ENV:-local}
+      # Centralized build cache configuration.
+      # This might move to the Docker build image.
+      NPM_CONFIG_CACHE: /root/.cache/npm
+      COMPOSER_CACHE_DIR: /root/.cache/composer
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+    external_links:
+      - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
+    labels:
+      outrigger.project: <%= projectName %>
+    network_mode: "bridge"
+    volumes:
+      # Code volume mount.
+      - .:/var/www
+      # /var/www/src is used here rather than /var/www/build/html to
+      # prevent the grunt clean:default task from encountering an error
+      # because docker won't let the files directory be removed as the
+      # container is using it in its filesystem magic. Since the
+      # /var/www/build/html/sites/default item is a symlink it can be
+      # successfully cleaned without then needing to touch the files
+      # directory. This mount is present so that drush and other build
+      # container operations can operate on the files for a site.
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
+      # By volume mounting project Drush configuration to the user profile the
+      # Docker image can carry Drush configuration and commands itself.
+      # Would be more clean if this volume mount placed the Drush configuration
+      # within the Drupal directory structure.
+      - ./env/build/etc/drush:/root/.drush
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+      # Persist the cache directories associated with various tools.
+      # The first volume mount covers: npm, composer, bower, fontconfig, & yarn
+      - /data/<%= projectName %>/cache:/root/.cache
+      - /data/<%= projectName %>/cache/drush:/root/.drush/cache
+      # SSH key grants read access to private Git repositories.
+      - ~/.ssh/${OUTRIGGER_SSH_KEY:-id_rsa}:/root/.ssh/outrigger.key
+    working_dir: /var/www/build/html
 
   # Adjust the base service definition for devcloud.
   #
   # Usage Example:
   # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm drupal
   drupal:
-    volumes:
-      # Code volume mount.
-      - .:/var/www
-      # DevCloud backups are homed in /data/backups directory.
-      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+    image: <%= buildImage %>
+    command: ""
+    entrypoint: [ "/init", "/var/www/vendor/bin/drupal", "--ansi" ]
     environment:
       APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
       GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
+      NODE_VERSION: 6<% if (usePLS) { %>
+      # Allow for pattern lab compilation need detection with reasonable performance from
+      # within the build container.
+      # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
+      CHOKIDAR_USEPOLLING: 1
+      <% } -%># Set to "true" to load xdebug configuration. Note this will cause significant composer
+      # performance degradation.
+      PHP_XDEBUG: "false"
+      # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
+      GDT_QUIET: 1
+      # Include the DOCKER_ENV so Drupal settings can be aware of environment.
+      DOCKER_ENV: ${DOCKER_ENV:-local}
+      # Centralized build cache configuration.
+      # This might move to the Docker build image.
+      NPM_CONFIG_CACHE: /root/.cache/npm
+      COMPOSER_CACHE_DIR: /root/.cache/composer
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+    external_links:
+      - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
+    labels:
+      outrigger.project: <%= projectName %>
+    network_mode: "bridge"
+    volumes:
+      # Code volume mount.
+      - .:/var/www
+      # /var/www/src is used here rather than /var/www/build/html to
+      # prevent the grunt clean:default task from encountering an error
+      # because docker won't let the files directory be removed as the
+      # container is using it in its filesystem magic. Since the
+      # /var/www/build/html/sites/default item is a symlink it can be
+      # successfully cleaned without then needing to touch the files
+      # directory. This mount is present so that drush and other build
+      # container operations can operate on the files for a site.
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
+      # By volume mounting project Drush configuration to the user profile the
+      # Docker image can carry Drush configuration and commands itself.
+      # Would be more clean if this volume mount placed the Drush configuration
+      # within the Drupal directory structure.
+      - ./env/build/etc/drush:/root/.drush
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+      # Persist the cache directories associated with various tools.
+      # The first volume mount covers: npm, composer, bower, fontconfig, & yarn
+      - /data/<%= projectName %>/cache:/root/.cache
+      - /data/<%= projectName %>/cache/drush:/root/.drush/cache
+      # SSH key grants read access to private Git repositories.
+      - ~/.ssh/${OUTRIGGER_SSH_KEY:-id_rsa}:/root/.ssh/outrigger.key
+    working_dir: /var/www/build/html
 
   <% if (usePLS) { %>
   # Adjust the base service definition for devcloud.
@@ -89,15 +277,62 @@ services:
   # Usage Example:
   # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm theme
   theme:
-    volumes:
-      # Code volume mount.
-      - .:/var/www
-      # DevCloud backups are homed in /data/backups directory.
-      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+    image: <%= buildImage %>
+    command: ""
+    entrypoint: [ "/init", "./node_modules/.bin/gulp" ]
     environment:
       APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
       GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
+      NODE_VERSION: 6<% if (usePLS) { %>
+      # Allow for pattern lab compilation need detection with reasonable performance from
+      # within the build container.
+      # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
+      CHOKIDAR_USEPOLLING: 1<% } -%>
+      # Set to "true" to load xdebug configuration. Note this will cause significant composer
+      # performance degradation.
+      PHP_XDEBUG: "false"
+      # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
+      GDT_QUIET: 1
+      # Include the DOCKER_ENV so Drupal settings can be aware of environment.
+      DOCKER_ENV: ${DOCKER_ENV:-local}
+      # Centralized build cache configuration.
+      # This might move to the Docker build image.
+      NPM_CONFIG_CACHE: /root/.cache/npm
+      COMPOSER_CACHE_DIR: /root/.cache/composer
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+    external_links:
+      - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
+    labels:
+      com.dnsdock.name: theme
+      com.dnsdock.image: <%= domain %>
+      outrigger.project: <%= projectName %>
+    network_mode: "bridge"
+    volumes:
+      # Code volume mount.
+      - .:/var/www
+      # /var/www/src is used here rather than /var/www/build/html to
+      # prevent the grunt clean:default task from encountering an error
+      # because docker won't let the files directory be removed as the
+      # container is using it in its filesystem magic. Since the
+      # /var/www/build/html/sites/default item is a symlink it can be
+      # successfully cleaned without then needing to touch the files
+      # directory. This mount is present so that drush and other build
+      # container operations can operate on the files for a site.
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
+      # By volume mounting project Drush configuration to the user profile the
+      # Docker image can carry Drush configuration and commands itself.
+      # Would be more clean if this volume mount placed the Drush configuration
+      # within the Drupal directory structure.
+      - ./env/build/etc/drush:/root/.drush
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+      # Persist the cache directories associated with various tools.
+      # The first volume mount covers: npm, composer, bower, fontconfig, & yarn
+      - /data/<%= projectName %>/cache:/root/.cache
+      # SSH key grants read access to private Git repositories.
+      - ~/.ssh/${OUTRIGGER_SSH_KEY:-id_rsa}:/root/.ssh/outrigger.key
+    working_dir: /var/www/<%= themePath %>/<%= themeName %>
 
   <% } -%>
   # Adjust the grunt service definition for devcloud.
@@ -105,27 +340,121 @@ services:
   # Usage Example:
   # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm grunt
   grunt:
-    volumes:
-      # Code volume mount.
-      - .:/var/www
-      # DevCloud backups are homed in /data/backups directory.
-      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+    image: <%= buildImage %>
+    command: ""
+    entrypoint: [ "/init", "grunt" ]
     environment:
       APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
       GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
+      NODE_VERSION: 6<% if (usePLS) { %>
+      # Allow for pattern lab compilation need detection with reasonable performance from
+      # within the build container.
+      # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
+      CHOKIDAR_USEPOLLING: 1
+      <% } -%># Set to "true" to load xdebug configuration. Note this will cause significant composer
+      # performance degradation.
+      PHP_XDEBUG: "false"
+      # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
+      GDT_QUIET: 1
+      # Include the DOCKER_ENV so Drupal settings can be aware of environment.
+      DOCKER_ENV: ${DOCKER_ENV:-local}
+      # Centralized build cache configuration.
+      # This might move to the Docker build image.
+      NPM_CONFIG_CACHE: /root/.cache/npm
+      COMPOSER_CACHE_DIR: /root/.cache/composer
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+    external_links:
+      - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
+    labels:
+      outrigger.project: <%= projectName %>
+    network_mode: "bridge"
+    volumes:
+      # Code volume mount.
+      - .:/var/www
+      # /var/www/src is used here rather than /var/www/build/html to
+      # prevent the grunt clean:default task from encountering an error
+      # because docker won't let the files directory be removed as the
+      # container is using it in its filesystem magic. Since the
+      # /var/www/build/html/sites/default item is a symlink it can be
+      # successfully cleaned without then needing to touch the files
+      # directory. This mount is present so that drush and other build
+      # container operations can operate on the files for a site.
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
+      # By volume mounting project Drush configuration to the user profile the
+      # Docker image can carry Drush configuration and commands itself.
+      # Would be more clean if this volume mount placed the Drush configuration
+      # within the Drupal directory structure.
+      - ./env/build/etc/drush:/root/.drush
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+      # Persist the cache directories associated with various tools.
+      # The first volume mount covers: npm, composer, bower, fontconfig, & yarn
+      - /data/<%= projectName %>/cache:/root/.cache
+      - /data/<%= projectName %>/cache/drush:/root/.drush/cache
+      - /data/<%= projectName %>/cache/behat_gherkin:/tmp/behat_gherkin_cache
+      # SSH key grants read access to private Git repositories.
+      - ~/.ssh/${OUTRIGGER_SSH_KEY:-id_rsa}:/root/.ssh/outrigger.key
+    working_dir: /var/www
 
   # Adjust the base service definition for devcloud.
   #
   # Usage Example:
   # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm base 'rm -Rf node_modules'
   base:
+    image: <%= buildImage %>
+    network_mode: "bridge"
+    entrypoint: [ "/init" ]
+    working_dir: /var/www
+    command: /bin/bash
     volumes:
       # Code volume mount.
       - .:/var/www
+      # /var/www/src is used here rather than /var/www/build/html to
+      # prevent the grunt clean:default task from encountering an error
+      # because docker won't let the files directory be removed as the
+      # container is using it in its filesystem magic. Since the
+      # /var/www/build/html/sites/default item is a symlink it can be
+      # successfully cleaned without then needing to touch the files
+      # directory. This mount is present so that drush and other build
+      # container operations can operate on the files for a site.
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
+      # By volume mounting project Drush configuration to the user profile the
+      # Docker image can carry Drush configuration and commands itself.
+      # Would be more clean if this volume mount placed the Drush configuration
+      # within the Drupal directory structure.
+      - ./env/build/etc/drush:/root/.drush
       # DevCloud backups are homed in /data/backups directory.
       - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+      # Persist the cache directories associated with various tools.
+      # The first volume mount covers: npm, composer, bower, fontconfig, & yarn
+      - /data/<%= projectName %>/cache:/root/.cache
+      - /data/<%= projectName %>/cache/drush:/root/.drush/cache
+      - /data/<%= projectName %>/cache/behat_gherkin:/tmp/behat_gherkin_cache
+      # SSH key grants read access to private Git repositories.
+      - ~/.ssh/${OUTRIGGER_SSH_KEY:-id_rsa}:/root/.ssh/outrigger.key
+      # Preserve BASH history across build container runs.
+      - /data/<%= projectName %>/${DOCKER_ENV:-local}/bash:/root/bash
+    labels:
+      outrigger.project: <%= projectName %>
     environment:
       APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
       GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
+      NODE_VERSION: 6<% if (usePLS) { %>
+      # Allow for pattern lab compilation need detection with reasonable performance from
+      # within the build container.
+      # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
+      CHOKIDAR_USEPOLLING: 1<% } -%>
+      # Set to "true" to load xdebug configuration. Note this will cause significant composer
+      # performance degradation.
+      PHP_XDEBUG: "false"
+      # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
+      GDT_QUIET: 1
+      # Include the DOCKER_ENV so Drupal settings can be aware of environment.
+      DOCKER_ENV: ${DOCKER_ENV:-local}
+      # Centralized build cache configuration.
+      # This might move to the Docker build image.
+      NPM_CONFIG_CACHE: /root/.cache/npm
+      COMPOSER_CACHE_DIR: /root/.cache/composer
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
