@@ -89,7 +89,6 @@ services:
   # Other services inherit these settings via the extends property.
   # See https://docs.docker.com/compose/extends/#extending-services
   base:
-  base:
     image: <%= buildImage %>
     network_mode: "bridge"
     entrypoint: [ "/init" ]
