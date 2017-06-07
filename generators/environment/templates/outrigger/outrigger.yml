@@ -16,9 +16,10 @@ project: <%= projectName %>
 scripts:
 
   run:
+    alias: run
     description: Run one of the build container services such as 'cli' or 'drush'.
     run:
-      - docker-compose -f $CWD/build.yml run --rm
+      - docker-compose -f $PWD/build.yml run --rm
 
   setup:
     alias: setup
