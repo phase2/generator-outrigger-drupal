@@ -18,9 +18,9 @@
 # Configuration. A generic approach for this has not yet been determined.
 #
 # @see https://docs.docker.com/compose/reference/overview/
-# @see https://docs.docker.com/compose/compose-file/compose-file-v2/
+# @see https://docs.docker.com/compose/compose-file/compose-file/
 ##
-version: '2.1'
+version: '3.1'
 
 services:
   # Database service
@@ -40,6 +40,7 @@ services:
       com.dnsdock.name: db
       com.dnsdock.image: <%= domain %>
       outrigger.project: <%= projectName %>
+
   <% if (cache.external) { %>
   # Application Cache service
   cache:
@@ -55,6 +56,7 @@ services:
       com.dnsdock.name: cache
       com.dnsdock.image: <%= domain %>
       outrigger.project: <%= projectName %>
+
   <% } if (proxy.exists) { %>
   # Reverse-proxy Cache service
   proxy:
@@ -72,6 +74,7 @@ services:
       com.dnsdock.name: www
       com.dnsdock.image: <%= domain %>
       outrigger.project: <%= projectName %>
+
   <% } if (mail.exists) { %>
   # MailHog SMTP and UI service.
   mail:
@@ -87,6 +90,7 @@ services:
       # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
       VIRTUAL_HOST: mail-${DOCKER_ENV}-<%= host.devcloud %>
       VIRTUAL_PORT: '8025'
+
   <% } %>
   # Main Application service.
   www:
@@ -106,19 +110,11 @@ services:
     links:
       - db<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (mail.exists) { %><%= mail.docker.link %><% } %>
     volumes:
-      # Use 'rig project sync' to leverage unison-based filesystem for app code.
-      # @see <doc-url>
-      - project-sync:/var/www/
+      # Main code volume mount.
+      - .:/var/www/
       # /var/www/src is used for consistency with the build container.
       - /data/<%= projectName %>/${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files
     labels:
       com.dnsdock.name: <% if (proxy.exists) { %>app<% } else { %>www<% } %>
       com.dnsdock.image: <%= domain %>
       outrigger.project: <%= projectName %>
-
-volumes:
-  # This defines the filesystem synchronization volume used for application
-  # code by the web container.
-  # @see <doc-url>
-  project-sync:
-    external: true

@@ -103,6 +103,12 @@ module.exports = Generator.extend({
       );
 
       this.fs.copyTpl(
+        this.templatePath('docker/docker-compose.override.yml'),
+        this.destinationPath('docker-compose.override.yml'),
+        tokens
+      );
+
+      this.fs.copyTpl(
         this.templatePath('docker/build.yml'),
         this.destinationPath('build.yml'),
         tokens
@@ -290,7 +296,8 @@ module.exports = Generator.extend({
     outrigger: function() {
       this.fs.copyTpl(
         this.templatePath('outrigger/outrigger.yml'),
-        this.destinationPath('./.outrigger.yml')
+        this.destinationPath('./.outrigger.yml'),
+        tokens
       );
     },
 

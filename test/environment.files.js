@@ -15,9 +15,11 @@ module.exports = {
     'CONTRIBUTING.md',
     'DOCKER.md',
     'docker-compose.yml',
+    'docker-compose.override.yml',
     'env/build/etc/drush/drushrc.php',
     'env/build/etc/drush/aliases.drushrc.php',
     'Gruntconfig.json',
+    '.outrigger.yml',
     'package.json',
     'src/sites/settings.common.php',
     'TODOS.md'
@@ -31,7 +33,9 @@ module.exports = {
   },
   yaml: {
     'docker-compose.yml': 'docker-compose.yml',
+    'docker-compose.override.yml': 'docker-compose.override.yml',
     'build.yml': 'build.yml',
-    'build.devcloud.yml': 'build.devcloud.yml'
+    'build.devcloud.yml': 'build.devcloud.yml',
+    '.outrigger.yml': '.outrigger.yml'
   }
 };

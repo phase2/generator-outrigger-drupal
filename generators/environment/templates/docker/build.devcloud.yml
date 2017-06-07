@@ -19,80 +19,110 @@
 # @see https://docs.docker.com/compose/reference/overview/
 # @see https://docs.docker.com/compose/compose-file/compose-file-v2/
 ##
-version: '2.1'
+version: '3.1'
 
 services:
-  # Container for starting a cli for build commands
-  # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm cli
+
+  # Adjust the base service definition for devcloud.
+  #
+  # Usage Example:
+  # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm cli
   cli:
-    extends:
-      service: operational
-
-  # Container for running composer in the repo root.
-  # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm composer <command>
-  composer:
-    extends:
-      service: base
-    entrypoint: [ "/init", "composer", "--ansi" ]
-    command: ""
-
-  # Container for running drush in the docroot.
-  # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm drush <command>
-  # Where <command> is a direct drush command like cache-rebuild
-  drush:
-    extends:
-      service: operational
-    entrypoint: [ "/init", "drush", "@<%= projectName %>" ]
-    working_dir: /var/www/build/html
-
-  # Container for running Drupal Console in the docroot.
-  # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm drupal <command>
-  # Where <command> is a direct drupal command like generate
-  # Note: Only works if the project includes Drupal Console as a composer dependency.
-  drupal:
-    extends:
-      service: operational
-    entrypoint: [ "/init", "/var/www/vendor/bin/drupal", "--ansi" ]
-    working_dir: /var/www/build/html
-
-  # Container for running grunt in the docroot.
-  # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm grunt <command>
-  grunt:
-    extends:
-      service: operational
-    entrypoint: [ "/init", "grunt" ]
-
-  # Operational base service definition for Phase2 Dev Cloud environment.
-  #
-  # Unlike `base`, this layer is functional for application interactions.
-  #
-  # Other services inherit these settings via the extends property.
-  # See https://docs.docker.com/compose/extends/#extending-services
-  operational:
-    extends:
-      service: base
-    external_links:
-      - <%= db.docker.extLink %><% if (cache.external) { %><%= cache.docker.extLink %><% } %>
-    # Unset the bin/bash command used by base and cli.
-    command: ""
-
-  # Base service definition for Phase2 Dev Cloud environment.
-  #
-  # This is not a fully operational build container, lacking access to other
-  # services such as the database or cache needed to properly interact with the
-  # application.
-  #
-  # Uses for this container include filesystem operations. For example:
-  #
-  # DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm base 'rm -Rf node_modules'
-  #
-  # Other services inherit these settings via the extends property.
-  # See https://docs.docker.com/compose/extends/#extending-services
-  base:
-    extends:
-      file: build.yml
-      service: base
     volumes:
+      # Code volume mount.
+      - .:/var/www
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+    environment:
+      APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+
+  # Adjust the base service definition for devcloud.
+  #
+  # Usage Example:
+  # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm composer install
+  composer:
+    volumes:
+      # Code volume mount.
+      - .:/var/www
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+    environment:
+      APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+
+  # Adjust the base service definition for devcloud.
+  #
+  # Usage Example:
+  # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm drush
+  drush:
+    volumes:
+      # Code volume mount.
+      - .:/var/www
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+    environment:
+      APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+
+  # Adjust the base service definition for devcloud.
+  #
+  # Usage Example:
+  # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm drupal
+  drupal:
+    volumes:
+      # Code volume mount.
+      - .:/var/www
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+    environment:
+      APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+
+  <% if (usePLS) { %>
+  # Adjust the base service definition for devcloud.
+  #
+  # Usage Example:
+  # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm theme
+  theme:
+    volumes:
+      # Code volume mount.
+      - .:/var/www
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+    environment:
+      APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+
+  <% } -%>
+  # Adjust the grunt service definition for devcloud.
+  #
+  # Usage Example:
+  # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm grunt
+  grunt:
+    volumes:
+      # Code volume mount.
+      - .:/var/www
+      # DevCloud backups are homed in /data/backups directory.
+      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+    environment:
+      APP_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      GDT_DOMAIN: ${DOCKER_ENV}-<%= host.devcloud %>
+      <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+
+  # Adjust the base service definition for devcloud.
+  #
+  # Usage Example:
+  # DOCKER_ENV=int docker-compose -f build.yml -f build.devcloud.yml -p <%= machineName %>_int run --rm base 'rm -Rf node_modules'
+  base:
+    volumes:
+      # Code volume mount.
+      - .:/var/www
       # DevCloud backups are homed in /data/backups directory.
       - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
     environment:
