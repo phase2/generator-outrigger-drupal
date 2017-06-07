@@ -159,5 +159,5 @@ volumes:
   # This defines the filesystem synchronization volume used for application
   # code by the web container.
   # @see <doc-url>
-  project-sync:
+  <%= projectName%>-sync:
     external: true
