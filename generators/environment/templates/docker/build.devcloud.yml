@@ -113,7 +113,7 @@ services:
       # within the Drupal directory structure.
       - ./env/build/etc/drush:/root/.drush
       # DevCloud backups are homed in /data/backups directory.
-      - /data/backups/<%= projectName %>/${DOCKER_ENV}:/opt/backups
+      - /data/backups/<%= projectName %>/${DOCKER_ENV:-local}:/opt/backups
       # Persist the cache directories associated with various tools.
       # The first volume mount covers: npm, composer, bower, fontconfig, & yarn
       - /data/<%= projectName %>/cache:/root/.cache
@@ -145,4 +145,4 @@ services:
       # This might move to the Docker build image.
       NPM_CONFIG_CACHE: /root/.cache/npm
       COMPOSER_CACHE_DIR: /root/.cache/composer
-      <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %><% } %>
+      <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV:-local}-<%= host.devcloud %><% } %>
