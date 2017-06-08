@@ -18,9 +18,9 @@
 # Configuration. A generic approach for this has not yet been determined.
 #
 # @see https://docs.docker.com/compose/reference/overview/
-# @see https://docs.docker.com/compose/compose-file/compose-file-v2/
+# @see https://docs.docker.com/compose/compose-file/compose-file/
 ##
-version: '2.1'
+version: '3.1'
 
 services:
   # Database service
@@ -32,7 +32,7 @@ services:
       # This is used by the nginx-proxy service which is part of Phase2's Outrigger hosting platform.
       # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
       # Add a VIRTUAL_PORT to access the service externally over port 80.
-      VIRTUAL_HOST: db-${DOCKER_ENV}-<%= host.devcloud %>
+      VIRTUAL_HOST: db-${DOCKER_ENV:-local}-<%= host.devcloud %>
     volumes:
       - /data/<%= projectName %>/${DOCKER_ENV:-local}/mysql:/var/lib/mysql
     network_mode: "bridge"
@@ -50,7 +50,7 @@ services:
       # This is used by the nginx-proxy service which is part of Phase2's Outrigger hosting platform.
       # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
       # Add a VIRTUAL_PORT to access the service externally over port 80.
-      VIRTUAL_HOST: cache-${DOCKER_ENV}-<%= host.devcloud %>
+      VIRTUAL_HOST: cache-${DOCKER_ENV:-local}-<%= host.devcloud %>
     labels:
       com.dnsdock.name: cache
       com.dnsdock.image: <%= domain %>
@@ -65,7 +65,7 @@ services:
       VARNISH_BACKEND_HOST: www
       # This is used by the nginx-proxy service which is part of Phase2's Outrigger hosting platform.
       # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
-      VIRTUAL_HOST: ${DOCKER_ENV}-<%= host.devcloud %>
+      VIRTUAL_HOST: ${DOCKER_ENV:-local}-<%= host.devcloud %>
     links:
       - www
     labels:
@@ -85,7 +85,7 @@ services:
     environment:
       # This is used by the nginx-proxy service which is part of Phase2's Outrigger Cloud hosting.
       # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
-      VIRTUAL_HOST: mail-${DOCKER_ENV}-<%= host.devcloud %>
+      VIRTUAL_HOST: mail-${DOCKER_ENV:-local}-<%= host.devcloud %>
       VIRTUAL_PORT: '8025'
   <% } %>
   # Main Application service.
@@ -102,10 +102,11 @@ services:
       DOCKER_ENV: ${DOCKER_ENV:-local}
       # This is used by the nginx-proxy service which is part of Phase2's Outrigger Cloud hosting.
       # Outrigger Cloud as a hosting platform is still for Phase2 internal use only.
-      VIRTUAL_HOST: <% if (proxy.exists) { %>app-<% } %>${DOCKER_ENV}-<%= host.devcloud %>
+      VIRTUAL_HOST: <% if (proxy.exists) { %>app-<% } %>${DOCKER_ENV:-local}-<%= host.devcloud %>
     links:
       - db<% if (cache.external) { %><%= cache.docker.link %><% } %><% if (mail.exists) { %><%= mail.docker.link %><% } %>
     volumes:
+      # Main code volume mount.
       - .:/var/www/
       # /var/www/src is used for consistency with the build container.
       - /data/<%= projectName %>/${DOCKER_ENV:-local}/files:/var/www/src/sites/default/files

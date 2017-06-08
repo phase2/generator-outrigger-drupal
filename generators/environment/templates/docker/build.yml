@@ -60,8 +60,8 @@ services:
     working_dir: /var/www/<%= themePath %>/<%= themeName %>
     entrypoint: [ "/init", "./node_modules/.bin/gulp" ]
     command: ""
-  <% } -%>
 
+  <% } -%>
   # Container for running grunt in the repo root.
   # Usage: docker-compose -f build.yml run --rm grunt <command>
   grunt:
@@ -102,8 +102,9 @@ services:
     working_dir: /var/www
     command: /bin/bash
     volumes:
-      # Primary code mount.
-      - .:/var/www/
+      # Use 'rig project sync' to leverage unison-based filesystem for app code.
+      # @see <doc-url>
+      - <%= projectName %>-sync:/var/www/
       # /var/www/src is used here rather than /var/www/build/html to
       # prevent the grunt clean:default task from encountering an error
       # because docker won't let the files directory be removed as the
@@ -136,14 +137,12 @@ services:
       APP_DOMAIN: <%= host.local %>
       GDT_DOMAIN: <%= host.local %>
       # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
-      NODE_VERSION: 6
-      <% if (usePLS) { %>
+      NODE_VERSION: 6<% if (usePLS) { %>
       # Allow for pattern lab compilation need detection with reasonable performance from
       # within the build container.
       # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
       CHOKIDAR_USEPOLLING: 1
-      <% } -%>
-      # Set to "true" to load xdebug configuration. Note this will cause significant composer
+      <% } -%># Set to "true" to load xdebug configuration. Note this will cause significant composer
       # performance degradation.
       PHP_XDEBUG: "false"
       # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
@@ -155,3 +154,10 @@ services:
       NPM_CONFIG_CACHE: /root/.cache/npm
       COMPOSER_CACHE_DIR: /root/.cache/composer
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: <%= host.local %><% } %>
+
+volumes:
+  # This defines the filesystem synchronization volume used for application
+  # code by the web container.
+  # @see <doc-url>
+  <%= projectName %>-sync:
+    external: true
