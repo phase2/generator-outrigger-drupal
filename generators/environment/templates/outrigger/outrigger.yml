@@ -26,6 +26,7 @@ scripts:
     description: Run the end-to-end repository initialization and site install script.
     run:
       - rig project run:welcome
+      - rig project sync:start
       - start.sh
 
   up:
@@ -59,6 +60,12 @@ scripts:
     description: Install the Drupal site.
     run:
       - docker-compose -f build.yml run --rm grunt install
+
+  fix-permissions:
+    alias: fix-perms
+    description: Fix permissions for Apache to run code and access files. (Automatically run as part of rig project install.)
+    run:
+      - docker-compose exec www /var/www/bin/fix-perms.sh
 
   ps:
     description: Get a list of all containers associated with this project. Unlike docker-compose ps, this will include all containers even for different configuration files.
