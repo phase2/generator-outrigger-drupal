@@ -96,7 +96,7 @@ export COMPOSE_FILE=build$COMPOSE_EXT.yml
 # This will allow follow-up runs via Jenkins to manage the workspace.
 # Container rm is left to Jenkins or the developer.
 teardown() {
-  docker-compose -f docker-compose.yml stop || true
+  docker-compose -f docker-compose$COMPOSE_EXT.yml stop || true
 }
 
 # Handler for errors and interruptions.
@@ -124,7 +124,7 @@ export DOCKER_ENV
 
 # Spin up cache and db services to support build container.
 # Web container might take file locks on existing code, blocking the build process.
-cmd "docker-compose -f docker-compose.yml up -d <% if(cache.external) { %>cache <% } %>db"
+cmd "docker-compose -f docker-compose$COMPOSE_EXT.yml up -d <% if(cache.external) { %>cache <% } %>db"
 
 # Install dependencies and run main application build.
 # Run grunt with --force to ignore errors. This won't help if the errors bail the build.
@@ -134,7 +134,7 @@ echoInfo "This just suppresses errors and is unlikely to fix issues causing your
 cmd "docker-compose run --rm -e NPM_CONFIG_LOGLEVEL=error cli \"npm install --unsafe-perm && grunt --timer --quiet ${NO_VALIDATE}\""
 
 # Now safe to activate web container to support end-to-end testing.
-cmd "docker-compose -f docker-compose.yml up -d <% if(proxy.exists) { %>proxy <% } %>www"
+cmd "docker-compose -f docker-compose$COMPOSE_EXT.yml up -d <% if(proxy.exists) { %>proxy <% } %>www"
 
 # Correct any issues in the web container.
 cmd "docker exec <%= machineName %>_${DOCKER_ENV}_www \"/var/www/bin/fix-perms.sh\""

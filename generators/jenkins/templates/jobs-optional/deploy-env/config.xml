@@ -61,8 +61,8 @@ export SITE_DOMAIN=<% if (environment == 'local') { %><%= host.local %><% } else
 
 # Break down the Docker environment and remove generated files.
 teardown() {
-  docker-compose -f docker-compose.yml stop || true
-  docker-compose -f docker-compose.yml rm -f || true
+  docker-compose -f docker-compose.<%= dockerComposeExt %>yml stop || true
+  docker-compose -f docker-compose.<%= dockerComposeExt %>yml rm -f || true
   # Now that www container is stopped it&apos;s safe to clean up.
   # This is not done by default to keep most environments fast.
   <% if (environment != 'review') { %>#<% } %> git clean -fd
