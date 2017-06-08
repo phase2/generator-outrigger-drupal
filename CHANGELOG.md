@@ -1,3 +1,46 @@
+## v3.2.0 (June 8 2017)
+
+### Major Changes
+
+#### Support for New Rig Project Commands
+
+As of [rig 1.3.0](https://github.com/phase2/rig/releases/tag/1.3.0),
+there is a new facility in the rig CLI to support project-specific operations.
+
+If you opt-in to Docker environment configuration, a default .outrigger.yml
+configuration file will be created. This will include various script operations
+that are considered best practices for routine use.
+
+The available scripts can be viewed from inside your generated project with
+`rig project`. Read more about this in the
+[Outrigger Documentation on Project Configuration](http://docs.outrigger.sh/project-setup/project-configuration/).
+
+Amongst other things, this replaces the previous, direct use of bin/start.sh
+when setting up a project with `rig project setup`. The start.sh script still
+exists but in the future will be broken up into smaller pieces.
+
+**We discourage running start.sh on a regular basis, as there are more specific
+commands, many of them facilitated in rig project, that will help solve daily
+development tasks.**
+
+#### Environment Configuration
+
+* Add a docker-compose.override.yml which will be applied automatically for local use.
+  This contains development-only adjustments to the docker-compose configuration.
+  On DevCloud you might skip this by running docker-compose.yml explicitly:
+  `docker-compose -f docker-compose.yml up -d`. Currently the only change is for
+  Unison support.
+* Added out-of-box support for Unison-based filesystem sync of codebase. **This has
+  dramatic performance wins.** Anyone running projects on Linux will not see an
+  improvement, and for now might safely skip the docker-compose.override.yml file.
+
+### Other Changes
+
+* Upgrade docker-compose.yml from schema v2.1 to schema v3.1. This will help projects
+  with future deployment via docker swarm.
+* Further "branding" cleanups from the namechange.
+* Improvements in generated documentation.
+
 ## v3.1.0 (June 5 2017)
 
 * Changed name to generator-outrigger-drupal
