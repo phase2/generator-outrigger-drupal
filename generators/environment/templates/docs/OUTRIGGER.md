@@ -12,6 +12,8 @@ filesystem, DNS, and any necessary virtualization. Read more about this in the
 should follow the [Linux instructions](http://docs.outrigger.sh/getting-started/linux-installation/)
 for simple things like DNS consistency with macOS users.)
 
+> **You should never run code outside the Outrigger Build container other than rig project commands, docker commands, or BASH scripts you understand handle running docker commands as needed. Imagine your system has no development environment setup.**
+
 ## First-time Application Setup
 
 Once you have a working Outrigger + Docker environment, you can have a
@@ -20,38 +22,56 @@ commands.
 
 ```bash
 git clone <%= gitRepoUrl %>
-bin/start.sh
+rig project setup
 ```
-
-This command has a number of options, run `bin/start.sh --help` to see available options. It is also used in our Continuous Integration and QA deployment processes.
-
-> **WARNING**
->
-> `start.sh` is a great shortcut to get your development environment started up later, but please review the code to ensure familiarity with everything it does.
-> * By default it will reinstall the site, wiping your database.
-> * You can run with `--update` for an update operation, though early in the project this will likely fail.
 
 ## Daily Routine
 
 * `rig start`
-* eval "$(rig config)"
+* `eval "$(rig config)"`
 * `cd path/to/project`
-* `docker-compose up -d`
+* `rig project up`
 * [PRODUCTIVE!]
+* `rig project stop`
 * `rig stop`
 
-You can leave rig running day to day, but performance of the environment tends to degrade, so a clean stop, or morning `rig restart` will help.
+You can leave rig running day to day but periodic restarts are recommended.
 
 ## Running Commands in the Build Container
 
 All command-line operations to interact with the application are executed via a dedicated build container that has many tools built-in.
 
-* **Run Drush Command**: `docker-compose -f build.yml run drush <command>`
-* **Run Grunt Task**: `docker-compose -f build.yml run grunt <task>`
-* **Run Drupal Console Command**: `docker-compose -f build.yml run drupal <command>`
-* **Start an interactive BASH session**: `docker-compose -f build.yml run cli`
-  * There is no webserver running in this container, so testing operations will require the web container to be active.
-  * Run Drush commands with the alias `@<%- projectName %>`.
+### Using Build Services
+
+You can run any of the services defined at the root directory in build.yml, including services for cli, composer, drush, drupal (console), grunt, and theme,
+with either of the following commands:
+
+#### Using Rig Project
+
+```
+rig project run "<service> <further arguments and options>"
+rig project run "composer install"
+```
+
+#### Using docker-compose
+
+```
+docker-compose -f build.yml run --rm <service> <further arguments and options>
+docker-compose -f build.yml run --rm composer install
+```
+
+### Using a "Remote Server" Workflow
+
+If you want to run an interactive BASH session, use the `cli` service without further arguments:
+
+```
+rig project run cli
+```
+
+This will open a BASH session that allows you to run any commands or use any tools available in the build container.
+
+
+### Aliases & Shortcuts
 
 You may want to add an alias to your shell to reduce the typing:
 
@@ -65,21 +85,9 @@ Then execute commands with:
 r drush cr
 ```
 
-If you have Node 4 and npm 2 available in your local environment, you can also run:
+## Common Operations
 
-```
-npm run d 'cli'
-```
-
-### Common Operations
-
-These operations are for local development.
-
-* **Start Containers:** `docker-compose up`
-* **Build the Site:** `docker-compose -f build.yml run grunt`
-* **Open a Terminal Session to the Web Host container:** `docker-compose exec www bash`
-* **Fix File Permissions:** `docker-compose exec www /var/www/bin/fix-perms.sh`
-* **Open a Terminal Session to the Virtual machine:** `docker-machine ssh dev`
+To see a list of common operations run `rig project`.
 
 ## Services
 
