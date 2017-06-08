@@ -9,7 +9,7 @@
 * [ ] Set up the Docker-based site.
     * Install and start [Outrigger](http://docs.outrigger.sh/).
     * Run  `docker-compose pull && docker-compose -f build.yml pull` to ensure you have the latest Docker images for local development.
-    * Run `rig project setup` to confirm the code works and setup your project.
+    * Run `rig project sync:start` and `rig project setup` to confirm the code works and setup your project.
     * `npm install` and other tools should only be run inside containers.
 * [ ] Set up Jenkins to manage your CI and build processes.
     * Ensure the Jenkins jobs have the correct Git URL.
