@@ -318,7 +318,7 @@ module.exports = Generator.extend({
 
     if (!options['skipGoodbye']) {
       this.log(chalk.green('Your Docker-based Drupal site is ready to go. Remember, all your commands should be run inside a container!'));
-      this.log(chalk.yellow('Please read TODOS.md for manual follow-up steps.'));
+      this.log(chalk.yellow('Read the TODOS.md for manual actions before any other development.'));
     }
   }
 });

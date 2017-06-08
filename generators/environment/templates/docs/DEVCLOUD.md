@@ -1,13 +1,12 @@
-# Phase2 DevCloud
+# Phase2 DevCloud / Outrigger Hosting
 
-> Learn how to work with and manage Phase2's Docker development hosting platform.
+> Learn how to work with and manage Phase2's Outrigger Hosting platform.
 
-The Phase2 Dev Cloud is the hosting infrastructure for non-local development,
-testing, and other project-specific web resources.
+Outrigger Hosting is Phase2's docker-based hosting platform for our development projects. This solution is still internal-only and evolving, and will eventually be documented so others can set it up as well.
 
 ## Server Location
 
-All Docker-based Dev Cloud sites are located on ci.p2devcloud.com or
+All Docker-based hosted sites are located on ci.p2devcloud.com or
 ci2.p2devcloud.com.
 
 You can reach an environment on the server via:

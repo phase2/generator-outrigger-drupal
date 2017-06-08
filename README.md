@@ -2,6 +2,9 @@
 
 > Yeoman generator that weaves together Outrigger with other best-in-class tools for your Drupal project.
 
+**This project is mostly generic, but has some remaining pieces related to
+Phase2-specific development environment hosting.**
+
 This is an umbrella [Yeoman](http://yeoman.io/) generator that asks questions,
 then passes the answers to multiple "child" generators that handle their own
 aspect of project scaffolding. As the name implies, this generator focuses on Outrigger practices, where some of the other generators in use are focused on broader industry best practices.
