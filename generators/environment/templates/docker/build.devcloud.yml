@@ -156,5 +156,5 @@ services:
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV:-local}-<%= host.devcloud %><% } %>
       # PHPUnit variables.
       SIMPLETEST_DB: mysql://admin:admin@db/<%= machineName %>_drupal
-      SIMPLETEST_URL: <%= host.local %>
+      SIMPLETEST_URL: <%= host.devcloud %>
       BROWSERTEST_OUTPUT_DIRECTORY: /tmp
