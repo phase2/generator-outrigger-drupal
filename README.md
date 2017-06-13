@@ -13,13 +13,13 @@ aspect of project scaffolding. As the name implies, this generator focuses on Ou
 
 ### Using Docker
 
-Docker-based usage is available as of v3.0.0. It is the recommended approach as
+Docker-based usage is available as of v3.2.0. It is the recommended approach as
 updates tend to be less prone to complication.
 
 ```bash
 git clone git@github.com:phase2/generator-outrigger-drupal.git
 cd generator-outrigger-drupal
-git checkout v3.0.0
+git checkout v3.2.0
 docker-compose run --rm cli npm install
 mkdir ~/path/to/empty/directory
 YO_PROJECT_DIRECTORY=~/path/to/empty/directory docker-compose run --rm yo outrigger-drupal
