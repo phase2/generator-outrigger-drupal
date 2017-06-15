@@ -179,7 +179,7 @@ module.exports = Generator.extend({
   end: function() {
     var version = {
       gadget: require('generator-gadget/package.json').version,
-      env: require('generator-outrigger-drupal/package.json').version,
+      env: require('../../../generator-outrigger-drupal/package.json').version,
       pls: require('generator-pattern-lab-starter/package.json').version,
     }
 
