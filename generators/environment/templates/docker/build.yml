@@ -137,7 +137,8 @@ services:
       APP_DOMAIN: <%= host.local %>
       GDT_DOMAIN: <%= host.local %>
       # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
-      NODE_VERSION: 6<% if (usePLS) { %>
+      NODE_VERSION: 6
+      <% if (usePLS) { %>
       # Allow for pattern lab compilation need detection with reasonable performance from
       # within the build container.
       # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
