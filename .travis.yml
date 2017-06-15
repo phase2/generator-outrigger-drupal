@@ -4,6 +4,8 @@ node_js:
   - 4
   - 6
   - node
+install:
+  - npm install -g
 
 # The env and addons section is used to support a native module dependency.
 env:
