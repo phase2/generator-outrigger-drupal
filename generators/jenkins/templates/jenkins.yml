@@ -5,7 +5,7 @@ version: '2.1'
 
 services:
   jenkins:
-    image: phase2/jenkins-docker:latest
+    image: outrigger/jenkins-docker:latest
     volumes:
       # Primary jenkins configuration. Direct file mount prevents writing updates from running instance.
       - ./env/jenkins/config.xml:/var/jenkins_home/config.xml
@@ -16,7 +16,7 @@ services:
       # Mount a stable location for the Jenkins workspace
       - /opt/development/<%= projectName %>/jenkins/env/workspace:/opt/development/<%= projectName %>/jenkins/env/workspace
       # SSH key grants read access to private Git repositories.
-      - ~/.ssh/${DEVTOOLS_SSH_KEY:-id_rsa}:/root/.ssh/devtools.key
+      - ~/.ssh/${OUTRIGGER_SSH_KEY:-id_rsa}:/root/.ssh/outrigger.key
     network_mode: "bridge"
     environment:
       VIRTUAL_HOST: build.<%= host.devcloud %>
