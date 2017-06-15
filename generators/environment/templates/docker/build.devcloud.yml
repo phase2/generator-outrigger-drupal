@@ -96,7 +96,7 @@ services:
     command: /bin/bash
     volumes:
       # Main code volume mount.
-      - .:/var/www/
+      - .:/var/www
       # /var/www/src is used here rather than /var/www/build/html to
       # prevent the grunt clean:default task from encountering an error
       # because docker won't let the files directory be removed as the
