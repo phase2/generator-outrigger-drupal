@@ -57,7 +57,7 @@ specify an environment variable locally to substitute in the key name of your
 choice:
 
 ```bash
-export DEVTOOLS_SSH_KEY=devcloud_bitbucket_rsa
+export OUTRIGGER_SSH_KEY=devcloud_bitbucket_rsa
 ```
 
 This same mechanism is available to the build container.
