@@ -62,6 +62,15 @@ services:
       service: operational
     entrypoint: [ "/init", "grunt" ]
 
+  # Container for running PHPUnit tests.
+  # Usage: docker-compose -f build.yml run --rm phpunit <phpunit parameters>
+  # E.g. docker-compose -f build.yml run --rm phpunit -c ./core/phpunit.xml.dist ./modules/custom
+  phpunit:
+    extends:
+      service: operational
+    entrypoint: [ "/init", "/var/www/vendor/bin/phpunit" ]
+    working_dir: /var/www/build/html
+
   # Operational base service definition for Phase2 Dev Cloud environment.
   #
   # Unlike `base`, this layer is functional for application interactions.
@@ -145,3 +154,7 @@ services:
       NPM_CONFIG_CACHE: /root/.cache/npm
       COMPOSER_CACHE_DIR: /root/.cache/composer
       <% if (proxy.exists) { %>PROXY_VIRTUAL_HOST: ${DOCKER_ENV:-local}-<%= host.devcloud %><% } %>
+      # PHPUnit variables.
+      SIMPLETEST_DB: mysql://admin:admin@db/<%= machineName %>_drupal
+      SIMPLETEST_URL: <%= host.devcloud %>
+      BROWSERTEST_OUTPUT_DIRECTORY: /tmp
