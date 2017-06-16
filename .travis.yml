@@ -1,7 +1,16 @@
 sudo: false
 language: node_js
 node_js:
-  - '4'
-  - '5'
-  - '6'
-  - '7'
+  - 4
+  - 6
+  - node
+
+# The env and addons section is used to support a native module dependency.
+env:
+  - CXX=g++-4.8
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
