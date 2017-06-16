@@ -1,3 +1,18 @@
+## v3.3.0 (June 16 2017)
+
+* Added PHPUnit build service container to facilitate running tests.
+* Fixed Jenkins not using outrigger docker image or naming.
+* Fixed Unison volume override and standardize on code volumes have no final slash.
+* Fixed templating error in build.yml/build.devcloud.yml
+* Fixed `rig project run:all-stop` script was totally broken.
+
+### Project Plumbing
+
+* Added README badges to show off our hot stuff.
+* Added Greenkeeper dependency update automation.
+* Added Travis test automation for all branches and pull requests.
+* Updated project version in README installation notes.
+
 ## v3.2.0 (June 8 2017)
 
 ### Major Changes

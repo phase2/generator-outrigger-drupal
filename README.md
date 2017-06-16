@@ -1,11 +1,10 @@
 # Outrigger Drupal
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/phase2/generator-outrigger-drupal.svg)](https://greenkeeper.io/)
-
 > Yeoman generator that weaves together Outrigger with other best-in-class tools for your Drupal project.
 
-[![Travis CI status](https://travis-ci.org/phase2/generator-outrigger-drupal.png?branch=master)](https://travis-ci.org/phase2/generator-outrigger-drupal)
 [![npm version](https://badge.fury.io/js/generator-outrigger-drupal.svg)](https://www.npmjs.com/package/generator-outrigger-drupal)
+[![Travis CI status](https://travis-ci.org/phase2/generator-outrigger-drupal.png?branch=master)](https://travis-ci.org/phase2/generator-outrigger-drupal)
+[![Greenkeeper badge](https://badges.greenkeeper.io/phase2/generator-outrigger-drupal.svg)](https://greenkeeper.io/)
 
 **This project is mostly generic, but has some remaining pieces related to Phase2-specific development environment hosting.**
 
@@ -17,13 +16,13 @@ aspect of project scaffolding. As the name implies, this generator focuses on Ou
 
 ### Using Docker
 
-Docker-based usage is available as of v3.2.0. It is the recommended approach as
+Docker-based usage is available as of v3.0.0. It is the recommended approach as
 updates tend to be less prone to complication.
 
 ```bash
 git clone git@github.com:phase2/generator-outrigger-drupal.git
 cd generator-outrigger-drupal
-git checkout v3.2.0
+git checkout v3.3.0
 docker-compose run --rm cli npm install
 mkdir ~/path/to/empty/directory
 YO_PROJECT_DIRECTORY=~/path/to/empty/directory docker-compose run --rm yo outrigger-drupal
@@ -32,7 +31,7 @@ YO_PROJECT_DIRECTORY=~/path/to/empty/directory docker-compose run --rm yo outrig
 ### Using npm
 
 ```bash
-npm install --global git+ssh://github.com:phase2/generator-outrigger-drupal.git#v3.0.1
+npm install -g generator-outrigger-drupal
 mkdir ~/path/to/empty/directory
 cd ~/path/to/empty/directory
 yo outrigger-drupal
