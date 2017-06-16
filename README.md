@@ -2,8 +2,10 @@
 
 > Yeoman generator that weaves together Outrigger with other best-in-class tools for your Drupal project.
 
-**This project is mostly generic, but has some remaining pieces related to
-Phase2-specific development environment hosting.**
+[![Travis CI status](https://travis-ci.org/phase2/generator-outrigger-drupal.png?branch=master)](https://travis-ci.org/phase2/generator-outrigger-drupal)
+[![npm version](https://badge.fury.io/js/generator-outrigger-drupal.svg)](https://www.npmjs.com/package/generator-outrigger-drupal)
+
+**This project is mostly generic, but has some remaining pieces related to Phase2-specific development environment hosting.**
 
 This is an umbrella [Yeoman](http://yeoman.io/) generator that asks questions,
 then passes the answers to multiple "child" generators that handle their own
