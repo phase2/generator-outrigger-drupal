@@ -75,7 +75,7 @@ scripts:
   all-stop:
     description: Halt all containers associated with this project.
     run:
-      - rig project run:ps -q | xargs docker stop
+      - rig project run:ps -- -q | xargs docker stop
 
   logs:
     alias: logs
