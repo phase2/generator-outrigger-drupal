@@ -1,5 +1,7 @@
 # Outrigger Drupal
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/phase2/generator-outrigger-drupal.svg)](https://greenkeeper.io/)
+
 > Yeoman generator that weaves together Outrigger with other best-in-class tools for your Drupal project.
 
 [![Travis CI status](https://travis-ci.org/phase2/generator-outrigger-drupal.png?branch=master)](https://travis-ci.org/phase2/generator-outrigger-drupal)
