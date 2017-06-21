@@ -6,6 +6,11 @@
  * sites/default/settings.php which includes this file.
  */
 
+// Show errors including XDEBUG trace.
+ini_set('display_errors', 1);
+if (PHP_SAPI !== 'cli') {
+  ini_set('html_errors', 1);
+}
 // Forcibly disable poorman's cron.
 $conf['cron_safe_threshold'] = 0;
 
