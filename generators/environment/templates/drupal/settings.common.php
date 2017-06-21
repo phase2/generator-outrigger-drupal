@@ -1,6 +1,9 @@
 <?php
 /**
- * Additional site settings.
+ * Common site settings.
+ *
+ * The process of running 'grunt install' will automatically set up a Drupal
+ * sites/default/settings.php which includes this file.
  */
 
 // Forcibly disable poorman's cron.
