@@ -11,9 +11,10 @@ ini_set('display_errors', 1);
 if (PHP_SAPI !== 'cli') {
   ini_set('html_errors', 1);
 }
+<% if (drupalDistroVersion == '7.x') { %>
 // Forcibly disable poorman's cron.
 $conf['cron_safe_threshold'] = 0;
-
+<% } %>
 // Database connection settings.
 $databases['default']['default'] = array (
   'database' => '<%= machineName %>_drupal',
