@@ -1,3 +1,8 @@
+## v3.3.1 (June 23, 2017)
+
+* Fixed Jenkins ci job was not properly setting the environment name.
+* Fixed drush dispatch to "local" composer-installed Drush is no longer necessary, and in some cases causing duplicate command execution.
+
 ## v3.3.0 (June 16 2017)
 
 * Added PHPUnit build service container to facilitate running tests.
