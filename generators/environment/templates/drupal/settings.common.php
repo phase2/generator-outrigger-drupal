@@ -1,11 +1,20 @@
 <?php
 /**
- * Additional site settings.
+ * Common site settings.
+ *
+ * The process of running 'grunt install' will automatically set up a Drupal
+ * sites/default/settings.php which includes this file.
  */
 
+// Show errors including XDEBUG trace.
+ini_set('display_errors', 1);
+if (PHP_SAPI !== 'cli') {
+  ini_set('html_errors', 1);
+}
+<% if (drupalDistroVersion == '7.x') { %>
 // Forcibly disable poorman's cron.
 $conf['cron_safe_threshold'] = 0;
-
+<% } %>
 // Database connection settings.
 $databases['default']['default'] = array (
   'database' => '<%= machineName %>_drupal',
