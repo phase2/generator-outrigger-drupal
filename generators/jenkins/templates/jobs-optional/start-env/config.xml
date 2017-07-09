@@ -22,8 +22,6 @@
       <command>#!/usr/bin/env bash
 export DOCKER_ENV=<% if (environment) { %><%= environment %><% } else { %>&apos;&apos;<% } %>
 export COMPOSE_PROJECT_NAME=<%= machineName %>_${DOCKER_ENV:--local}
-export COMPOSE_FILE=build.<%= dockerComposeExt %>yml
-export SITE_DOMAIN=<% if (environment == 'local') { %><%= host.local %><% } else { %>${DOCKER_ENV}-<%= ci.host %><% } %>
 
 # Break down the Docker environment and remove generated files.
 teardown() {
@@ -48,7 +46,7 @@ trap &apos;cancel $LINENO $BASH_COMMAND&apos; ERR SIGINT SIGTERM SIGQUIT SIGHUP
 # Clean up on program termination.
 trap &apos;complete $?&apos; EXIT
 
-docker-compose up -d
+docker-compose -f docker-compose.yml up -d
 </command>
     </hudson.tasks.Shell>
   </builders>
