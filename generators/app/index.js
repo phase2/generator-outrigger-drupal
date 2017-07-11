@@ -139,8 +139,8 @@ module.exports = Generator.extend({
       var gadgetOptions = {}
       if (options['usePLS']) {
         gadgetOptions.themeScripts = {
-          "compile-theme": "npm run setup --unsafe-perm && npm run compile --unsafe-perm",
-          "validate": "npm run test --unsafe-perm"
+          "compile-theme": "npm run setup && npm run compile",
+          "validate": "npm run test"
         };
       }
       this.composeWith(require.resolve('generator-gadget'), _.assign(options, gadgetOptions));
