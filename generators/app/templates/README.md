@@ -13,8 +13,8 @@ and manifests of upstream dependencies. [Grunt-Drupal-Tasks](https://github.com/
 (a Node.js tool based on the popular Grunt task-runner) is used for development
 and operational management of the application code. A build process downloads and assembles all dependencies for deployment into the webserver.
 
-<% if (useENV) { %><% include ../../environment/templates/docs/README.md %>
-## Running without Docker<% } else { %>## Getting Started <% } %>
+<% include ../../environment/templates/docs/README.md %>
+## Running without Docker
 
 ### Requirements
 

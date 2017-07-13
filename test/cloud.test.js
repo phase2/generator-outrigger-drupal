@@ -6,7 +6,7 @@ var path = require('path');
 var _ = require('lodash');
 var assert = require('yeoman-assert');
 var test = require('yeoman-test');
-var files = require('./jenkins.files');
+var files = require('./cloud.files');
 var schema = require('./schema-assert');
 
 var describeYaml = function() {
@@ -36,13 +36,13 @@ var describeXml = function(extended) {
   };
 }
 
-describe('outrigger-drupal:jenkins', function() {
-  var appDir = path.join(os.tmpdir(), './temp-test-jenkins');
-  console.log('Jenkins tests will be generated in "' + appDir + '"');
+describe('outrigger-drupal:cloud', function() {
+  var appDir = path.join(os.tmpdir(), './temp-test-cloud');
+  console.log('Cloud tests will be generated in "' + appDir + '"');
 
   describe('minimal configuration', function() {
     before(function(done) {
-      test.run(path.join(__dirname, '../generators/jenkins'))
+      test.run(path.join(__dirname, '../generators/cloud'))
         .inDir(appDir)
         .withPrompts({
           projectName: 'drupal8',
@@ -72,7 +72,7 @@ describe('outrigger-drupal:jenkins', function() {
 
   describe('extended configuration', function() {
     before(function(done) {
-      test.run(path.join(__dirname, '../generators/jenkins'))
+      test.run(path.join(__dirname, '../generators/cloud'))
         .inDir(appDir)
         .withPrompts({
           projectName: 'drupal8',

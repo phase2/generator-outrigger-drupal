@@ -45,25 +45,39 @@ module.exports = Generator.extend({
       }
     }.bind(this));
 
-    if (_.isUndefined(options['useENV'])) {
-      prompts.push({
-        name: 'useENV',
-        type: 'confirm',
-        message: 'Use Outrigger Environment?'
-      });
-    }
     var envPrompts = require('../lib/prompts.js');
     envPrompts.forEach(function (item) {
       if (_.isUndefined(options[item.name])) {
         var validate = item.when;
         item.when = function(answers) {
-          return answers['useENV'] && (!_.isFunction(validate) || validate(answers));
+          return !_.isFunction(validate) || validate(answers);
         };
         item.default = this.config.get(item.name) || item.default;
 
         prompts.push(item);
       }
     }.bind(this));
+
+    if (_.isUndefined(options['useCloud'])) {
+      prompts.push({
+        name: 'useCloud',
+        type: 'confirm',
+        message: 'Use Phase2 DevCloud/Outrigger Cloud Hosting?'
+      });
+    }
+
+    var cloudPrompts = require('../cloud/prompts.js');
+    cloudPrompts.forEach(function (item) {
+      if (_.isUndefined(options[item.name])) {
+        var validate = item.when;
+        item.when = function(answers) {
+          return answers['useCloud'] && (!_.isFunction(validate) || validate(answers));
+        };
+        item.default = this.config.get(item.name) || item.default;
+        prompts.push(item);
+      }
+    }.bind(this));
+
 
     if (_.isUndefined(options['usePLS'])) {
       prompts.push({
@@ -147,14 +161,18 @@ module.exports = Generator.extend({
     },
 
     env: function() {
-      if (options['useENV']) {
-        this.composeWith(require.resolve('../environment'), options);
-      }
+      this.composeWith(require.resolve('../environment'), options);
     },
 
     pls: function() {
       if (options['usePLS']) {
         this.composeWith(require.resolve('generator-pattern-lab-starter'), options);
+      }
+    },
+
+    cloud: function() {
+      if (options['useCloud']) {
+        this.composeWith(require.resolve('../cloud'), options);
       }
     },
 
@@ -167,7 +185,6 @@ module.exports = Generator.extend({
         tokens
       );
     }
-
   },
 
   install: function () {
@@ -185,12 +202,12 @@ module.exports = Generator.extend({
 
     this.log(yosay('Outrigger Drupal has completed generation of your Drupal project.'));
     this.log('Primary scaffolding created by ' + chalk.red('generator-gadget v' + version.gadget) + '.');
-    this.log('Check out your new READMEs to get oriented.');
-    if (options['useENV']) {
-      this.log('You have chosen a ' + chalk.bold('Docker-based development environment') + ' created by ' + chalk.red('generator-outrigger-drupal:environment v' + version.env) + '.');
-      this.log(chalk.yellow('All tools and application code should be run via the Docker containers.'));
-      this.log(chalk.green('A handy TODOS.md checklist has been created for your next steps.'));
-      this.log('Want to see a running Drupal site without opening a text editor? Run ' + chalk.bold('bash bin/start.sh') + ' now.');
+    this.log('You are using a ' + chalk.bold('Docker-based development environment') + ' created by ' + chalk.red('generator-outrigger-drupal:environment v' + version.env) + '.');
+    this.log(chalk.yellow('All tools and application code should be run via the Docker containers.'));
+    this.log(chalk.green('A handy TODOS.md checklist has been created for your next steps.'));
+    this.log('Want to see a running Drupal site? Run "rig project setup" now for your first time initialization.');
+    if (options['useCloud']) {
+      this.log('Your project is setup to have project testing environments created via Outrigger Cloud by ' + chalk.red('generator-outrigger-drupal:cloud v' + version.env) + '.');
     }
     if (options['usePLS']) {
       this.log('You have created a new theme ' + chalk.green(options.themeName) + ' at ' + chalk.red(options.themePath) + ' with ' + chalk.red('generator-pattern-lab-starter v' + version.pls) + '.');
