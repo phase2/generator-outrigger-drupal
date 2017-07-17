@@ -11,7 +11,7 @@
 ##
 
 if [ ! -f src/sites/default/default.settings.php ]; then
-  echo "There was an error building the docroot. Please run pre-install after it has been successfully built."
+  echo "Please run pre-install after successfully building the docroot."
   exit 1
 fi
 
