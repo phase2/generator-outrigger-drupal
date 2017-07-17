@@ -144,7 +144,7 @@ cmd "docker exec <%= machineName %>_${DOCKER_ENV}_www \"/var/www/bin/fix-perms.s
 # Install the site.
 if [ "$UPDATE" == 0 ]; then
   if [ ! -z "$FORCE" ]; then
-    echoInfo "The start.sh --force flag was used, site install will proceed despite any errors."
+    echoInfo "The start.sh --force flag was used, site install will proceed despite any errors.\n"
   fi
   cmd "docker-compose run --rm grunt \"install --no-db-load${FORCE}\""
 else
