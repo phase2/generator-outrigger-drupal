@@ -15,6 +15,7 @@ source "$CALLPATH/framework.sh"
 
 NAME=`basename "$0"`
 NO_VALIDATE=''
+FORCE=''
 NOOP=0
 # This version is used to facilitate troubleshooting, by indicating which
 # version of the generator-outrigger-drupal project produced this script.
@@ -54,6 +55,7 @@ while true ; do
     dev|int|local|ms|qa|review) DOCKER_ENV=$1 ; shift ;;
     -e|--environment) DOCKER_ENV=$2 ; shift 2 ;;
     -i|--no-validate) NO_VALIDATE=" --no-validate"; shift ;;
+    -f|--force) FORCE=" --force"; shift ;;
     -u|--update) UPDATE=1; shift ;;
     -n|--noop) export NOOP=1; shift ;;
     *) shift ; break ;;
@@ -140,7 +142,7 @@ cmd "docker exec <%= machineName %>_${DOCKER_ENV}_www \"/var/www/bin/fix-perms.s
 
 # Install the site.
 if [ "$UPDATE" == 0 ]; then
-  cmd "docker-compose run --rm grunt \"install --no-db-load\""
+  cmd "docker-compose run --rm grunt \"install --no-db-load ${FORCE}\""
 else
   echoInfo "'grunt update' is defined in Gruntconfig.json\n"
   cmd "docker-compose run --rm grunt update"
