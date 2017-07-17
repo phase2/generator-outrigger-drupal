@@ -10,6 +10,11 @@
 # of `grunt install`.
 ##
 
+if [ ! -f src/sites/default/default.settings.php ]; then
+  echo "There was an error building the docroot. Please run pre-install after it has been successfully built."
+  exit 1
+fi
+
 <% if (cache.service == 'memcache') { %># Ensure Memcache does not hold onto stale data in between site installation runs.
 echo "Flush Memcache with 'flush_all'"
 echo "flush_all" | nc cache 11211
