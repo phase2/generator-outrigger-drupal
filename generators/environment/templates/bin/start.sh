@@ -140,12 +140,10 @@ cmd "docker exec <%= machineName %>_${DOCKER_ENV}_www \"/var/www/bin/fix-perms.s
 
 # Install the site.
 if [ "$UPDATE" == 0 ]; then
-  # Errors in final steps of installation require --force to ensure bin/post-install.sh is run.
-  # Dev triggers a development build of Open Atrium
-  cmd "docker-compose run --rm cli \"grunt install --no-db-load --force\""
+  cmd "docker-compose run --rm grunt \"install --no-db-load\""
 else
   echoInfo "'grunt update' is defined in Gruntconfig.json\n"
-  cmd "docker-compose run --rm cli grunt update"
+  cmd "docker-compose run --rm grunt update"
 fi
 
 # Wipe cache after permissions fix.
