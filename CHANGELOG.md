@@ -1,3 +1,15 @@
+## v3.4.0 (July 18, 2017)
+
+* Added display_errors by default in Drupal settings.common.php.
+  In non-CLI environments further enable HTML errors.
+* Removed unneeded `--unsafe-perm` flag from npm operations as Build container now applies that via environment variable.
+* Fixed Jenkins CI job using the wrong docker-compose configuration.
+
+### Project Plumbing
+
+* Updated Chalk to v2.0.1
+* Update .mailmap
+
 ## v3.3.1 (June 23, 2017)
 
 * Fixed Jenkins ci job was not properly setting the environment name.

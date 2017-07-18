@@ -22,7 +22,7 @@ updates tend to be less prone to complication.
 ```bash
 git clone git@github.com:phase2/generator-outrigger-drupal.git
 cd generator-outrigger-drupal
-git checkout v3.3.1
+git checkout v3.4.0
 docker-compose run --rm cli npm install
 mkdir ~/path/to/empty/directory
 YO_PROJECT_DIRECTORY=~/path/to/empty/directory docker-compose run --rm yo outrigger-drupal
