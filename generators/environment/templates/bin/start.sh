@@ -15,6 +15,7 @@ source "$CALLPATH/framework.sh"
 
 NAME=`basename "$0"`
 NO_VALIDATE=''
+FORCE=''
 NOOP=0
 # This version is used to facilitate troubleshooting, by indicating which
 # version of the generator-outrigger-drupal project produced this script.
@@ -40,6 +41,7 @@ Usage: $name [options]
 -i|--no-validate     Skip the static analysis validate step.
                      Useful for speedy build process, or when the report-generating
                      analyze task will also be used.
+-f|--force           Force grunt install to complete regardless of errors.
 -n|--noop            Take no action, just output the commands to be run.
 -u|--update          Instead of site install, run site update procedures.
 EOF
@@ -54,6 +56,7 @@ while true ; do
     dev|int|local|ms|qa|review) DOCKER_ENV=$1 ; shift ;;
     -e|--environment) DOCKER_ENV=$2 ; shift 2 ;;
     -i|--no-validate) NO_VALIDATE=" --no-validate"; shift ;;
+    -f|--force) FORCE=" --force"; shift ;;
     -u|--update) UPDATE=1; shift ;;
     -n|--noop) export NOOP=1; shift ;;
     *) shift ; break ;;
@@ -130,7 +133,7 @@ cmd "docker-compose -f docker-compose.yml up -d <% if(cache.external) { %>cache 
 # Run grunt with --force to ignore errors. This won't help if the errors bail the build.
 echoInfo "When grunt commands fail they suggest running with '--force'.\n"
 echoInfo "This just suppresses errors and is unlikely to fix issues causing your build process to fail.\n"
-cmd "docker-compose run --rm -e NPM_CONFIG_LOGLEVEL=error cli \"npm install && grunt --timer --quiet ${NO_VALIDATE}\""
+cmd "docker-compose run --rm -e NPM_CONFIG_LOGLEVEL=error cli \"npm install && grunt --timer --quiet${NO_VALIDATE}\""
 
 # Now safe to activate web container to support end-to-end testing.
 cmd "docker-compose -f docker-compose.yml up -d <% if(proxy.exists) { %>proxy <% } %>www"
@@ -140,12 +143,13 @@ cmd "docker exec <%= machineName %>_${DOCKER_ENV}_www \"/var/www/bin/fix-perms.s
 
 # Install the site.
 if [ "$UPDATE" == 0 ]; then
-  # Errors in final steps of installation require --force to ensure bin/post-install.sh is run.
-  # Dev triggers a development build of Open Atrium
-  cmd "docker-compose run --rm cli \"grunt install --no-db-load --force\""
+  if [ ! -z "$FORCE" ]; then
+    echoInfo "The start.sh --force flag was used, site install will proceed despite any errors.\n"
+  fi
+  cmd "docker-compose run --rm grunt \"install --no-db-load${FORCE}\""
 else
   echoInfo "'grunt update' is defined in Gruntconfig.json\n"
-  cmd "docker-compose run --rm cli grunt update"
+  cmd "docker-compose run --rm grunt update"
 fi
 
 # Wipe cache after permissions fix.
