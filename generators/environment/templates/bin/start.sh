@@ -30,7 +30,7 @@ UPDATE=0
 COMPOSE_EXT=".devcloud"
 
 # Wrangle CLI options
-TEMP=`getopt -o e::,h,i,n,u,v --long environment::,help,update,noop,no-validate,version -n '$NAME' -- "$@"`
+TEMP=`getopt -o e::,h,i,f,n,u,v --long environment::,help,no-validate,force,noop,update,version -n '$NAME' -- "$@"`
 
 usage() {
   cat <<EOF
