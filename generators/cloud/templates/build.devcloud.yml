@@ -27,6 +27,7 @@ services:
   cli:
     extends:
       service: operational
+    command: /bin/bash
 
   # Container for running composer in the repo root.
   # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm composer <command>
