@@ -5,6 +5,8 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
 
+var dockerComposeLink = require('../lib/util').dockerComposeLink;
+
 var options = {},
   tokens = {};
 
@@ -14,7 +16,7 @@ module.exports = Generator.extend({
     // Have Yeoman greet the user.
     if (!this.options.skipWelcome) {
       this.log(yosay(
-        'Welcome to the fantastic ' + chalk.cyan('Outrigger Jenkins') + ' generator!'
+        'Welcome to the cumulative ' + chalk.cyan('Outrigger Cloud') + ' generator!'
       ));
     }
 
@@ -25,7 +27,7 @@ module.exports = Generator.extend({
   },
 
   prompting: function() {
-    var prompts = require('../lib/prompts');
+    var prompts = require('../lib/prompts').concat(require('./prompts'));
     prompts = _.filter(prompts, function (item) {
       return _.isUndefined(options[item.name]);
     });
@@ -45,17 +47,35 @@ module.exports = Generator.extend({
   },
 
   writing: {
+    docs: function() {
+      this.fs.copyTpl(
+        this.templatePath('DEVCLOUD.md'),
+        this.destinationPath('docs/DEVCLOUD.md'),
+        tokens
+      );
+    },
+
     dockerCompose: function() {
       this.fs.copyTpl(
-        this.templatePath('jenkins.yml'),
+        this.templatePath('jenkins/jenkins.yml'),
         this.destinationPath('jenkins.yml'),
+        tokens
+      );
+
+      tokens.dockerComposeExt = 'devcloud.';
+      tokens.cache.docker.extLink = dockerComposeLink(options.machineName + "_${DOCKER_ENV:-local}_cache:cache");
+      tokens.db.docker.extLink = options.machineName + "_${DOCKER_ENV:-local}_db:db";
+
+      this.fs.copyTpl(
+        this.templatePath('build.devcloud.yml'),
+        this.destinationPath('build.devcloud.yml'),
         tokens
       );
     },
 
     jenkinsConfig: function() {
       this.fs.copyTpl(
-        this.templatePath('config.xml'),
+        this.templatePath('jenkins/config.xml'),
         this.destinationPath('env/jenkins/config.xml'),
         tokens
       );
@@ -63,7 +83,7 @@ module.exports = Generator.extend({
 
     jenkinsCoreJobs: function() {
       this.fs.copyTpl(
-        this.templatePath('jobs'),
+        this.templatePath('jenkins/jobs'),
         this.destinationPath('env/jenkins/jobs'),
         tokens
       );
@@ -91,28 +111,28 @@ module.exports = Generator.extend({
         }
 
         this.fs.copyTpl(
-          this.templatePath('jobs-optional/deploy-env'),
+          this.templatePath('jenkins/jobs-optional/deploy-env'),
           this.destinationPath('env/jenkins/jobs/deploy-' + key),
           tokens
         );
 
         this.fs.copyTpl(
-          this.templatePath('jobs-optional/start-env'),
+          this.templatePath('jenkins/jobs-optional/start-env'),
           this.destinationPath('env/jenkins/jobs/start-' + key),
           tokens
         );
         this.fs.copyTpl(
-          this.templatePath('jobs-optional/stop-env'),
+          this.templatePath('jenkins/jobs-optional/stop-env'),
           this.destinationPath('env/jenkins/jobs/stop-' + key),
           tokens
         );
         this.fs.copyTpl(
-          this.templatePath('jobs-optional/cron-env'),
+          this.templatePath('jenkins/jobs-optional/cron-env'),
           this.destinationPath('env/jenkins/jobs/cron-' + key),
           tokens
         );
         this.fs.copyTpl(
-          this.templatePath('jobs-optional/password-reset-env'),
+          this.templatePath('jenkins/jobs-optional/password-reset-env'),
           this.destinationPath('env/jenkins/jobs/password-reset-' + key),
           tokens
         );
@@ -122,7 +142,8 @@ module.exports = Generator.extend({
 
   end: function() {
     if (!options['skipGoodbye']) {
-      this.log(chalk.green('Your project Jenkins has been configured for use.'));
+      this.log(chalk.green('Your project has been configured for Outrigger Cloud.'));
+      this.log(chalk.green('This includes a ready-to-go docker-based Jenkins instance.'));
       this.log(chalk.green('Run with `docker-compose -f jenkins.yml run jenkins`'));
       this.log(chalk.yellow('Jenkins will not remember changes via the Admin UI.'));
       this.log(chalk.yellow('Be sure to commit configuration to the codebase in env/jenkins.'));

@@ -153,7 +153,7 @@ configuration the "Docker way" to work out-of-the-box.
 * Provides a range of shell scripts to run builds, verify aspects of the system,
 create default users, and more.
 
-### Project-specific CI & Environment Management
+### Outrigger Cloud: Project-specific CI & Environment Management
 
 If you liked the Docker-based environments, you can also use our Docker-based
 Jenkins instance to manage your central test environments, complete with default

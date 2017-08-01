@@ -1,5 +1,6 @@
 module.exports = {
   minimum: [
+    'build.devcloud.yml',
     'env/jenkins/config.xml',
     'env/jenkins/jobs/ci/config.xml',
     'env/jenkins/jobs/deploy-local/config.xml',
@@ -8,6 +9,7 @@ module.exports = {
     'env/jenkins/jobs/jenkins-test-docker/config.xml',
     'env/jenkins/jobs/jenkins-test-fail/config.xml',
     'jenkins.yml',
+    'docs/DEVCLOUD.md'
   ],
   extended: [
     'env/jenkins/jobs/cron-dev/config.xml',
@@ -41,6 +43,7 @@ module.exports = {
     'env/jenkins/jobs/stop-review/config.xml': '"stop-review" job configuration',
   },
   yaml: {
-    'jenkins.yml': 'jenkins.yml'
+    'jenkins.yml': 'jenkins.yml',
+    'build.devcloud.yml': 'build.devcloud.yml'
   }
 };

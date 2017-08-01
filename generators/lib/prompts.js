@@ -40,7 +40,7 @@ var prompts = [
     name: 'webserver',
     message: 'Choose your webserver:',
     choices: function (answers) {
-      var options = docker.imageOptions(answers.hosting, 'www');
+      var options = docker.imageOptions(answers.hosting || 'outrigger', 'www');
       options.push('custom');
       return options;
     }
@@ -65,7 +65,7 @@ var prompts = [
     name: 'cacheInternal',
     message: 'Choose a cache backend:',
     choices: function(answers) {
-      var options = docker.imageOptions(answers.hosting, 'cache');
+      var options = docker.imageOptions(answers.hosting || 'outrigger', 'cache');
       options.push({value: 'database', name: 'Database'});
       return options;
     },
@@ -106,33 +106,6 @@ var prompts = [
     default: 'none'
   },
   {
-    type: 'checkbox',
-    name: 'environments',
-    message: 'Select default standing environments:',
-    default: [
-      'dev',
-      'qa',
-      'review'
-    ],
-    choices: [
-      {
-        value: 'dev',
-        name: 'Development - Automatically updates when PRs are merged.',
-        short: 'Development'
-      },
-      {
-        value: 'qa',
-        name: 'QA - Regularly scheduled deployments for manual testing.',
-        short: 'QA'
-      },
-      {
-        value: 'review',
-        name: 'Review - Milestone review sandbox for client use.',
-        short: 'Review'
-      }
-    ]
-  },
-  {
     type: 'input',
     name: 'domain',
     message: 'Domain for local development (www.<domain>.vm):',
@@ -148,15 +121,11 @@ var prompts = [
     name: 'gitRepoUrl',
     message: 'URL to the Git Repo for checkout by Jenkins and other tools:',
     default: function(answers) {
-      var gitBaseUrl = platforms.load()[answers.hosting].tools.git.baseUrl;
+      var gitBaseUrl = platforms.load()[answers.hosting || 'outrigger'].tools.git.baseUrl;
       return gitBaseUrl + answers.projectName + '.git';
     }
   },
-  {
-    type: 'input',
-    name: 'flowdockApiKey',
-    message: 'API key for the project flow (found in your account under API Tokens), leave blank to skip:',
-  }
+
 ];
 
 module.exports = prompts;

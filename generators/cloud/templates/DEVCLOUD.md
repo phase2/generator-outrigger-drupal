@@ -1,6 +1,6 @@
-# Phase2 DevCloud / Outrigger Hosting
+# Outrigger Cloud: Docker-based Development Hosting
 
-> Learn how to work with and manage Phase2's Outrigger Hosting platform.
+> Learn how to work with and manage Phase2's Outrigger Cloud hosting platform.
 
 Outrigger Hosting is Phase2's docker-based hosting platform for our development projects. This solution is still internal-only and evolving, and will eventually be documented so others can set it up as well.
 

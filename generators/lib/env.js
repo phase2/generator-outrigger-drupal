@@ -26,7 +26,7 @@ module.exports = function(options) {
    * This function should only be used after options parameter is initialized from prompts.
    */
   function envActive(environment) {
-    return options.environments.indexOf(environment) != -1;
+    return options.environments && options.environments.indexOf(environment) != -1;
   }
 
   function virtualHost(env, namespace) {

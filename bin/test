@@ -18,5 +18,5 @@
 set -e
 mocha --timeout=5000 test/app.test.js
 mocha --timeout=6000 test/environment.test.js
-mocha --timeout=3000 test/jenkins.test.js
+mocha --timeout=3000 test/cloud.test.js
 mocha --timeout=2000 test/lib.test.js

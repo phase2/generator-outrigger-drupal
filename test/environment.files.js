@@ -1,5 +1,3 @@
-var jenkins = require('./jenkins.files.js');
-
 module.exports = {
   minimum: [
     'bin/db-export.sh',
@@ -11,7 +9,6 @@ module.exports = {
     'bin/start.sh',
     'bin/update-scanner.sh',
     'build.yml',
-    'build.devcloud.yml',
     'CONTRIBUTING.md',
     'DOCKER.md',
     'docker-compose.yml',
@@ -25,8 +22,6 @@ module.exports = {
     'TODOS.md'
   ],
   extended: [],
-  minimumJenkins: jenkins.minimum,
-  extendedJenkins: jenkins.extended,
   json: {
     'Gruntconfig.json': 'Gruntconfig.json',
     'package.json': 'package.json'
@@ -35,7 +30,6 @@ module.exports = {
     'docker-compose.yml': 'docker-compose.yml',
     'docker-compose.override.yml': 'docker-compose.override.yml',
     'build.yml': 'build.yml',
-    'build.devcloud.yml': 'build.devcloud.yml',
     '.outrigger.yml': '.outrigger.yml'
   }
 };

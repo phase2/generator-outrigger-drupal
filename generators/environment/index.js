@@ -33,22 +33,24 @@ module.exports = Generator.extend({
       return _.isUndefined(options[item.name]);
     });
     return this.prompt(prompts).then(function (props) {
-      // Maintain backwards compatbility on --replay for projects that do not
-      // have a hosting prompt saved.
-      if (!props.hosting) {
-        props.hosting = 'outrigger';
-      }
       options = _.assign(options, props);
-      options.machineName = options.projectName.replace(/\-/g, '_');
     }.bind(this));
 
   },
+
 
   // The default priority fires after configuring, which means we can now rely
   // on the presence of other composed generators to have completed configuring
   // steps.
   default: {
-    optionSetup: function() {
+    optionDefaults: function() {
+      // Maintain backwards compatbility on --replay for projects that do not
+      // have a hosting prompt saved.
+      options.hosting = options.hosting || 'outrigger';
+      options.useCloud = options.useCloud || false;
+      options.machineName = options.projectName.replace(/\-/g, '_');
+    },
+    composerSetup: function() {
       var composer = this.fs.readJSON('composer.json');
       // Fake a default core version range as a fallback if we do not have
       // composer data that has a core version. Or if the environment generator
@@ -115,18 +117,6 @@ module.exports = Generator.extend({
       );
     },
 
-    dockerComposeDevcloud: function() {
-      tokens.dockerComposeExt = 'devcloud.';
-      tokens.cache.docker.extLink = dockerComposeLink(options.machineName + "_${DOCKER_ENV}_cache:cache");
-      tokens.db.docker.extLink = options.machineName + "_${DOCKER_ENV}_db:db";
-
-      this.fs.copyTpl(
-        this.templatePath('docker/build.devcloud.yml'),
-        this.destinationPath('build.devcloud.yml'),
-        tokens
-      );
-    },
-
     docs: function() {
       this.fs.copyTpl(
         this.templatePath('docs/CONTRIBUTING.md'),
@@ -158,12 +148,6 @@ module.exports = Generator.extend({
       this.fs.copyTpl(
         this.templatePath('docs/OUTRIGGER.md'),
         this.destinationPath('docs/OUTRIGGER.md'),
-        tokens
-      );
-
-      this.fs.copyTpl(
-        this.templatePath('docs/DEVCLOUD.md'),
-        this.destinationPath('docs/DEVCLOUD.md'),
         tokens
       );
     },
@@ -240,8 +224,8 @@ module.exports = Generator.extend({
          gcfg.scripts['seed-users'] = 'bash bin/seed-users.sh';
       }
 
-      // Lack of a useENV option means it was not invoked by a parent generator.
-      if (!options['useENV']) {
+      // Lack of a useCloud option means it was not invoked by a parent generator.
+      if (!options['useCloud']) {
         if (!gcfg.generated) {
           gcfg.generated = { name: 'hand-crafted', version: '0.0.0' };
         }
@@ -299,10 +283,6 @@ module.exports = Generator.extend({
         this.destinationPath('./.outrigger.yml'),
         tokens
       );
-    },
-
-    jenkins: function() {
-      this.composeWith(require.resolve('../jenkins'), options);
     }
   },
 
