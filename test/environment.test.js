@@ -40,7 +40,7 @@ describe('outrigger-drupal:environment', function() {
   var appDir = path.join(os.tmpdir(), './temp-test-environment');
   console.log('Environment tests will be generated in "' + appDir + '"');
 
-  describe.only('minimal configuration', function() {
+  describe('minimal configuration', function() {
     before(function(done) {
       test.run(path.join(__dirname, '../generators/environment'))
         .inDir(appDir)
