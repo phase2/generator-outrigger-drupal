@@ -70,6 +70,15 @@ rig project run cli
 
 This will open a BASH session that allows you to run any commands or use any tools available in the build container.
 
+### Environment Configuration
+
+There are a couple special environment configuration variables that the Docker
+configuration will respect.
+
+* **OUTRIGGER_SSH_KEY**: [Default: `id_rsa`] The filename of the private SSH key
+to use to access private servers or git repositories. Assumes lookup in ~/.ssh/.
+* **OUTRIGGER_XDEBUG_REMOTE_HOST**: [DEFAULT: `localhost`] Should be the IP
+address of the virtual machine, used to facilitate Xdebug debugging in PHPStorm.
 
 ### Aliases & Shortcuts
 
