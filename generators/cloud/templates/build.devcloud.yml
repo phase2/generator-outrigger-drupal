@@ -142,10 +142,8 @@ services:
       # Allow for pattern lab compilation need detection with reasonable performance from
       # within the build container.
       # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
-      CHOKIDAR_USEPOLLING: 1
-      <% } -%> # Set to "true" to load xdebug configuration. Note this will cause significant composer
-      # performance degradation.
-      PHP_XDEBUG: "false"
+      CHOKIDAR_USEPOLLING: 1<% } %>
+      PHP_XDEBUG: "true"
       # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
       GDT_QUIET: 1
       # Include the DOCKER_ENV so Drupal settings can be aware of environment.
