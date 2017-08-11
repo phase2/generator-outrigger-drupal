@@ -130,6 +130,11 @@ module.exports = Generator.extend({
       delete store['resolved'];
       this.config.set(store);
 
+    }.bind(this));
+  },
+
+  configuring: {
+    sensibleDefaults: function() {
       options['skip-readme'] = true;
       // If using Docker-based environment defer running install locally.
       if (options['useENV']) {
@@ -145,7 +150,7 @@ module.exports = Generator.extend({
         // generator can set up theme wiring. This is the hard-coded name.
         options['themeName'] = 'patternlab';
       }
-    }.bind(this));
+    }
   },
 
   writing: {
