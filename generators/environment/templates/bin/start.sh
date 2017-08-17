@@ -28,6 +28,7 @@ UPDATE=0
 # local or devcloud. If we wanted to have separate manifests from those, this
 # would need to be more meaningfully parameterized.
 COMPOSE_EXT=".devcloud"
+DOCKER_COMPOSE_FLAG=" -f docker-compose.yml"
 
 # Wrangle CLI options
 TEMP=`getopt -o e::,h,i,f,n,u,v --long environment::,help,no-validate,force,noop,update,version -n '$NAME' -- "$@"`
@@ -68,6 +69,9 @@ done
 DOCKER_ENV=${DOCKER_ENV:-local}
 if [[ $DOCKER_ENV == 'local' ]]; then
   COMPOSE_EXT=''
+  if [[ "$OSTYPE" != "linux-gnu" ]]; then
+    DOCKER_COMPOSE_FLAG=''
+  fi
 else
   # This is a magic docker-compose environment variable that sets the -p flag.
   # It is only needed for non-local environments assuming the project has only
@@ -99,7 +103,7 @@ export COMPOSE_FILE=build$COMPOSE_EXT.yml
 # This will allow follow-up runs via Jenkins to manage the workspace.
 # Container rm is left to Jenkins or the developer.
 teardown() {
-  docker-compose -f docker-compose.yml stop || true
+  docker-compose$DOCKER_COMPOSE_FLAG stop || true
 }
 
 # Handler for errors and interruptions.
@@ -127,7 +131,7 @@ export DOCKER_ENV
 
 # Spin up cache and db services to support build container.
 # Web container might take file locks on existing code, blocking the build process.
-cmd "docker-compose -f docker-compose.yml up -d <% if(cache.external) { %>cache <% } %>db"
+cmd "docker-compose$DOCKER_COMPOSE_FLAG up -d <% if(cache.external) { %>cache <% } %>db"
 
 # Install dependencies and run main application build.
 # Run grunt with --force to ignore errors. This won't help if the errors bail the build.
@@ -136,7 +140,7 @@ echoInfo "This just suppresses errors and is unlikely to fix issues causing your
 cmd "docker-compose run --rm -e NPM_CONFIG_LOGLEVEL=error cli \"npm install && grunt --timer --quiet${NO_VALIDATE}\""
 
 # Now safe to activate web container to support end-to-end testing.
-cmd "docker-compose -f docker-compose.yml up -d <% if(proxy.exists) { %>proxy <% } %>www"
+cmd "docker-compose$DOCKER_COMPOSE_FLAG up -d <% if(proxy.exists) { %>proxy <% } %>www"
 
 # Correct any issues in the web container.
 cmd "docker exec <%= machineName %>_${DOCKER_ENV}_www \"/var/www/bin/fix-perms.sh\""
