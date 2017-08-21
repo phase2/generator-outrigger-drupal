@@ -19,27 +19,22 @@ scripts:
     alias: run
     description: Run one of the build container services such as 'cli' or 'drush'.
     run:
-      - docker-compose -f $PWD/build.yml run --rm
-
-  setup:
-    alias: setup
-    description: Run the end-to-end repository initialization and site install script.
-    run:
-      - rig project run:welcome
-      - rig project sync:start
-      - start.sh
+      - if [ "$OSTYPE" == "linux-gnu" ]; then COMPOSE_FILE=build.devcloud.yml; else COMPOSE_FILE=build.yml; fi
+      - docker-compose run --rm
 
   up:
     alias: up
     description: Start up operational docker containers and filesystem sync.
     run:
       - rig project sync:start
+      - if [ "$OSTYPE" == "linux-gnu" ]; then COMPOSE_FILE=docker-compose.yml; fi
       - docker-compose up -d
 
   stop:
     alias: stop
     description: Halt operational containers and filesystem sync.
     run:
+      - if [ "$OSTYPE" == "linux-gnu" ]; then COMPOSE_FILE=docker-compose.yml; fi
       - docker-compose stop
       - rig project sync:stop
 
@@ -47,25 +42,43 @@ scripts:
     alias: build
     description: Run the end-to-end build process.
     run:
-      - docker-compose -f build.yml run --rm grunt
-
-  theme:
-    alias: theme
-    description: Compile all theme assets, activate watch, and start up pattern-lab.
-    run:
-      - docker-compose -f build.yml run --rm theme
+      - if [ "$OSTYPE" == "linux-gnu" ]; then COMPOSE_FILE=build.devcloud.yml; else COMPOSE_FILE=build.yml; fi
+      - docker-compose run --rm cli "NPM_CONFIG_LOGLEVEL=error npm install"
+      - docker-compose run --rm grunt --timer
 
   install:
     alias: install
     description: Install the Drupal site.
     run:
-      - docker-compose -f build.yml run --rm grunt install
+      - echo "'grunt install' is defined as a grunt task."
+      - echo "Drop the --no-db-load to auto-load build/backups/latest.sql.gz if present."
+      - if [ "$OSTYPE" == "linux-gnu" ]; then COMPOSE_FILE=build.devcloud.yml; else COMPOSE_FILE=build.yml; fi
+      - docker-compose run --rm grunt install --no-db-load
+      - echo "Visit $(docker-compose run --rm drush sa @<%= projectName %> --format=list --fields=uri)"
+
+  update:
+    description: Update the Drupal database to match current code.
+    run:
+      - echo "'grunt update' is defined in Gruntconfig.json\n"
+      - if [ "$OSTYPE" == "linux-gnu" ]; then COMPOSE_FILE=build.devcloud.yml; else COMPOSE_FILE=build.yml; fi
+      - docker-compose run --rm grunt update
+      - echo "Visit $(docker-compose run --rm drush sa @<%= projectName %> --format=list --fields=uri)"
+
+  theme:
+    alias: theme
+    description: Compile all theme assets, activate watch, and start up pattern-lab.
+    run:
+      - if [ "$OSTYPE" == "linux-gnu" ]; then COMPOSE_FILE=build.devcloud.yml; else COMPOSE_FILE=build.yml; fi
+      - docker-compose run --rm theme
 
   fix-permissions:
     alias: fix-perms
     description: Fix permissions for Apache to run code and access files. (Automatically run as part of rig project install.)
     run:
+      - if [ "$OSTYPE" == "linux-gnu" ]; then COMPOSE_FILE=docker-compose.yml; fi
       - docker-compose exec www /var/www/bin/fix-perms.sh
+      - if [ "$OSTYPE" == "linux-gnu" ]; then COMPOSE_FILE=build.devcloud.yml; else COMPOSE_FILE=build.yml; fi
+      - docker-compose run --rm grunt cache-clear
 
   ps:
     description: Get a list of all containers associated with this project. Unlike docker-compose ps, this will include all containers even for different configuration files.
@@ -81,7 +94,21 @@ scripts:
     alias: logs
     description: Stream the logs produced by your Docker project containers. To limit output add '--tail=20'.
     run:
+      - if [ "$OSTYPE" == "linux-gnu" ]; then COMPOSE_FILE=docker-compose.yml; fi
       - docker-compose logs -ft
+
+  setup:
+    alias: setup
+    description: Run the end-to-end repository initialization and site install script.
+    run:
+      - rig project run:welcome
+      - echo "Continuing with 'rig project setup'..."
+      - rig project sync:start
+      - rig project build
+      - rig project install
+      - rig project run "grunt seed-users"
+      - echo "Congratulations, your new <%= projectName %> instance is fully set up."
+      - echo "From now on, use 'rig project up' to start your work sessions."
 
   welcome:
     alias: tour
