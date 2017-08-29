@@ -156,7 +156,6 @@ services:
       # See http://docs.outrigger.sh/common-tasks/using-xdebug-with-phpstorm/
       PHP_XDEBUG: "true"
       PHP_IDE_CONFIG: "serverName=<% if (proxy.exists) { %>app<% } else { %>www<% } %>.<%= domain %>.vm"
-      XDEBUG_CONFIG: "remote_host=${OUTRIGGER_XDEBUG_REMOTE_HOST:-localhost}"
       # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
       GDT_QUIET: 1
       # Include the DOCKER_ENV so Drupal settings can be aware of environment.
