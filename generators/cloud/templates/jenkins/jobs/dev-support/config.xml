@@ -89,7 +89,13 @@ trap &apos;complete $?&apos; EXIT
 teardown
 
 # Set up and install site
-bin/start.sh --environment=${DOCKER_ENV}
+docker-compose -f docker-compose.yml up -d
+docker-compose run --rm cli "NPM_CONFIG_LOGLEVEL=error npm install"
+docker-compose run --rm grunt --timer
+
+# Remove --no-db-load if each deploy should re-load a database from /opt/backups/latest.sql.gz.
+# The location and name of this file can be changed in Gruntconfig.json.
+docker-compose run --rm grunt install --no-db-load
 
 # Run cron for maximized database freshness.
 docker-compose run --rm drush cron
