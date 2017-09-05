@@ -96,8 +96,8 @@ and running your vanilla Drupal system for the first time.
 If you are not using the Docker-based development environment, you can get your
 codebase built by running `grunt`. From there you are on your own.
 
-If you are using the Docker-based development environment, run `./bin/start.sh`
-and your site will be built and a new site installed.
+If you are using the Docker-based development environment, run `rig project setup`
+and your codebase will be built and a new site installed.
 
 ## Child Generators
 
