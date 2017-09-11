@@ -1,3 +1,11 @@
+## v4.0.0-pre (August 42, 2020)
+
+### Upgrade Instructions
+
+To continue using the --replay flag with projects generated before v4, please make the following changes to your `.yo-rc.json` file, hidden at the root of your git repo.
+* Replace `useEnv` with `useCloud`.
+* Add `cloudHost` key set to the URL of your Docker host. (`ci.p2devcloud.com` or `ci2.p2devcloud.com`)
+
 ## v3.4.0 (July 18, 2017)
 
 * Added display_errors by default in Drupal settings.common.php.

@@ -6,8 +6,7 @@ Outrigger Hosting is Phase2's docker-based hosting platform for our development 
 
 ## Server Location
 
-All Docker-based hosted sites are located on ci.p2devcloud.com or
-ci2.p2devcloud.com.
+These Docker-based hosted sites are on servers managed by the Phase2 Infrastructure Team.
 
 You can reach an environment on the server via:
 

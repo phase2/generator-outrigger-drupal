@@ -1,4 +1,21 @@
+var url = require('url');
+
 var prompts = [
+  {
+    type: 'input',
+    name: 'cloudHost',
+    message: 'Outrigger Cloud base URL for your project (Ask for this!): ',
+    validate: function (input) {
+      if (!input) return 'You must specify a valid domain such as "ci.p2devcloud.com". If you do not have this information, abort and retry answering "No" to Cloud Hosting.';
+      if (input.search(' ') !== -1) return 'No spaces allowed.';
+      if (input.search('_') !== -1) return 'No underscores allowed.';
+      return true;
+    },
+    filter: function (input) {
+      parsed = url.parse(input);
+      return parsed.host || parsed.href;
+    }
+  },
   {
     type: 'checkbox',
     name: 'environments',

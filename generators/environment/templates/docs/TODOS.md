@@ -28,10 +28,10 @@ complete. As items are accomplished, they can be removed from this file.
     * Modify scripts to suite your needs, or remove scripts you will not use and maintain as it will simply be clutter.
     * Rewrite codebase documentation to suite the audience. Make sure future onboarding will work.
 
-* [ ] Spin up Continuous Integration & Testing Environments: This is specific to Phase2-only infrastructure at this time.
+<% if (useCloud.exists) { %>* [ ] Spin up Continuous Integration & Testing Environments: This is specific to Phase2-only infrastructure at this time.
     * Ensure the Jenkins jobs have the correct Git URL. (You can correct this by editing .yo-rc.json and running the generator again with `--replay`.)
     * Visit your CI Server and [spin up your Jenkins instance](http://build.<%= host.devcloud %>/job/ci-start/parambuild/?delay=0sec&NAME=<%= projectName %>&GIT_URL=git%40bitbucket.org%3Aphase2tech%2F<%= projectName %>.git&GIT_REF=develop).
-
+<% } %>
 <% if (mail.exists) { %>* [ ] Configure Email Testing: Add the SMTP module to the project to use MailHog for testing.
     * Add the SMTP module to the codebase.
     * Enable the module and turn on STMP mail transport at `admin/config/system/smtp`.
