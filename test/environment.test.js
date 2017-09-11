@@ -40,7 +40,7 @@ describe('outrigger-drupal:environment', function() {
   var appDir = path.join(os.tmpdir(), './temp-test-environment');
   console.log('Environment tests will be generated in "' + appDir + '"');
 
-  describe.only('minimal configuration', function() {
+  describe('minimal configuration', function() {
     before(function(done) {
       test.run(path.join(__dirname, '../generators/environment'))
         .inDir(appDir)
@@ -154,6 +154,9 @@ describe('outrigger-drupal:environment', function() {
 
         it('should use the PHP7 build container with Drupal 8', function() {
           assert.ok(manifest['services']['base']['image'] == 'outrigger/build:php70');
+        });
+        it('should set PHP_IDE_CONFIG to use "app" subdomain instead of "www" with proxy', function() {
+          assert.ok(/^serverName=app\./.test(manifest['services']['base']['environment']['PHP_IDE_CONFIG']));
         });
 
       });

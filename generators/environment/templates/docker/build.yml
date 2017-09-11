@@ -145,17 +145,17 @@ services:
     environment:
       APP_DOMAIN: <%= host.local %>
       GDT_DOMAIN: <%= host.local %>
-      # Check https://hub.docker.com/r/phase2/devtools-build/ for other Node version options.
+      # See https://hub.docker.com/r/outrigger/build for other Node version options.
       NODE_VERSION: 6
       <% if (usePLS) { %>
       # Allow for pattern lab compilation need detection with reasonable performance from
       # within the build container.
       # See: https://github.com/paulmillr/chokidar/blob/master/README.md#user-content-performance
-      CHOKIDAR_USEPOLLING: 1
-      <% } -%>
-      # Set to "true" to load xdebug configuration. Note this will cause significant composer
-      # performance degradation.
-      PHP_XDEBUG: "false"
+      CHOKIDAR_USEPOLLING: 1<% } %>
+      # Configure Xdebug
+      # See http://docs.outrigger.sh/common-tasks/using-xdebug-with-phpstorm/
+      PHP_XDEBUG: "true"
+      PHP_IDE_CONFIG: "serverName=<% if (proxy.exists) { %>app<% } else { %>www<% } %>.<%= domain %>.vm"
       # Suppress the loading of grunt-drupal-tasks desktop notification functionality.
       GDT_QUIET: 1
       # Include the DOCKER_ENV so Drupal settings can be aware of environment.
