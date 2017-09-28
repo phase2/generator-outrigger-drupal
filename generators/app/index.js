@@ -214,6 +214,9 @@ module.exports = Generator.extend({
     if (options['useCloud']) {
       this.log('Your project is setup to have project testing environments created via Outrigger Cloud by ' + chalk.red('generator-outrigger-drupal:cloud v' + version.env) + '.');
     }
+    else {
+      this.log('Your project is ' + chalk.yellow('not configured to use Outrigger Dev Cloud,') + ' to use this later you can re-run the generator.');
+    }
     if (options['usePLS']) {
       this.log('You have created a new theme ' + chalk.green(options.themeName) + ' at ' + chalk.red(options.themePath) + ' with ' + chalk.red('generator-pattern-lab-starter v' + version.pls) + '.');
     }

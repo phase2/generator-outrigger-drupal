@@ -70,6 +70,10 @@ rig project run cli
 
 This will open a BASH session that allows you to run any commands or use any tools available in the build container.
 
+### Environment Configuration
+
+* **OUTRIGGER_SSH_KEY**: [Default: `id_rsa`] The filename of the private SSH key
+to use to access private servers or git repositories. Assumes lookup in ~/.ssh/.
 
 ### Aliases & Shortcuts
 
