@@ -89,7 +89,7 @@ trap &apos;complete $?&apos; EXIT
 teardown
 
 # Set up and install site
-bin/start.sh --environment=${DOCKER_ENV}
+bin/start.sh --environment ${DOCKER_ENV}
 
 # Run cron for maximized database freshness.
 docker-compose run --rm drush cron
