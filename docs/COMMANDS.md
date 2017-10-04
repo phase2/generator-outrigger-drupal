@@ -18,7 +18,7 @@ Operation         | Description
 ## rig project sync
 
 You can always use rig project sync to spin up the data sync, it has a dedicated
-configuration section but it's core behavior is directly managed by the rig tool.
+configuration section but its core behavior is directly managed by the rig tool.
 For more on this, please read the [filesystem sync documentation](http://docs.outrigger.sh/project-setup/filesystem-sync/).
 
 # Generated Operations
@@ -126,7 +126,7 @@ Gruntconfig.json `update` operation so it can be easily chained to other steps.
 
 > Compile all theme assets, activate watch, and start up pattern-lab.
 
-Run on it's own, this is an alias for running `gulp` in the main theme directory.
+Run on its own, this is an alias for running `gulp` in the main theme directory.
 Additional arguments passed to the command will be sent along as gulp arguments,
 though as with any additional arguments for `rig project` it may need to be
 wrapped in quotation marks.
