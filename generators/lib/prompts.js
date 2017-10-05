@@ -113,7 +113,7 @@ var prompts = [
       return answers['projectName'].replace(/_|\s/, '-')
     },
     validate: function (input) {
-      return input.match(/_|\s/) == undefined ? true : 'Please use a value qualified for use as a domain name. No spaces or underscores allowed.';
+      return input.match(/_|\s|[A-Z]/) == undefined ? true : 'Please use a value qualified for use as a domain name. No spaces, underscores, or capital letters allowed.';
     }
   },
   {
