@@ -94,9 +94,9 @@ assertNotEqual() {
   fi
 }
 
-if [ -z "$1" ] || [ "$1" == 'devtools' ]; then
+if [ -z "$1" ] || [ "$1" == 'outrigger' ]; then
   heading 'Docker Utilities'
-  assertCmd 'devtools' $WARNING
+  assertCmd 'rig' $WARNING
   assertCmd 'docker' $ERROR
   assertCmd 'docker-compose' $ERROR
   assertCmd 'docker-machine' $ERROR
@@ -124,14 +124,14 @@ if [ -z "$1" ] || [ "$1" == 'gdt' ]; then
   assertFile 'build/html/index.php' $ERROR
 fi
 
-if [ -z "$1" ] || [ "$1" == 'docker-machine' ]; then
-  heading 'Docker-Machine Functionality'
-  docker-compose -f build.yml run base ls /var/www/src > /dev/null
-  assertOk $? 'code volume-mount' $ERROR
+if [ -z "$1" ] || [ "$1" == 'unison' ]; then
+  heading 'Unison File Sync Functionality'
+  docker-compose -f build.yml run base ls /var/www/src > /dev/null 2>&1
+  assertOk $? 'unison file sync/volume bind mount' $ERROR
 fi
 
 if [ "$STATUS" -gt 0 ]; then
-  echo 'Run "devtools doctor" to address Docker problems.'
+  echo 'Run "rig doctor" to address general Docker problems.'
 fi
 
 exit $STATUS
