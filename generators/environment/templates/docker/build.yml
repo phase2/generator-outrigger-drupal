@@ -167,6 +167,7 @@ services:
       SIMPLETEST_DB: mysql://admin:admin@db/<%= machineName %>_drupal
       SIMPLETEST_URL: <%= host.local %>
       BROWSERTEST_OUTPUT_DIRECTORY: /tmp
+      COMPOSER_EXIT_ON_PATCH_FAILURE: 1
 
 volumes:
   # This defines the filesystem synchronization volume used for application
