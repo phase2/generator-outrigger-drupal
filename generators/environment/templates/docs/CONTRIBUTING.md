@@ -37,7 +37,7 @@ by the system.
 
 ### When To Run
 
-* **First Run/Kitchen Sink**: `bash bin/start.sh`
+* **First Run/Kitchen Sink**: `rig project setup`
 * **After Merging Changes from Upstream**: `docker-compose -f build.yml run grunt`
 * **Before Final Feature Branch Push**: `docker-compose -f build.yml run grunt validate`
 * **Starting a New Feature:**

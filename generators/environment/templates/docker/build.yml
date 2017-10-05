@@ -3,8 +3,8 @@
 #
 # By setting your local DOCKER_ENV environment variable you can spin up
 # multiple environments. Keep in mind you should also vary the docker-compose
-# --project-name as needed. The `bin/start.sh` script sets a project name of
-# <%= machineName %>_${DOCKER_ENV:-local}.
+# --project-name as needed by running commands with that flag, the -p alias,
+# or setting the COMPOSE_PROJECT_NAME environment variable.
 #
 # @see https://docs.docker.com/compose/reference/overview/
 # @see https://docs.docker.com/compose/compose-file/compose-file-v2/
@@ -49,8 +49,6 @@ services:
   <% if (usePLS) { %>
   # Container to get Pattern Lab compiled, running, and watched from inside the theme folder in one step.
   # Usage: docker-compose -f build.yml run --rm theme
-  # Note: For faster file-watching, run: rig watch src/themes/themeName after Pattern Lab builds.
-  # You can also pass any argument the gulp command within the theme accepts as an argument here.
   theme:
     extends:
       service: base

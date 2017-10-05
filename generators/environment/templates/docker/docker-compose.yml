@@ -8,11 +8,7 @@
 #   how this configuration is used.
 # * The -p|--project-name option for Docker Compose, which uses the provided name
 #   in lieu of deriving key Docker namespacing from whatever the current directory
-#   happens to be named.
-#
-# When bin/start.sh is used to start up services, it configures a docker-compose
-# project of '<%= machineName %>_${DOCKER_ENV:-local}' and a default DOCKER_ENV of local.
-# (${VARNAME:-default} is some BASH variable magic.)
+#   happens to be named. You can also set the COMPOSE_PROJECT_NAME environment variable.
 #
 # Warning: Multiple environments for local use require customizing the DNSDock
 # Configuration. A generic approach for this has not yet been determined.

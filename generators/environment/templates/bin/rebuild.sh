@@ -1,3 +1,5 @@
 #!/bin/sh
 # Script to rebuild site (drush make)
-bin/start.sh --update
+CALLPATH=`dirname $0`
+
+$CALLPATH/start.sh --update

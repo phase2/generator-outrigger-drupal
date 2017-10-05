@@ -56,6 +56,21 @@ services:
     entrypoint: [ "/init", "/var/www/vendor/bin/drupal", "--ansi" ]
     working_dir: /var/www/build/html
 
+  <% if (usePLS) { %>
+  # Container to get Pattern Lab compiled, running, and watched from inside the theme folder in one step.
+  # Usage: docker-compose -f build.devcloud.yml run --rm theme
+  theme:
+    extends:
+      service: base
+    labels:
+      com.dnsdock.name: theme
+      com.dnsdock.image: <%= domain %>
+    working_dir: /var/www/<%= themePath %>/<%= themeName %>
+    entrypoint: [ "/init", "./node_modules/.bin/gulp" ]
+    command: ""
+
+  <% } -%>
+
   # Container for running grunt in the docroot.
   # Usage: DOCKER_ENV=int docker-compose -f build.devcloud.yml -p <%= machineName %>_int run --rm grunt <command>
   grunt:

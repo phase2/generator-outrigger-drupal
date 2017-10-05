@@ -90,11 +90,19 @@ trap &apos;complete $?&apos; EXIT
 teardown
 
 # Set up and install site
-FLAGS=&apos;&apos;
+docker-compose -f docker-compose.yml up -d
+docker-compose run --rm cli "NPM_CONFIG_LOGLEVEL=error npm install"
+docker-compose run --rm grunt --timer
+
 if [ $UPDATE = &quot;true&quot; ]; then
-  FLAGS=&quot;$FLAGS --update&quot;
+  docker-compose run --rm grunt update
+else
+  # Remove --no-db-load if each deploy should re-load a database from /opt/backups/latest.sql.gz.
+  # The location and name of this file can be changed in Gruntconfig.json.
+  docker-compose run --rm grunt install --no-db-load
 fi
-bin/start.sh --environment $DOCKER_ENV $FLAGS
+
+echo "Visit $(docker-compose run --rm drush sa @<%= projectName %> --format=list --fields=uri)"
 
 # Warm cache and review HTTP response headers
 echo &quot;Warm cache and review HTTP response headers...&quot;
