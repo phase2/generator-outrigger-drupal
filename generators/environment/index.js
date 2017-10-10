@@ -140,12 +140,6 @@ module.exports = Generator.extend({
       );
 
       this.fs.copyTpl(
-        this.templatePath('docs/TODOS.md'),
-        this.destinationPath('TODOS.md'),
-        tokens
-      );
-
-      this.fs.copyTpl(
         this.templatePath('docs/OUTRIGGER.md'),
         this.destinationPath('docs/OUTRIGGER.md'),
         tokens
