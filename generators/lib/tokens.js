@@ -102,7 +102,7 @@ module.exports = function(options) {
     int: env.virtualHost('int', options.projectName),
     local: 'www.' + options.domain + '.vm',
     devcloud: env.virtualHost(false, options.projectName),
-    master: options.ciHost
+    master: env.ciHost()
   };
 
   if (env.envActive('dev')) {
