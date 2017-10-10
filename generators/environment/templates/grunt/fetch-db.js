@@ -3,9 +3,12 @@
  *
  * Retrieves the latest database export for the project.
  */
+
 module.exports = function(grunt) {
   grunt.registerTask('fetch-db', 'Fetch a development database export from the CI server.',
     function(env) {
+      grunt.loadNpmTasks('grunt-shell');
+
       // If not specified, default to integration environment.
       if (!env) {
         env = grunt.config('config.project.backups.env');
@@ -15,7 +18,7 @@ module.exports = function(grunt) {
       // clean install by default.
       var dbPath = grunt.option('db-path') || grunt.config('config.project.db') || '/opt/backups/latest.sql.gz';
 
-      grunt.config('shell.fetch-db', {
+      grunt.config.set('shell.fetch-db', {
         command: 'curl -vv -f ' + grunt.config('config.project.backups.url') + '/' + env
           + '/latest.sql.gz > ' + dbPath
       });
@@ -31,7 +34,7 @@ module.exports = function(grunt) {
       grunt.task.run([
         'mkdir:init',
         'mkdir:backups',
-        'shell:fetch-db:' + env
+        'shell:fetch-db'
       ]);
     }
   );
