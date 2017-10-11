@@ -16,7 +16,7 @@ module.exports = {
     'env/build/etc/drush/drushrc.php',
     'env/build/etc/drush/aliases.drushrc.php',
     'Gruntconfig.json',
-    '.outrigger.yml',
+    'outrigger.yml',
     'package.json',
     'src/sites/settings.common.php',
     'TODOS.md'
@@ -30,6 +30,6 @@ module.exports = {
     'docker-compose.yml': 'docker-compose.yml',
     'docker-compose.override.yml': 'docker-compose.override.yml',
     'build.yml': 'build.yml',
-    '.outrigger.yml': '.outrigger.yml'
+    'outrigger.yml': 'outrigger.yml'
   }
 };
