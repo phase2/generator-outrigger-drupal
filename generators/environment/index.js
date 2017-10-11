@@ -274,7 +274,7 @@ module.exports = Generator.extend({
     outrigger: function() {
       this.fs.copyTpl(
         this.templatePath('outrigger/outrigger.yml'),
-        this.destinationPath('./.outrigger.yml'),
+        this.destinationPath('./outrigger.yml'),
         tokens
       );
     }
