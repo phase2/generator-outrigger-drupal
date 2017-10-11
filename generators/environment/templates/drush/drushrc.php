@@ -6,6 +6,13 @@
  * with configuration and commands placed in /etc/drush.
  */
 
+// Default Drush to target the Drupal site.
+// This does not preclude the use of the alias, but allows basic Drush usage
+// without requiring the alias to perform basic Drush operations.
+$host = getenv('APP_DOMAIN');
+$options['uri'] = $host ? $host : 'http://www.<%= domain %>.vm/';
+$options['root'] = '/var/www/build/html';
+
 // On drush sql-dump and other database extraction operations, ignore the data
 // in these tables, but keep the table structures.
 // Make sure to update the list when new cache tables are added.
