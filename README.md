@@ -6,15 +6,28 @@
 [![Travis CI status](https://travis-ci.org/phase2/generator-outrigger-drupal.png?branch=master)](https://travis-ci.org/phase2/generator-outrigger-drupal)
 [![Greenkeeper badge](https://badges.greenkeeper.io/phase2/generator-outrigger-drupal.svg)](https://greenkeeper.io/)
 
-**This project is mostly generic, but has some remaining pieces related to Phase2-specific development environment hosting.**
+**The Outrigger Cloud sub-generator is still tied to Phase2's internal Docker hosting solution. The next version will be more open.**
 
-This is an umbrella [Yeoman](http://yeoman.io/) generator that asks questions,
+This project helps create new Drupal projects fully outfitted with environment
+support, build processes, frontend tooling, and more. It operates as an umbrella [Yeoman](http://yeoman.io/) generator that asks questions,
 then passes the answers to multiple "child" generators that handle their own
-aspect of project scaffolding. As the name implies, this generator focuses on Outrigger practices, where some of the other generators in use are focused on broader industry best practices.
+aspect of project scaffolding. As the name implies, this generator focuses on
+Outrigger practices, where some of the other generators in use are focused on
+broader industry best practices.
 
 ## Installation & Usage
 
-### Using Docker
+### Using Docker Image
+
+```
+mkdir ~/PROJECT-NAME
+cd ~/PROJECT-NAME
+docker run -it --rm -v $PWD:/generated outrigger/generator
+```
+
+For more options check out [outrigger/generator directly](https://github.com/phase2/outrigger-generator).
+
+### Using Docker for Development
 
 Docker-based usage is available as of v3.0.0. It is the recommended approach as
 updates tend to be less prone to complication.
@@ -22,7 +35,7 @@ updates tend to be less prone to complication.
 ```bash
 git clone git@github.com:phase2/generator-outrigger-drupal.git
 cd generator-outrigger-drupal
-git checkout v3.4.0
+git checkout v4.0.0
 docker-compose run --rm cli npm install
 mkdir ~/path/to/empty/directory
 YO_PROJECT_DIRECTORY=~/path/to/empty/directory docker-compose run --rm yo outrigger-drupal
@@ -159,7 +172,8 @@ If you liked the Docker-based environments, you can also use our Docker-based
 Jenkins instance to manage your central test environments, complete with default
 jobs so you can start continuous integration with zero further configuration.
 
-This uses a sub-generator of generator-outrigger-drupal which can be separately executed as `yo outrigger-drupal:jenkins`.
+This uses a sub-generator of generator-outrigger-drupal which can be separately
+executed as `yo outrigger-drupal:cloud`.
 
 ### Feature Breakdown
 

@@ -1,10 +1,49 @@
-## v4.0.0-pre (August 42, 2020)
+# CHANGELOG
 
-### Upgrade Instructions
+## v4.0.0 (October 11, 2017)
+
+One of the big changes in this release is the removal/deprecation of the
+bin/start.sh script. For a longish explanation why please check out [Deprecate the start.sh script in favor of using the underlying tools #59](https://github.com/phase2/generator-outrigger-drupal/issues/59)
+
+For more on the breaking changes associated with this release read on past the change list.
+
+* Moved generated .outrigger.yml to outrigger.yml for improved visibility. (:environment)
+* Removed start.sh script and replaced with a deprecation message. (:environment)
+* Added more robust rig project scripts instead of start.sh script. (:environment)
+* Added [documentation to repo](https://github.com/phase2/generator-outrigger-drupal/blob/master/docs/COMMANDS.md) on generated outrigger scripts.
+* Fixed composer install or composer update process does not return failure if patches fail to apply.
+* Added Drush defaults such that using drush via the cli service will target the site.
+  (This removes the requirement to always use the alias via the cli service. Use `drush @none` to avoid Drupal bootstrap.)
+* Added out-of-box configuration for Xdebug via the CLI. (Ready out of box with [PHPStorm configuration](http://docs.outrigger.sh/common-tasks/using-xdebug-with-outrigger/))
+* Added validation to domain prompt to disallow capital letters. (:environment)
+* Refactored all things CI or remote-host oriented to the new `cloud` sub-generator.
+* Added prompt to enter the remote CI host. (:cloud)
+* Removed outrigger integration as optional (Jenkins integration is optional via :cloud) (:environment)
+* Fixed generated grunt fetch-db task. (:environment)
+* Fixed cli build service to default to use BASH. (:environment)
+* Fixed --replay flag.
+* Fixed Unison compatibility for bin/docker.sh. (:environment)
+
+### Technical Plumbing
+
+* Upgraded generator-gadget to v1.2.0 ([Release Notes](https://github.com/phase2/generator-gadget/releases/tag/v1.2.0))
+
+### Contributors
+
+@grayside, @scottalan, @jhedstrom, @mike-potter, @febbraro, @tekante
+
+### Breaking Changes
+
+#### Code Changes
 
 To continue using the --replay flag with projects generated before v4, please make the following changes to your `.yo-rc.json` file, hidden at the root of your git repo.
+
 * Replace `useEnv` with `useCloud`.
-* Add `cloudHost` key set to the URL of your Docker host. (`ci.p2devcloud.com` or `ci2.p2devcloud.com`)
+* Add `cloudHost` key set to the URL of your Docker host. (For example: `ci.p2devcloud.com`)
+
+#### System Requirements
+
+Upgrade rig CLI to at least version 1.3.2.
 
 ## v3.4.0 (July 18, 2017)
 
@@ -419,7 +458,7 @@ The `bin/start.sh` script has got command-line options now, including:
 * Break Jenkins home into views by environment with primary for key shortcuts.
 * Add jenkins-test-fail job to check on Jenkins error handling.
 * Added deploy-local job for local testing of Jenkins
-* Added the colorization library from _devtools_vm past, began light use.
+* Added the colorization library from \_devtools_vm past, began light use.
 * Automated test coverage, 45 assertions and counting.
 * Generated documentation improvements
 
