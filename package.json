@@ -35,7 +35,7 @@
     "yosay": "^2.0.0"
   },
   "devDependencies": {
-    "js-yaml": "^3.7.0",
+    "js-yaml": "^3.13.1",
     "longjohn": "^0.2.12",
     "mocha": "^4.0.0",
     "xml2js": "^0.4.16",
